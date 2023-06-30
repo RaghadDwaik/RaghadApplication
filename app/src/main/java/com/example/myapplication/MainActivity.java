@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -30,6 +31,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private DatabaseReference databaseReference4;
     private DatabaseReference databaseReference5;
 
-    private boolean userLoggedIn ;
+    private boolean userLoggedIn;
 
 
     private RecyclerView recyclerView;
@@ -91,22 +96,36 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient mFusedLocationClient;
-
+    ////////////////nada////////////////////////////
+    private LocationCallback locationCallback;
+    ////////////////nada////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ////////////////nada////////////////////////////
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    // Use the retrieved location
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    Toast.makeText(MainActivity.this, "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        ////////////////nada////////////////////////////
+
         ImageView v = findViewById(R.id.slide);
         AnimationDrawable u = (AnimationDrawable) v.getDrawable();
         u.start();
 
         love = findViewById(R.id.love);
         list = findViewById(R.id.Rlist);
-
-
-
-
 
 
         final DrawerLayout drawerLayout = findViewById(R.id.DrawerLayout);
@@ -272,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             startActivity(intent);
         });
     }
+
     private void setupAdapterClickListener3() {
         adapter3.setOnItemClickListener((snapshot, position) -> {
             PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
@@ -285,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             startActivity(intent);
         });
     }
-
 
 
     @Override
@@ -446,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
                     // Perform any action with the searched supermarket
                     // For example, start the SupermarketItem activity and pass the supermarket ID
-                    Intent intent = new Intent(MainActivity.this,RestaurantList.class);
+                    Intent intent = new Intent(MainActivity.this, RestaurantList.class);
                     intent.putExtra("restaurant_name", supermarket.getName());
                     startActivity(intent);
                 }
@@ -566,6 +585,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     protected void onStart() {
         super.onStart();
+        ////////////////nada////////////////////////////
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            requestLocationUpdates();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+        ////////////////nada////////////////////////////
+
+
         adapter.startListening();
 
         adapter1.startListening();
@@ -575,6 +606,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onStop() {
         super.onStop();
+        ////////////////nada////////////////////////////
+        mFusedLocationClient.removeLocationUpdates(locationCallback);
+        ////////////////nada////////////////////////////
         adapter.stopListening();
     }
 
@@ -595,5 +629,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         startActivity(intent);
     }
 
+    ////////////////nada////////////////////////////
+    private void requestLocationUpdates() {
+        LocationRequest locationRequest = LocationRequest.create()
+                .setInterval(5000)
+                .setFastestInterval(2000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+    ////////////////nada////////////////////////////
 
 }
