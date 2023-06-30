@@ -17,6 +17,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +35,8 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
     private BottomNavigationView bottom;
     private RecyclerView recyclerView;
     private ItemListAdapter itemListAdapter;
+    private DatabaseReference ratedSupermarketsRef;
+
     private UserAdapter userAdapter;
 
     private DatabaseReference servicesRef;
@@ -68,22 +71,15 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         restaurantId = intent.getStringExtra("restaurant_id");
         restaurantName = intent.getStringExtra("restaurant_name");
         restaurantImageUrl = intent.getStringExtra("restaurant_image");
+        float RestRating = getIntent().getFloatExtra("restaurant_rating", 0.0f);
+        rating.setRating(RestRating);
+        //      rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
         servicesRef = FirebaseDatabase.getInstance().getReference().child("Items");
         Query query = servicesRef.orderByChild("Resturant").equalTo(restaurantName);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        CollectionReference userRatingRef = FirebaseFirestore.getInstance().collection("Rating");
-        com.google.firebase.firestore.Query firestoreQuery = userRatingRef.whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .orderBy("name");
-
-        FirestoreRecyclerOptions<ServicesClass> firestoreOptions = new FirestoreRecyclerOptions.Builder<ServicesClass>()
-                .setQuery(firestoreQuery, ServicesClass.class)
-                .build();
-
-        userAdapter = new UserAdapter(firestoreOptions);
-        userAdapter.setOnItemClickListener(this);
 
         // Setup Firebase options for ItemListAdapter
         FirebaseRecyclerOptions<ServicesClass> firebaseOptions = new FirebaseRecyclerOptions.Builder<ServicesClass>()
@@ -99,18 +95,40 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         bottom.setItemIconTintList(null);
         bottom.setOnNavigationItemSelectedListener(this);
 
-        CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
-        DocumentReference userRatingDocRef = userRatingCollectionRef.document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(restaurantId);
-        restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
-                rating.setRating(ratingValue);
-            } else {
-                // If the restaurant doesn't exist in the user's ratings, set the rating to zero
-                rating.setRating(0.0f);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
+
+            if (restaurantId != null) {
+                DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
+                DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(restaurantId);
+                restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
+                    try {
+                        if (e != null) {
+                            throw e; // Throw the exception if it's not null
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
+                            rating.setRating(ratingValue);
+                        } else {
+                            // If the restaurant doesn't exist in the user's ratings, set the rating to zero
+                            rating.setRating(0.0f);
+                        }
+                    } catch (Exception exception) {
+                        // Handle the exception
+                        System.out.println("Error retrieving rating snapshot: " + exception.getMessage());
+                        exception.printStackTrace();
+                    }
+                });
             }
-        });
+        } else {
+            // Handle the case when the currentUser is null
+        }
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -144,38 +162,57 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
 
     private void updateRating(float rating) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedRest");
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference userRatingCollectionRef = firestore.collection("User");
-        DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
-        DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(restaurantId);
+        DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                .document(userId)
+                .collection("Rating")
+                .document(restaurantId);
 
-        // Create a new document for the restaurant with the user's rating
+        // Create a new document for the supermarket with the user's rating
         HashMap<String, Object> ratingData = new HashMap<>();
-        ratingData.put("name", restaurantName);
+        ratingData.put("name", restaurantId);
         ratingData.put("image", restaurantImageUrl);
         ratingData.put("rating", rating);
-        restaurantRatingDocRef.set(ratingData)
-                .addOnSuccessListener(aVoid -> {
-                    // Rating updated successfully
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the failure to update the rating
-                });
+        restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+
+                } else {
+                    // User has not rated the supermarket yet
+                    restaurantRatingDocRef.set(ratingData)
+                            .addOnSuccessListener(aVoid -> {
+                                DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(restaurantId).push();
+                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
+
+                                userSupermarketRef.child("id").setValue(restaurantId);
+                                userSupermarketRef.child("image").setValue(restaurantImageUrl);
+                                userSupermarketRef.child("name").setValue(restaurantName);
+                                userSupermarketRef.child("rating").setValue(rating);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update the rating
+                            });
+                }
+            } else {
+                // Handle the failure to check the existing rating
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         itemListAdapter.startListening();
-        userAdapter.startListening();
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         itemListAdapter.stopListening();
-        userAdapter.stopListening();
     }
 
     @Override

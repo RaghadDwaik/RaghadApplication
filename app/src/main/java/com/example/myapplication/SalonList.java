@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +25,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -32,6 +34,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
     private BottomNavigationView bottom;
     private RecyclerView recyclerView;
+    private DatabaseReference ratedSupermarketsRef;
+
     private ItemListAdapter adapter;
     private DatabaseReference servicesRef;
     private SearchView searchView;
@@ -54,7 +58,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         ImageView salonImageView = findViewById(R.id.restaurantImageView);
 
         Intent intent = getIntent();
-         salonImage = intent.getStringExtra("salon_image");
+        salonImage = intent.getStringExtra("salon_image");
 
         Glide.with(this)
                 .load(salonImage)
@@ -62,9 +66,11 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                 .into(salonImageView);
 
         salonId = intent.getStringExtra("salon_id");
-         salonName = intent.getStringExtra("salon_name");
-         salonImage = intent.getStringExtra("salon_image");
-
+        salonName = intent.getStringExtra("salon_name");
+        salonImage = intent.getStringExtra("salon_image");
+        float supermarketRating = getIntent().getFloatExtra("salon_rating", 0.0f);
+        rating.setRating(supermarketRating);
+        //  rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
         servicesRef = FirebaseDatabase.getInstance().getReference().child("Services");
         Query query = servicesRef.orderByChild("salon").equalTo(salonName);
@@ -84,18 +90,41 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
         bottom.setOnNavigationItemSelectedListener(this);
 
-        CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
-        DocumentReference userRatingDocRef = userRatingCollectionRef.document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(salonId);
-        restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
-                rating.setRating(ratingValue);
-            } else {
-                // If the restaurant doesn't exist in the user's ratings, set the rating to zero
-                rating.setRating(0.0f);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        System.out.println("tttttttttttttttttttttttttttttttttt");
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
+            System.out.println("ooooooooooooooooooooooooooooo");
+
+            if (salonId != null) {
+                DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
+                DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(salonId);
+                restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
+                    try {
+                        if (e != null) {
+                            throw e; // Throw the exception if it's not null
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
+                            rating.setRating(ratingValue);
+                        } else {
+                            // If the restaurant doesn't exist in the user's ratings, set the rating to zero
+                            rating.setRating(0.0f);
+                        }
+                    } catch (Exception exception) {
+                        // Handle the exception
+                        System.out.println("Error retrieving rating snapshot: " + exception.getMessage());
+                        exception.printStackTrace();
+                    }
+                });
             }
-        });
+        } else {
+            // Handle the case when the currentUser is null
+        }
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -121,24 +150,44 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
     private void updateRating(float rating) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedSalon");
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference userRatingCollectionRef = firestore.collection("User");
-        DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
-        DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(salonId);
+        DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                .document(userId)
+                .collection("Rating")
+                .document(salonId);
 
-        // Create a new document for the restaurant with the user's rating
+        // Create a new document for the supermarket with the user's rating
         HashMap<String, Object> ratingData = new HashMap<>();
         ratingData.put("name", salonName);
         ratingData.put("image", salonImage);
         ratingData.put("rating", rating);
-        restaurantRatingDocRef.set(ratingData)
-                .addOnSuccessListener(aVoid -> {
-                    // Rating updated successfully
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the failure to update the rating
-                });
+        restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+
+                } else {
+                    // User has not rated the supermarket yet
+                    restaurantRatingDocRef.set(ratingData)
+                            .addOnSuccessListener(aVoid -> {
+                                DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(salonId).push();
+                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
+
+                                userSupermarketRef.child("id").setValue(salonId);
+                                userSupermarketRef.child("image").setValue(salonImage);
+                                userSupermarketRef.child("name").setValue(salonName);
+                                userSupermarketRef.child("rating").setValue(rating);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update the rating
+                            });
+                }
+            } else {
+                // Handle the failure to check the existing rating
+            }
+        });
     }
 
      /*   DatabaseReference recommendedRef = FirebaseDatabase.getInstance().getReference().child("RecommendedSalon");

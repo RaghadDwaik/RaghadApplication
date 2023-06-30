@@ -10,54 +10,61 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
 
-public class RecommendAdapter extends FirebaseRecyclerAdapter<PlacesClass, RecommendAdapter.SalonViewHolder> {
+public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.SalonViewHolder> {
 
+    private List<PlacesClass> recommendList;
     private OnItemClickListener listener;
 
-    public RecommendAdapter(@NonNull FirebaseRecyclerOptions<PlacesClass> options) {
-        super(options);
+    public RecommendAdapter(List<PlacesClass> recommendList) {
+        this.recommendList = recommendList;
     }
-
-
-
-    @Override
-    protected void onBindViewHolder(@NonNull SalonViewHolder holder, int position, @NonNull PlacesClass model) {
-        holder.bind(model);
-
-    }
-
-
 
     @NonNull
     @Override
     public SalonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recommendcard, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommendcard, parent, false);
         return new SalonViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull SalonViewHolder holder, int position) {
+        PlacesClass item = recommendList.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int clickedPosition = holder.getAdapterPosition();
+                if (clickedPosition != RecyclerView.NO_POSITION) {
+                    PlacesClass clickedItem = recommendList.get(clickedPosition);
+                    if (listener != null) {
+                        listener.onItemClick(clickedItem, clickedPosition);
+                    }
+                }
+            }
+        });
+
+        holder.bind(item);
+    }
+
+    @Override
+    public int getItemCount() {
+        return recommendList.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public class SalonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+    public class SalonViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
         private TextView mNameTextView;
-
 
         public SalonViewHolder(View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.image);
             mNameTextView = itemView.findViewById(R.id.txtName);
-
-            itemView.setOnClickListener(this);
         }
 
         public void bind(PlacesClass salon) {
@@ -66,17 +73,9 @@ public class RecommendAdapter extends FirebaseRecyclerAdapter<PlacesClass, Recom
                     .into(mImageView);
             mNameTextView.setText(salon.getName());
         }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION && listener != null) {
-                listener.onItemClick(getSnapshots().getSnapshot(position), position);
-            }
-        }
     }
 
     public interface OnItemClickListener {
-        void onItemClick(DataSnapshot snapshot, int position);
+        void onItemClick(PlacesClass item, int position);
     }
 }

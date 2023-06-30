@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
-public class PlacesClass {
+
+import java.util.Comparator;
+
+public class PlacesClass implements Comparator<PlacesClass> {
     private String name;
 
     public String getId() {
@@ -50,6 +53,10 @@ public class PlacesClass {
         this.name = name;
         this.image = image;
     }
+    public PlacesClass(String name) {
+        this.name = name;
+
+    }
     public PlacesClass(String id,String name, String image) {
         this.id=id;
         this.name = name;
@@ -57,5 +64,8 @@ public class PlacesClass {
     }
 
 
-
+    @Override
+    public int compare(PlacesClass t,PlacesClass t1) {
+        return Double.compare(t1.getRating(), t.getRating());
+    }
 }

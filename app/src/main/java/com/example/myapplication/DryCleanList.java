@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,11 +25,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
 public class DryCleanList extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener ,ItemListAdapter.OnItemClickListener{
+
+    private DatabaseReference ratedSupermarketsRef;
 
     private BottomNavigationView bottom;
     private RecyclerView recyclerView;
@@ -69,8 +73,8 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         drycleanId = intent.getStringExtra("dryclean_id");
         drycleanName = intent.getStringExtra("dryclean_name");
         drycleanImageUrl = intent.getStringExtra("dryclean_image");
-
-        // Set the title of the action bar to the name of the selected salon
+        float supermarketRating = getIntent().getFloatExtra("dryclean_rating", 0.0f);
+        rating.setRating(supermarketRating);
 
         // Construct the database reference for the services of the selected Restaurant
         servicesRef = FirebaseDatabase.getInstance().getReference().child("Services");
@@ -94,27 +98,41 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
         bottom.setOnNavigationItemSelectedListener(this);
 
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
-        DocumentReference userRatingDocRef = userRatingCollectionRef.document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(drycleanId);
-        restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
-                rating.setRating(ratingValue);
-            } else {
-                // If the restaurant doesn't exist in the user's ratings, set the rating to zero
-                rating.setRating(0.0f);
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
+            System.out.println("ooooooooooooooooooooooooooooo");
+
+            if (drycleanId != null) {
+                DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
+                DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(drycleanId);
+                restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
+                    try {
+                        if (e != null) {
+                            throw e; // Throw the exception if it's not null
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
+                            rating.setRating(ratingValue);
+                        } else {
+                            // If the restaurant doesn't exist in the user's ratings, set the rating to zero
+                            rating.setRating(0.0f);
+                        }
+                    } catch (Exception exception) {
+                        // Handle the exception
+                        System.out.println("Error retrieving rating snapshot: " + exception.getMessage());
+                        exception.printStackTrace();
+                    }
+                });
             }
-        });
+        } else {
+            // Handle the case when the currentUser is null
+        }
 
-        rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
 
-                updateRating(rating);
-            }
-        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -137,24 +155,44 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
     private void updateRating(float rating) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedClean");
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference userRatingCollectionRef = firestore.collection("User");
-        DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
-        DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(drycleanId);
+        DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                .document(userId)
+                .collection("Rating")
+                .document(drycleanId);
 
-        // Create a new document for the restaurant with the user's rating
+        // Create a new document for the supermarket with the user's rating
         HashMap<String, Object> ratingData = new HashMap<>();
         ratingData.put("name", drycleanName);
         ratingData.put("image", drycleanImageUrl);
         ratingData.put("rating", rating);
-        restaurantRatingDocRef.set(ratingData)
-                .addOnSuccessListener(aVoid -> {
-                    // Rating updated successfully
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the failure to update the rating
-                });
+        restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+
+                } else {
+                    // User has not rated the supermarket yet
+                    restaurantRatingDocRef.set(ratingData)
+                            .addOnSuccessListener(aVoid -> {
+                                DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(drycleanId).push();
+                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
+
+                                userSupermarketRef.child("id").setValue(drycleanId);
+                                userSupermarketRef.child("image").setValue(drycleanImageUrl);
+                                userSupermarketRef.child("name").setValue(drycleanName);
+                                userSupermarketRef.child("rating").setValue(rating);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update the rating
+                            });
+                }
+            } else {
+                // Handle the failure to check the existing rating
+            }
+        });
     }
 
 

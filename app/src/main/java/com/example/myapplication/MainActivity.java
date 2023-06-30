@@ -21,7 +21,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,10 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +42,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, RecycleViewOnItemClick, SearchView.OnQueryTextListener {
@@ -70,9 +66,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private DatabaseReference databaseReference3;
     private DatabaseReference databaseReference4;
     private DatabaseReference databaseReference5;
+    List<PlacesClass> recommendedMarkets = new ArrayList<>();
+    List<PlacesClass> recommendedSalon = new ArrayList<>();
+    List<PlacesClass> recommendedRest = new ArrayList<>();
+    List<PlacesClass> recommendedClean = new ArrayList<>();
 
     private boolean userLoggedIn;
-
+    Query query;
 
     private RecyclerView recyclerView;
     private RecyclerView recyclerView1;
@@ -86,40 +86,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     ImageView list;
 
 
-    private List<PlacesClass> Recommend;
-    private List<PlacesClass> RecommendR;
-    private List<PlacesClass> RecommendD;
-    private List<PlacesClass> RecommendSt;
-    private List<PlacesClass> RecommendS;
-    private List<PlacesClass> RecommendDo;
 
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient mFusedLocationClient;
-    ////////////////nada////////////////////////////
-    private LocationCallback locationCallback;
-    ////////////////nada////////////////////////////
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ////////////////nada////////////////////////////
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                Location location = locationResult.getLastLocation();
-                if (location != null) {
-                    // Use the retrieved location
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    Toast.makeText(MainActivity.this, "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-        ////////////////nada////////////////////////////
-
         ImageView v = findViewById(R.id.slide);
         AnimationDrawable u = (AnimationDrawable) v.getDrawable();
         u.start();
@@ -183,128 +159,322 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //    recyclerView5 = findViewById(R.id.RecommendedDo_recycler);
 
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        DatabaseReference recommendedMarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
+        query = recommendedMarketsRef.limitToLast(5);
 
-        recyclerView1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView3.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        //   recyclerView4.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        //    recyclerView5.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
-        databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Recommended");
-        databaseReference2 = FirebaseDatabase.getInstance().getReference().child("RecommendedClean");
-        databaseReference3 = FirebaseDatabase.getInstance().getReference().child("RecommendedSalon");
-        //  databaseReference4 = FirebaseDatabase.getInstance().getReference().child("Recommended");
-        //   databaseReference5 = FirebaseDatabase.getInstance().getReference().child("Recommended");
+                for (DataSnapshot supermarketSnapshot : dataSnapshot.getChildren()) {
+                    String supermarketKey = supermarketSnapshot.getKey();
+                    double totalRating = 0;
+                    int numUsers = 0;
 
-        Recommend = new ArrayList<>();
-        RecommendR = new ArrayList<>();
-        RecommendD = new ArrayList<>();
-        RecommendS = new ArrayList<>();
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        double rating = ratingSnapshot.child("rating").getValue(Double.class);
+                        totalRating += rating;
+                        numUsers++;
+                    }
+
+                    double averageRating = totalRating / numUsers;
+
+                    // Retrieve other supermarket details such as name, image, etc.
+                    String name = null;
+                    String image = null;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        name = ratingSnapshot.child("name").getValue(String.class);
+                        image = ratingSnapshot.child("image").getValue(String.class);
+                        break; // Break after retrieving the details from the first rating entry
+                    }
+
+                    if (name != null && image != null) {
+                        PlacesClass market = new PlacesClass(name, image);
+                        market.setRating((float) averageRating);
+                        recommendedMarkets.add(market);
+                    }
+                }
+
+                // Sort the recommended supermarkets based on average ratings in descending order
+                Collections.sort(recommendedMarkets, new PlacesClass());
+
+                // Display the sorted supermarkets in the RecyclerView
+                adapter5 = new RecommendAdapter(recommendedMarkets);
+                recyclerView.setAdapter(adapter5);
+                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                adapter5.notifyDataSetChanged();
+
+                adapter5.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PlacesClass item, int position) {
+                        // Handle the item click event for the specific item
+                        // You can access the item details using item.getId(), item.getRating(), etc.
+                        String supermarketId = item.getId();
+                        float rating = item.getRating();
+                        String name = item.getName();
+                        String image = item.getImage();
+
+                        Intent intent = new Intent(MainActivity.this, SupermarketItemList.class);
+                        intent.putExtra("supermarket_id", supermarketId);
+                        intent.putExtra("supermarket_name", name);
+                        intent.putExtra("supermarket_image", image);
+                        intent.putExtra("supermarket_rating", rating);
+
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    }
+                });
 
 
-        Query query = databaseReference.orderByChild("rating").startAt(4);
-        Query query1 = databaseReference1.orderByChild("rating").startAt(4);
-        Query query2 = databaseReference2.orderByChild("rating").startAt(4);
-        Query query3 = databaseReference3.orderByChild("rating").startAt(4);
-
-        FirebaseRecyclerOptions<PlacesClass> options =
-                new FirebaseRecyclerOptions.Builder<PlacesClass>()
-                        .setQuery(query, PlacesClass.class)
-                        .build();
-
-        FirebaseRecyclerOptions<PlacesClass> options1 =
-                new FirebaseRecyclerOptions.Builder<PlacesClass>()
-                        .setQuery(query1, PlacesClass.class)
-                        .build();
-
-        FirebaseRecyclerOptions<PlacesClass> options2 =
-                new FirebaseRecyclerOptions.Builder<PlacesClass>()
-                        .setQuery(query2, PlacesClass.class)
-                        .build();
-
-        FirebaseRecyclerOptions<PlacesClass> options3 =
-                new FirebaseRecyclerOptions.Builder<PlacesClass>()
-                        .setQuery(query3, PlacesClass.class)
-                        .build();
-
-        adapter = new RecommendAdapter(options);
-        adapter1 = new RecommendAdapter(options1);
-        adapter2 = new RecommendAdapter(options2);
-        adapter3 = new RecommendAdapter(options3);
 
 
-        recyclerView1.setAdapter(adapter1);
-        recyclerView2.setAdapter(adapter2);
-        recyclerView3.setAdapter(adapter3);
-
-        recyclerView.setAdapter(adapter);
-
-        setupAdapterClickListener();
-        setupAdapterClickListener1();
-        setupAdapterClickListener2();
-        setupAdapterClickListener3();
 
 
-    }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors that occur during the data retrieval
+            }
+        });
 
 
-    private void setupAdapterClickListener() {
-        adapter.setOnItemClickListener((snapshot, position) -> {
-            PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
+        ///-----------------------------------------------------------------------------
 
-            Intent intent = new Intent(MainActivity.this, SupermarketItemList.class);
-            intent.putExtra("supermarket_id", snapshot.getKey());
-            intent.putExtra("supermarket_name", supermarket.getName());
-            intent.putExtra("supermarket_image", supermarket.getImage());
+        DatabaseReference recommendedSalonRef = FirebaseDatabase.getInstance().getReference().child("RecommendedSalon");
+        Query  query1 = recommendedSalonRef.limitToLast(5);
 
-            // Add any other necessary data as extras
-            startActivity(intent);
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot supermarketSnapshot : dataSnapshot.getChildren()) {
+                    String supermarketKey = supermarketSnapshot.getKey();
+                    double totalRating = 0;
+                    int numUsers = 0;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        double rating = ratingSnapshot.child("rating").getValue(Double.class);
+                        totalRating += rating;
+                        numUsers++;
+                    }
+
+                    double averageRating = totalRating / numUsers;
+
+                    // Retrieve other supermarket details such as name, image, etc.
+                    String name = null;
+                    String image = null;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        name = ratingSnapshot.child("name").getValue(String.class);
+                        image = ratingSnapshot.child("image").getValue(String.class);
+                        break; // Break after retrieving the details from the first rating entry
+                    }
+
+                    if (name != null && image != null) {
+                        PlacesClass market = new PlacesClass(name, image);
+                        market.setRating((float) averageRating);
+                        recommendedSalon.add(market);
+                    }
+                }
+
+                Collections.sort(recommendedSalon, new PlacesClass());
+
+                adapter1 = new RecommendAdapter(recommendedSalon);
+                recyclerView1.setAdapter(adapter1);
+                recyclerView1.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                adapter1.notifyDataSetChanged();
+
+                adapter1.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PlacesClass item, int position) {
+                        // Handle the item click event for the specific item
+                        // You can access the item details using item.getId(), item.getRating(), etc.
+                        String supermarketId = item.getId();
+                        float rating = item.getRating();
+                        String name = item.getName();
+                        String image = item.getImage();
+
+                        Intent intent = new Intent(MainActivity.this, SalonList.class);
+                        intent.putExtra("salon_id", supermarketId);
+                        intent.putExtra("salon_name", name);
+                        intent.putExtra("salon_image", image);
+                        intent.putExtra("salon_rating", rating);
+
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors that occur during the data retrieval
+            }
+        });
+
+
+        ///-----------------------------------------------------------------------------
+
+        DatabaseReference recommendedRestRef = FirebaseDatabase.getInstance().getReference().child("RecommendedRest");
+        Query  query2 = recommendedRestRef.limitToLast(5);
+
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot supermarketSnapshot : dataSnapshot.getChildren()) {
+                    String supermarketKey = supermarketSnapshot.getKey();
+                    double totalRating = 0;
+                    int numUsers = 0;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        double rating = ratingSnapshot.child("rating").getValue(Double.class);
+                        totalRating += rating;
+                        numUsers++;
+                    }
+
+                    double averageRating = totalRating / numUsers;
+
+                    // Retrieve other supermarket details such as name, image, etc.
+                    String name = null;
+                    String image = null;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        name = ratingSnapshot.child("name").getValue(String.class);
+                        image = ratingSnapshot.child("image").getValue(String.class);
+                        break;
+                    }
+
+                    if (name != null && image != null) {
+                        PlacesClass market = new PlacesClass(name, image);
+                        market.setRating((float) averageRating);
+                        recommendedRest.add(market);
+                    }
+                }
+
+                Collections.sort(recommendedRest, new PlacesClass());
+
+                adapter2 = new RecommendAdapter(recommendedRest);
+                recyclerView2.setAdapter(adapter2);
+                recyclerView2.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                adapter2.notifyDataSetChanged();
+
+                adapter2.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PlacesClass item, int position) {
+                        // Handle the item click event for the specific item
+                        // You can access the item details using item.getId(), item.getRating(), etc.
+                        String supermarketId = item.getId();
+                        float rating = item.getRating();
+                        String name = item.getName();
+                        String image = item.getImage();
+
+                        Intent intent = new Intent(MainActivity.this, RestaurantList.class);
+                        intent.putExtra("restaurant_id", supermarketId);
+                        intent.putExtra("restaurant_name", name);
+                        intent.putExtra("restaurant_image", image);
+                        intent.putExtra("restaurant_rating", rating);
+
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors that occur during the data retrieval
+            }
+        });
+
+
+
+        ///-----------------------------------------------------------------------------
+
+        DatabaseReference recommendedDryRef = FirebaseDatabase.getInstance().getReference().child("RecommendedClean");
+        Query  query3 = recommendedDryRef.limitToLast(5);
+
+        query3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot supermarketSnapshot : dataSnapshot.getChildren()) {
+                    String supermarketKey = supermarketSnapshot.getKey();
+                    double totalRating = 0;
+                    int numUsers = 0;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        double rating = ratingSnapshot.child("rating").getValue(Double.class);
+                        totalRating += rating;
+                        numUsers++;
+                    }
+
+                    double averageRating = totalRating / numUsers;
+
+                    // Retrieve other supermarket details such as name, image, etc.
+                    String name = null;
+                    String image = null;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        name = ratingSnapshot.child("name").getValue(String.class);
+                        image = ratingSnapshot.child("image").getValue(String.class);
+                        break;
+                    }
+
+                    if (name != null && image != null) {
+                        PlacesClass market = new PlacesClass(name, image);
+                        market.setRating((float) averageRating);
+                        recommendedClean.add(market);
+                    }
+                }
+
+                Collections.sort(recommendedClean, new PlacesClass());
+
+                adapter3 = new RecommendAdapter(recommendedClean);
+                recyclerView3.setAdapter(adapter3);
+                recyclerView3.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                adapter3.notifyDataSetChanged();
+
+                adapter3.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PlacesClass item, int position) {
+                        // Handle the item click event for the specific item
+                        // You can access the item details using item.getId(), item.getRating(), etc.
+                        String supermarketId = item.getId();
+                        float rating = item.getRating();
+                        String name = item.getName();
+                        String image = item.getImage();
+
+                        Intent intent = new Intent(MainActivity.this, DryCleanList.class);
+                        intent.putExtra("dryclean_id", supermarketId);
+                        intent.putExtra("dryclean_name", name);
+                        intent.putExtra("dryclean_image", image);
+                        intent.putExtra("dryclean_rating", rating);
+
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors that occur during the data retrieval
+            }
         });
     }
 
-    private void setupAdapterClickListener1() {
-        adapter1.setOnItemClickListener((snapshot, position) -> {
-            PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
 
-            Intent intent = new Intent(MainActivity.this, RestaurantList.class);
-            intent.putExtra("restaurant_id", snapshot.getKey());
-            intent.putExtra("restaurant_name", supermarket.getName());
-            intent.putExtra("restaurant_image", supermarket.getImage());
 
-            // Add any other necessary data as extras
-            startActivity(intent);
-        });
-    }
 
-    private void setupAdapterClickListener2() {
-        adapter2.setOnItemClickListener((snapshot, position) -> {
-            PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
-
-            Intent intent = new Intent(MainActivity.this, DryCleanList.class);
-            intent.putExtra("dryclean_id", snapshot.getKey());
-            intent.putExtra("dryclean_name", supermarket.getName());
-            intent.putExtra("dryclean_image", supermarket.getImage());
-
-            // Add any other necessary data as extras
-            startActivity(intent);
-        });
-    }
-
-    private void setupAdapterClickListener3() {
-        adapter3.setOnItemClickListener((snapshot, position) -> {
-            PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
-
-            Intent intent = new Intent(MainActivity.this, SalonList.class);
-            intent.putExtra("salon_id", snapshot.getKey());
-            intent.putExtra("salon_name", supermarket.getName());
-            intent.putExtra("salon_image", supermarket.getImage());
-
-            // Add any other necessary data as extras
-            startActivity(intent);
-        });
-    }
 
 
     @Override
@@ -357,9 +527,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     openLoginFragment();
                 }
                 return true;
-//                Intent in2 = new Intent(this, Profile.class);
-//                startActivity(in2);
-//                return true;
         }
         return false;
     }
@@ -465,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     PlacesClass supermarket = snapshot.getValue(PlacesClass.class);
                     // Perform any action with the searched supermarket
                     // For example, start the SupermarketItem activity and pass the supermarket ID
-                    Intent intent = new Intent(MainActivity.this, RestaurantList.class);
+                    Intent intent = new Intent(MainActivity.this,RestaurantList.class);
                     intent.putExtra("restaurant_name", supermarket.getName());
                     startActivity(intent);
                 }
@@ -583,34 +750,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
     }
 
-    protected void onStart() {
-        super.onStart();
-        ////////////////nada////////////////////////////
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            requestLocationUpdates();
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        }
-        ////////////////nada////////////////////////////
 
-
-        adapter.startListening();
-
-        adapter1.startListening();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        ////////////////nada////////////////////////////
-        mFusedLocationClient.removeLocationUpdates(locationCallback);
-        ////////////////nada////////////////////////////
-        adapter.stopListening();
-    }
 
 
     private boolean checkUserLoggedIn() {
@@ -629,25 +769,5 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         startActivity(intent);
     }
 
-    ////////////////nada////////////////////////////
-    private void requestLocationUpdates() {
-        LocationRequest locationRequest = LocationRequest.create()
-                .setInterval(5000)
-                .setFastestInterval(2000)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-    }
-    ////////////////nada////////////////////////////
 
 }
