@@ -120,8 +120,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
-                 //   currentLocation = location; // Assign the location to the currentLocation variable
-
+                    currentLocation = location; // Assign the location to the currentLocation variable
+//                       currentLat=31.761700;
+//                       currentLong=-95.631523;
                     currentLat = location.getLatitude();
                     currentLong = location.getLongitude();
                     supportMapFragment.getMapAsync(Map.this);
