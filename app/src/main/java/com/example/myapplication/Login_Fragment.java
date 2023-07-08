@@ -10,10 +10,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
+import android.se.omapi.Session;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -39,7 +42,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 public class Login_Fragment extends Fragment implements OnClickListener {
     private static View view;
 
@@ -51,6 +57,8 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
     private FirebaseAuth mAuth;
+    private int loginAttemptsCounter = 0;
+    private static final int MAX_LOGIN_ATTEMPTS = 3;
 
 
     @Override
@@ -258,16 +266,26 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Toast.makeText(getActivity(), "Login Successful", Toast.LENGTH_SHORT)
                                         .show();
-                                Intent intent = new Intent(getActivity(),MainActivity.class);
-                                startActivity(intent);
+                                Intent intent = new Intent(getActivity(),MainActivity.class);startActivity(intent);
 
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(getActivity(), "Login failed. Please check your credentials.", Toast.LENGTH_SHORT)
                                         .show();
+                                loginAttemptsCounter++;
+
+                                if (loginAttemptsCounter >= MAX_LOGIN_ATTEMPTS) {
+//                               sendLoginAttemptsEmail(getEmailId);
+                                    new CustomToast().Show_Toast(getActivity(), view,
+                                            "You exceed the limit attempt,if you forget your password click on Forget Password !");
+                                    loginAttemptsCounter = 0;  // Reset the counter
+
+                                }
                             }
                         }
                     });
 
+
     }
+
 }

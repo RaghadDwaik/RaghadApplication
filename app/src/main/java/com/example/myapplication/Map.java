@@ -6,19 +6,23 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.myapplication.databinding.ActivityMapBinding;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,21 +32,49 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
-public class Map extends FragmentActivity implements OnMapReadyCallback, LocationListener,
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+public class Map extends AppCompatActivity implements OnMapReadyCallback, LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    private Spinner spinner;
+    private Button findbutton;
+    private SupportMapFragment supportMapFragment;
 
     private GoogleMap mMap;
     private LocationManager locationManager;
     private Marker mCurrLocationMarker;
-    private LocationRequest mLocationRequest;
     private ActivityMapBinding binding;
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
+    double currentLat = 0, currentLong = 0;
     private static final int REQUEST_CODE = 101;
+
+    private PlacesClient placesClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +82,36 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, Locatio
         binding = ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_api_key));
+        placesClient = Places.createClient(this);
+
+        spinner = findViewById(R.id.spinner);
+        findbutton = findViewById(R.id.findbutton);
+        supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+
+        String[] placeTypeList = {"dorms", "restaurant", "salon", "dryclean", "studyplaces"};
+        String[] placeNameList = {"Dorms", "Restaurant", "Salon", "Dryclean", "Studyplaces"};
+
+        spinner.setAdapter(new ArrayAdapter<>(Map.this, android.R.layout.simple_spinner_dropdown_item, placeNameList));
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        placesClient = Places.createClient(this);
+
         getCurrentLocation();
+
+        findbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = spinner.getSelectedItemPosition();
+                String placeType = placeTypeList[i];
+                findNearbyPlaces(placeType);
+            }
+        });
     }
 
     private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             return;
         }
 
@@ -71,42 +120,92 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, Locatio
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
-                    currentLocation = location;
-                    Toast.makeText(getApplicationContext(), "Latitude: " + currentLocation.getLatitude() +
-                            ", Longitude: " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                 //   currentLocation = location; // Assign the location to the currentLocation variable
+
+                    currentLat = location.getLatitude();
+                    currentLong = location.getLongitude();
                     supportMapFragment.getMapAsync(Map.this);
+
+                    Toast.makeText(getApplicationContext(), "Latitude: " + currentLat +
+                            ", Longitude: " + currentLong, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    // ...
+
+    private void findNearbyPlaces(String placeType) {
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+            placeResponse.addOnCompleteListener(new OnCompleteListener<FindCurrentPlaceResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
+                    if (task.isSuccessful()) {
+                        FindCurrentPlaceResponse response = task.getResult();
+                        if (response != null) {
+                            List<PlaceLikelihood> placeLikelihoods = response.getPlaceLikelihoods();
+                            if (placeLikelihoods != null) {
+                                mMap.clear();
+                                for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
+                                    Place place = placeLikelihood.getPlace();
+                                    LatLng latLng = place.getLatLng();
+                                    String placeName = place.getName();
+                                    MarkerOptions markerOptions = new MarkerOptions()
+                                            .position(latLng)
+                                            .title(placeName);
+                                    mMap.addMarker(markerOptions);
+                                }
+                            }
+                        }
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception != null) {
+                            Toast.makeText(Map.this, "Failed to find nearby places: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            }
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
             requestLocationUpdates();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
-
         if (currentLocation != null) {
             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     }
 
     private void requestLocationUpdates() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastKnownLocation != null) {
@@ -115,7 +214,41 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, Locatio
         }
     }
 
-    // ...
+    private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
+        @Override
+        protected List<HashMap<String, String>> doInBackground(String... strings) {
+            JasonParser jasonParser = new JasonParser();
+            List<HashMap<String, String>> mapList = null;
+            JSONObject object = null;
+            try {
+                object = new JSONObject(strings[0]);
+                if (object.has("result")) {
+                    mapList = jasonParser.parseResult(object);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            return mapList;
+        }
+
+        @Override
+        protected void onPostExecute(List<HashMap<String, String>> hashMaps) {
+            mMap.clear();
+            if (hashMaps != null) {
+                for (int i = 0; i < hashMaps.size(); i++) {
+                    HashMap<String, String> hashMapList = hashMaps.get(i);
+                    double lat = Double.parseDouble(hashMapList.get("lat"));
+                    double lng = Double.parseDouble(hashMapList.get("lng"));
+                    String name = hashMapList.get("name");
+                    LatLng latLng = new LatLng(lat, lng);
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(name);
+                    mMap.addMarker(markerOptions);
+                }
+            }
+        }
+    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -158,15 +291,5 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, Locatio
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // Not used in this code snippet
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation();
-            }
-        }
     }
 }

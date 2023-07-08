@@ -2,8 +2,8 @@
     <string name="app_name">My Application</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="email">Email Id</string>
-    <string name="passowrd">Password</string>
+    <string name="email">Email </string>
+    <string name="password">Password</string>
     <string name="login">LOGIN</string>
     <string name="show_pwd">Show Password</string>
     <string name="hide_pwd">Hide Password</string>
@@ -17,7 +17,7 @@
     <string name="terms_conditions">By clicking SignUp you agree all the Terms and Conditions.</string>
     <string name="signUp">SIGN UP</string>
     <string name="already_user">Already have Account? Login here.</string>
-    <string name="registered_emailid">Please enter your Registered Email Id below:</string>
+    <string name="registered_emailid">Please enter your Registered Email below:</string>
     <string name="submit">SUBMIT</string>
     <string name="back">BACK</string>
     <string name="title_activity_map">title_activity_map</string>
@@ -25,7 +25,9 @@
     <string name="date_of_birth_dd_mm_yy" />
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+<!--    <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAdB1Pp6kJCePZbP8puwusIqrYb7GlgQiU</string>-->
     <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAdB1Pp6kJCePZbP8puwusIqrYb7GlgQiU</string>
+<!--    AIzaSyDQRo11Au3mI9ZM2Ppp-015nLMHZQp2FSs-->
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
