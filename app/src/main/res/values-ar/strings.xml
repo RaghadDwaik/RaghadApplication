@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">حولينا</string>
+    <string name="action_settings">اعدادات</string>
+    <string name="email">البريد الالكتروني</string>
+    <string name="password">كلمة السر</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="show_pwd">اظهار كلمة السر</string>
+    <string name="hide_pwd">اخفاء كلمة السر</string>
+    <string name="forgot">هل نسيت كلمة السر؟</string>
+    <string name="closebutton">اغلاق</string>
+    <string name="newUser">ليس لديك حساب؟ اضغط هنا للاشتراك</string>
+    <string name="fullName">الاسم الكامل</string>
+    <string name="mobileNumber">رقم الهاتف</string>
+    <string name="location">الموقع</string>
+    <string name="confirmPassword">تأكيد كلمة السر</string>
+    <string name="terms_conditions">الاحكام والشروط</string>
+    <string name="signUp">اشتراك</string>
+    <string name="already_user">لديك حساب؟</string>
+    <string name="registered_emailid">البريد الالكتروني</string>
+    <string name="submit">دخول</string>
+    <string name="back">رجوع</string>
+    <string name="title_activity_map">الخريطة</string>
+    <string name="Gender">الجنس</string>
+    <string name="date_of_birth_dd_mm_yy">تاريخ الميلاد</string>
+    <string name="navigation_drawer_open">فتح</string>
+    <string name="navigation_drawer_close">اغلاق</string>
+    <string name="hello_blank_fragment">مرحبا</string>
+</resources>
