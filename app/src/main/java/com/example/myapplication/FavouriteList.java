@@ -76,6 +76,16 @@ public class FavouriteList extends AppCompatActivity implements BottomNavigation
                 Intent in1 = new Intent(this, Map.class);
                 startActivity(in1);
                 return true;
+
+            case R.id.favorite:
+                Intent in5 = new Intent(this, FavouriteList.class);
+                startActivity(in5);
+                return true;
+
+            case R.id.Recently:
+                Intent in4 = new Intent(this, RecentlyView.class);
+                startActivity(in4);
+                return true;
             case R.id.profile:
                 Intent in2 = new Intent(this, Profile.class);
                 startActivity(in2);

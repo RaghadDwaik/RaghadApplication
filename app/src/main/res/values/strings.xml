@@ -26,7 +26,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 <!--    <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAdB1Pp6kJCePZbP8puwusIqrYb7GlgQiU</string>-->
-    <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAdB1Pp6kJCePZbP8puwusIqrYb7GlgQiU</string>
+    <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBAH6fWB2puoW6MN37eLSXzOG5B3tGUmpg</string>
 <!--    AIzaSyDQRo11Au3mI9ZM2Ppp-015nLMHZQp2FSs-->
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

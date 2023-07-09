@@ -21,5 +21,17 @@
         android:title="Profile"
 
         />
+    <item
+        android:id="@+id/favorite"
+        android:icon="@drawable/baseline_favorite_24"
+        android:title="Favorite"
+
+        />
+    <item
+        android:id="@+id/Recently"
+        android:icon="@drawable/list"
+        android:title="Favorite"
+
+        />
 
 </menu>

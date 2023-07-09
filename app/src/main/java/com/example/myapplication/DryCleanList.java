@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
@@ -35,6 +36,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
     private DatabaseReference ratedSupermarketsRef;
 
     private BottomNavigationView bottom;
+    private boolean userLoggedIn;
     private RecyclerView recyclerView;
     private ItemListAdapter adapter;
     private DatabaseReference servicesRef;
@@ -56,6 +58,8 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         searchView = findViewById(R.id.searchButton);
 
         rating = findViewById(R.id.ratingBar);
+        userLoggedIn = checkUserLoggedIn();
+
 
         ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
 
@@ -151,6 +155,22 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
     }
+    private boolean checkUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+
+    }
+
+    private void openProfileActivity() {
+        Intent intent = new Intent(this, Profile.class);
+        startActivity(intent);
+    }
+
+    private void openLoginFragment() {
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
+
 
 
     private void updateRating(float rating) {
@@ -226,22 +246,51 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch(id){
+        switch (id) {
             case R.id.home:
-                Intent in = new Intent (this,MainActivity.class);
+                Intent in = new Intent(this, MainActivity.class);
                 startActivity(in);
                 return true;
             case R.id.map:
-                Intent in1 = new Intent (this,Map.class);
+                Intent in1 = new Intent(this, Map.class);
                 startActivity(in1);
                 return true;
+
+            case R.id.favorite:
+                // Check if the user is logged in
+                if (userLoggedIn) {
+                    Intent in5 = new Intent(this, FavouriteList.class);
+                    startActivity(in5);
+                } else {
+                    // User is not logged in, show a message or launch the login activity
+                    showLoginPrompt();
+                }
+                return true;
+            case R.id.Recently:
+                if (userLoggedIn) {
+                    Intent in4 = new Intent(this, RecentlyView.class);
+                    startActivity(in4);
+
+                } else {
+                    showLoginPrompt();
+                }
+
+                return true;
             case R.id.profile:
-                Intent in2 = new Intent (this,Profile.class);
-                startActivity(in2);
+
+
+                if (userLoggedIn) {
+                    openProfileActivity();
+                } else {
+                    openLoginFragment();
+                }
                 return true;
         }
         return false;
     }
+
+    private void showLoginPrompt() {
+      }
 
     @Override
     public void onItemClick(DataSnapshot snapshot, int position) {

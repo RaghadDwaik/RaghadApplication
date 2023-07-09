@@ -32,7 +32,7 @@ public class CustomToast {
         // Fill
         // Horizontal
 
-        toast.setDuration(Toast.LENGTH_SHORT);// Set Duration
+        toast.setDuration(Toast.LENGTH_LONG);// Set Duration
         toast.setView(layout); // Set Custom View over toast
 
         toast.show();// Finally show toast

@@ -99,9 +99,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         ImageView v = findViewById(R.id.slide);
         AnimationDrawable u = (AnimationDrawable) v.getDrawable();
         u.start();
+        userLoggedIn = checkUserLoggedIn();
 
-        love = findViewById(R.id.love);
-        list = findViewById(R.id.Rlist);
+
+//        love = findViewById(R.id.love);
+//        list = findViewById(R.id.Rlist);
 
 
         final DrawerLayout drawerLayout = findViewById(R.id.DrawerLayout);
@@ -109,25 +111,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         bottom.setOnNavigationItemSelectedListener(this);
 
-        love.setOnClickListener(new View.OnClickListener() {
+//        love.setOnClickListener(new View.OnClickListener() {
+//
+//
+//            @Override
+//            public void onClick(View view) {
+//                Intent in = new Intent(MainActivity.this, FavouriteList.class);
+//                startActivity(in);
+//            }
+//        });
 
-
-            @Override
-            public void onClick(View view) {
-                Intent in = new Intent(MainActivity.this, FavouriteList.class);
-                startActivity(in);
-            }
-        });
-
-        list.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View view) {
-                Intent in = new Intent(MainActivity.this, RecentlyView.class);
-                startActivity(in);
-            }
-        });
+//        list.setOnClickListener(new View.OnClickListener() {
+//
+//
+//            @Override
+//            public void onClick(View view) {
+//                Intent in = new Intent(MainActivity.this, RecentlyView.class);
+//                startActivity(in);
+//            }
+//        });
 
         findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -516,11 +518,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Intent in1 = new Intent(this, Map.class);
                 startActivity(in1);
                 return true;
+
+            case R.id.favorite:
+                // Check if the user is logged in
+                if (userLoggedIn) {
+                    Intent in5 = new Intent(this, FavouriteList.class);
+                    startActivity(in5);
+                } else {
+                    // User is not logged in, show a message or launch the login activity
+                    showLoginPrompt();
+                }
+                return true;
+            case R.id.Recently:
+                if (userLoggedIn) {
+                    Intent in4 = new Intent(this, RecentlyView.class);
+                    startActivity(in4);
+
+                } else {
+                    showLoginPrompt();
+                }
+
+                return true;
             case R.id.profile:
 
-                // check if the user logged in or not
-                userLoggedIn = checkUserLoggedIn();
-                // Navigate to the appropriate fragment
+
                 if (userLoggedIn) {
                     openProfileActivity();
                 } else {
@@ -530,6 +551,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
     }
+
+    private void showLoginPrompt() {
+        View view = findViewById(android.R.id.content); // Replace with the appropriate View ID
+
+        new CustomToast().Show_Toast(MainActivity.this, view, "This Feature is not supported whithout login please login ");
+
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onItemClick(int position) {
