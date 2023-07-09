@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,7 +39,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -62,7 +62,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
     private Spinner spinner;
     private Button findbutton;
     private SupportMapFragment supportMapFragment;
-
+    String TAG;
     private GoogleMap mMap;
     private LocationManager locationManager;
     private Marker mCurrLocationMarker;
@@ -89,8 +89,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
         findbutton = findViewById(R.id.findbutton);
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
 
-        String[] placeTypeList = {"dorms", "restaurant", "salon", "dryclean", "studyplaces"};
-        String[] placeNameList = {"Dorms", "Restaurant", "Salon", "Dryclean", "Studyplaces"};
+        String[] placeTypeList = {"department_store", "restaurant", "beauty_salon", "laundry", " library", "supermarket"};
+        String[] placeNameList = {"Dorms", "Restaurant", "Salon", "Dry_clean", "Study_places", "Supermarket"};
 
         spinner.setAdapter(new ArrayAdapter<>(Map.this, android.R.layout.simple_spinner_dropdown_item, placeNameList));
 
@@ -104,7 +104,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
             public void onClick(View v) {
                 int i = spinner.getSelectedItemPosition();
                 String placeType = placeTypeList[i];
-                findNearbyPlaces(placeType);
+                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
+                        "?location=" + currentLat + "," + currentLong +
+                        "&radius=5000" +
+                        "&types=" + placeType +
+                        "&sensor=true" +
+                        "&key=" + getResources().getString(R.string.google_maps_api_key);
+                new PlaceTask().execute(url);
             }
         });
     }
@@ -120,7 +126,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
-                    currentLocation = location; // Assign the location to the currentLocation variable
+               //     currentLocation = location; // Assign the location to the currentLocation variable
 //                       currentLat=31.761700;
 //                       currentLong=-95.631523;
                     currentLat = location.getLatitude();
@@ -135,44 +141,72 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
     }
 
 
-    private void findNearbyPlaces(String placeType) {
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
-        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
+//    private void findNearbyPlaces(String placeType) {
+//        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+//        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+//            placeResponse.addOnCompleteListener(new OnCompleteListener<FindCurrentPlaceResponse>() {
+//                @Override
+//                public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
+//                    if (task.isSuccessful()) {
+//                        FindCurrentPlaceResponse response = task.getResult();
+//                        if (response != null) {
+//                            List<PlaceLikelihood> placeLikelihoods = response.getPlaceLikelihoods();
+//                            if (placeLikelihoods != null) {
+//                                mMap.clear();
+//                                for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
+//                                    Place place = placeLikelihood.getPlace();
+//                                    LatLng latLng = place.getLatLng();
+//                                    String placeName = place.getName();
+////                                    List<String> placeTypes = place.getTypes();
+////                                    if (placeTypes != null && placeTypes.contains(placeType)){
+//                                        MarkerOptions markerOptions = new MarkerOptions()
+//                                                .position(latLng)
+//                                                .title(placeName);
+//                                        mMap.addMarker(markerOptions);
+//                                    }
+//                                }
+//                            }
+//
+//                    } else {
+//                        Exception exception = task.getException();
+//                        if (exception != null) {
+//                            Toast.makeText(Map.this, "Failed to find nearby places: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }
+//            });
+//        } else {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//        }
+//    }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
-            placeResponse.addOnCompleteListener(new OnCompleteListener<FindCurrentPlaceResponse>() {
-                @Override
-                public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
-                    if (task.isSuccessful()) {
-                        FindCurrentPlaceResponse response = task.getResult();
-                        if (response != null) {
-                            List<PlaceLikelihood> placeLikelihoods = response.getPlaceLikelihoods();
-                            if (placeLikelihoods != null) {
-                                mMap.clear();
-                                for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
-                                    Place place = placeLikelihood.getPlace();
-                                    LatLng latLng = place.getLatLng();
-                                    String placeName = place.getName();
-                                    MarkerOptions markerOptions = new MarkerOptions()
-                                            .position(latLng)
-                                            .title(placeName);
-                                    mMap.addMarker(markerOptions);
-                                }
-                            }
-                        }
-                    } else {
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            Toast.makeText(Map.this, "Failed to find nearby places: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-    }
+//    private List<String> convertTypesToStringList(List<Integer> types) {
+//        List<String> stringList = new ArrayList<>();
+//        if (types != null) {
+//            for (Place.Type type : types) {
+//                String typeString = type.toString();
+//                stringList.add(typeString);
+//            }
+//        }
+//        return stringList;
+//    }
+
+//    private String getPlaceTypeString(int type) {
+//        switch (type) {
+//            case Place.TYPE_RESTAURANT:
+//                return "restaurant";
+//            case Place.TYPE_SCHOOL:
+//                return "school";
+//            case Place.TYPE_STORE:
+//                return "store";
+//            // Add more place types here as needed
+//            default:
+//                return null;
+//        }
+//    }
 
 
     @Override
@@ -198,8 +232,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
         if (currentLocation != null) {
             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(currentLat, currentLat), 10
+            ));
         }
     }
 
@@ -218,13 +253,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
     private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
         @Override
         protected List<HashMap<String, String>> doInBackground(String... strings) {
-            JasonParser jasonParser = new JasonParser();
+            JsonParser jsonParser = new JsonParser();
             List<HashMap<String, String>> mapList = null;
             JSONObject object = null;
             try {
                 object = new JSONObject(strings[0]);
-                if (object.has("result")) {
-                    mapList = jasonParser.parseResult(object);
+                if (object.has("results")) {
+
+                    mapList = jsonParser.parseResult(object);
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -234,18 +270,21 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
 
         @Override
         protected void onPostExecute(List<HashMap<String, String>> hashMaps) {
-            mMap.clear();
-            if (hashMaps != null) {
-                for (int i = 0; i < hashMaps.size(); i++) {
-                    HashMap<String, String> hashMapList = hashMaps.get(i);
-                    double lat = Double.parseDouble(hashMapList.get("lat"));
-                    double lng = Double.parseDouble(hashMapList.get("lng"));
-                    String name = hashMapList.get("name");
-                    LatLng latLng = new LatLng(lat, lng);
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.title(name);
-                    mMap.addMarker(markerOptions);
+            if (mMap != null) {
+                mMap.clear();
+                if (hashMaps != null) {
+//                for (int i = 0; i < hashMaps.size(); i++) {
+//                    HashMap<String, String> hashMapList = hashMaps.get(i);
+                    for (HashMap<String, String> hashMapList : hashMaps) {
+                        double lat = Double.parseDouble(hashMapList.get("lat"));
+                        double lng = Double.parseDouble(hashMapList.get("lng"));
+                        String name = hashMapList.get("name");
+                        LatLng latLng = new LatLng(lat, lng);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng);
+                        markerOptions.title(name);
+                        mMap.addMarker(markerOptions);
+                    }
                 }
             }
         }
@@ -293,4 +332,43 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // Not used in this code snippet
     }
-}
+
+    private class PlaceTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String data = null;
+            try {
+                data = downloadURL(strings[0]);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            new ParserTask().execute(s);
+            Log.d(TAG, "Response: " + s);
+        }
+    }
+
+
+        private String downloadURL(String string) throws IOException {
+            URL url = new URL(string);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+            InputStream stream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            StringBuilder builder = new StringBuilder();
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+
+            String data = builder.toString();
+            reader.close();
+            ;
+            return data;
+        }
+    }
