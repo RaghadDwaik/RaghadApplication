@@ -125,12 +125,12 @@ public class SuperMarket extends AppCompatActivity implements BottomNavigationVi
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle any errors that occur during the data retrieval
             }
         });
     }
 
-    @Override
+        @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();

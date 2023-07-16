@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -161,48 +162,39 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     }
 
     private void updateRating(float rating) {
+        // Check if supermarketId is not null
+        if (supermarketId != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                    .document(userId)
+                    .collection("Rating")
+                    .document(supermarketId);
 
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
-
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        DocumentReference restaurantRatingDocRef = firestore.collection("User")
-                .document(userId)
-                .collection("Rating")
-                .document(supermarketId);
-
-        // Create a new document for the supermarket with the user's rating
-        HashMap<String, Object> ratingData = new HashMap<>();
-        ratingData.put("name", supermarketName);
-        ratingData.put("image", Image);
-        ratingData.put("rating", rating);
-        restaurantRatingDocRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-
-                } else {
-                    // User has not rated the supermarket yet
-                    restaurantRatingDocRef.set(ratingData)
-                            .addOnSuccessListener(aVoid -> {
-                                DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(supermarketId).push();
-                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
-
-                                userSupermarketRef.child("id").setValue(supermarketId);
-                                userSupermarketRef.child("image").setValue(Image);
-                                userSupermarketRef.child("name").setValue(supermarketName);
-                                userSupermarketRef.child("rating").setValue(rating);
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle the failure to update the rating
-                            });
-                }
-            } else {
-                // Handle the failure to check the existing rating
-            }
-        });
+            // Create a new document for the supermarket with the user's rating
+            HashMap<String, Object> ratingData = new HashMap<>();
+            ratingData.put("name", supermarketName);
+            ratingData.put("image", Image);
+            ratingData.put("rating", rating);
+            restaurantRatingDocRef.set(ratingData)
+                    .addOnSuccessListener(aVoid -> {
+                        DatabaseReference ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
+                        DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(supermarketId).push();
+                        userSupermarketRef.child("id").setValue(supermarketId);
+                        userSupermarketRef.child("image").setValue(Image);
+                        userSupermarketRef.child("name").setValue(supermarketName);
+                        userSupermarketRef.child("rating").setValue(rating);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the failure to update the rating
+                        Toast.makeText(SupermarketItemList.this, "Failed to update rating.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // Handle the case when supermarketId is null (optional, you can add your own logic here)
+            Toast.makeText(SupermarketItemList.this, "Invalid supermarket ID.", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     @Override
     protected void onStart() {

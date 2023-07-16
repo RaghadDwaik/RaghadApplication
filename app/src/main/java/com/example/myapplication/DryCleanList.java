@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -294,40 +295,44 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onItemClick(DataSnapshot snapshot, int position) {
-        ServicesClass rest = snapshot.getValue(ServicesClass.class);
+        if (userLoggedIn) {
+            ServicesClass rest = snapshot.getValue(ServicesClass.class);
 
-        String id = rest.getId();
-        String itemName = rest.getName();
-        String itemImage = rest.getImage();
-        double price = rest.getPrice();
+            String id = rest.getId();
+            String itemName = rest.getName();
+            String itemImage = rest.getImage();
+            double price = rest.getPrice();
 
-        ServicesClass selectedItem = new ServicesClass(id,itemName, itemImage,price);
+            ServicesClass selectedItem = new ServicesClass(id, itemName, itemImage, price);
 
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference recentlyViewedRef = firestore.collection("User")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())// Replace "userId" with the actual user ID
-                .collection("RecentlyV");
-        DocumentReference documentRef = recentlyViewedRef.document(itemName);
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            CollectionReference recentlyViewedRef = firestore.collection("User")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())// Replace "userId" with the actual user ID
+                    .collection("RecentlyV");
+            DocumentReference documentRef = recentlyViewedRef.document(itemName);
 
-        documentRef.set(selectedItem)
-                .addOnSuccessListener(aVoid -> {
-                    // Successfully added the item to RecentlyV collection
-                    // Proceed with starting the ServiceDetails activity
-                    Intent intent = new Intent(DryCleanList.this, ServiceDetails.class);
-                    intent.putExtra("id", snapshot.getKey());
-                    intent.putExtra("name", rest.getName());
-                    intent.putExtra("price", rest.getPrice());
-                    intent.putExtra("desc", rest.getDescription());
-                    intent.putExtra("image", rest.getImage());
+            documentRef.set(selectedItem)
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully added the item to RecentlyV collection
+                        // Proceed with starting the ServiceDetails activity
+                        Intent intent = new Intent(DryCleanList.this, ServiceDetails.class);
+                        intent.putExtra("id", snapshot.getKey());
+                        intent.putExtra("name", rest.getName());
+                        intent.putExtra("price", rest.getPrice());
+                        intent.putExtra("desc", rest.getDescription());
+                        intent.putExtra("image", rest.getImage());
 
-                    // Add any other necessary data as extras
-                    startActivity(intent);
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the failure to add the item to RecentlyV collection
-                    // Display an error message or take appropriate action
-                });
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the failure to add the item to RecentlyV collection
+                        // Display an error message or take appropriate action
+                    });
+        } else {
+            // User is not logged in, show a message to log in
+            Toast.makeText(this, "Please log in to perform this action.", Toast.LENGTH_LONG).show();
+        }
     }
-
 }

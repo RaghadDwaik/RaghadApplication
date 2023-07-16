@@ -3,9 +3,11 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +40,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
     private DatabaseReference ratedSupermarketsRef;
 
     private UserAdapter userAdapter;
+    private boolean userLoggedIn;
 
     private DatabaseReference servicesRef;
     private RatingBar rating;
@@ -54,6 +57,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         recyclerView = findViewById(R.id.RestaurantList_recycler);
         searchView = findViewById(R.id.searchButton);
         rating = findViewById(R.id.ratingBar);
+        userLoggedIn = checkUserLoggedIn();
 
         ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
 
@@ -215,6 +219,22 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         itemListAdapter.stopListening();
     }
 
+    private boolean checkUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+
+    }
+
+    private void openProfileActivity() {
+        Intent intent = new Intent(this, Profile.class);
+        startActivity(intent);
+    }
+
+    private void openLoginFragment() {
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -229,24 +249,49 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
                 return true;
 
             case R.id.favorite:
-                Intent in5 = new Intent(this, FavouriteList.class);
-                startActivity(in5);
+                // Check if the user is logged in
+                if (userLoggedIn) {
+                    Intent in5 = new Intent(this, FavouriteList.class);
+                    startActivity(in5);
+                } else {
+                    // User is not logged in, show a message or launch the login activity
+                    showLoginPrompt();
+                }
                 return true;
-
             case R.id.Recently:
-                Intent in4 = new Intent(this, RecentlyView.class);
-                startActivity(in4);
+                if (userLoggedIn) {
+                    Intent in4 = new Intent(this, RecentlyView.class);
+                    startActivity(in4);
+
+                } else {
+                    showLoginPrompt();
+                }
+
                 return true;
             case R.id.profile:
-                Intent in2 = new Intent(this, Profile.class);
-                startActivity(in2);
+
+
+                if (userLoggedIn) {
+                    openProfileActivity();
+                } else {
+                    openLoginFragment();
+                }
                 return true;
         }
         return false;
     }
+    private void showLoginPrompt() {
+        View view = findViewById(android.R.id.content); // Replace with the appropriate View ID
+
+        new CustomToast().Show_Toast(RestaurantList.this, view, "This Feature is not supported whithout login please login ");
+
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onItemClick(DataSnapshot snapshot, int position) {
+        if (userLoggedIn) {
         ServicesClass rest = snapshot.getValue(ServicesClass.class);
 
         String id = rest.getId();
@@ -280,6 +325,11 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
                     // Handle the failure to add the item to RecentlyV collection
                     // Display an error message or take appropriate action
                 });
+
+    } else {
+        // User is not logged in, show a message to log in
+        Toast.makeText(this, "Please log in to perform this action.", Toast.LENGTH_LONG).show();
+    }
     }
 
     @Override
