@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/top_background"
+    android:background="@color/nude"
     tools:context=".DryClean">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

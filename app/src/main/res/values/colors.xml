@@ -13,5 +13,9 @@
     <color name="button_selectorcolor">#9E9E9E</color>
   <color name="blue">#83c8eb</color>
     <color name="RED">#F10606</color>
+    <color name="green">#173518</color>
+    <color name="BLUE">#44D4E0</color>
+    <color name="nude">#E0E0E0</color>
+
 
 </resources>

@@ -79,62 +79,61 @@
         <!--            android:hint="Enter new Email"-->
         <!--            android:textColorHint="@color/white_greyish"-->
         <!--            />-->
-        <TextView
-            android:id="@+id/textDob"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@id/EditPassword"
-            android:layout_marginTop="30dp"
-            android:text="@string/date_of_birth_dd_mm_yy"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:ignore="MissingPrefix" />
+<!--        <TextView-->
+<!--            android:id="@+id/textDob"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_below="@id/EditPassword"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:text="@string/date_of_birth_dd_mm_yy"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="16sp"-->
+<!--            tools:ignore="MissingPrefix" />-->
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/EditDob"
-            android:layout_below="@id/textDob"
-            android:padding="6dp"
-            android:inputType="date"
-            android:focusable="false"
-            android:textSize="16sp"
-            android:hint="Enter Date of Birth "
-            android:textColorHint="@color/white_greyish"
-            />
-        <TextView
-            android:id="@+id/textGender"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@id/EditDob"
-            android:layout_marginTop="30dp"
-            android:text="@string/Gender"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:ignore="MissingPrefix" />
+<!--        <EditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/EditDob"-->
+<!--            android:layout_below="@id/textDob"-->
+<!--            android:padding="6dp"-->
+<!--            android:inputType="date"-->
+<!--            android:focusable="false"-->
+<!--            android:textSize="16sp"-->
+<!--            android:hint="Enter Date of Birth "-->
+<!--            android:textColorHint="@color/white_greyish"-->
+<!--            />-->
+<!--        <TextView-->
+<!--            android:id="@+id/textGender"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:text="@string/Gender"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="16sp"-->
+<!--            tools:ignore="MissingPrefix" />-->
 
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio_button"
-            android:layout_below="@id/textGender"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/radio_female"
-                android:text="Female"
-                android:textSize="16sp"
-                android:textColor="@color/white_greyish"/>
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/radio_male"
-                android:text="Male"
-                android:textSize="16sp"
-                android:textColor="@color/white_greyish"/>
-        </RadioGroup>
+<!--        <RadioGroup-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/radio_button"-->
+<!--            android:layout_below="@id/textGender"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:orientation="horizontal">-->
+<!--            <RadioButton-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/radio_female"-->
+<!--                android:text="Female"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textColor="@color/white_greyish"/>-->
+<!--            <RadioButton-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/radio_male"-->
+<!--                android:text="Male"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textColor="@color/white_greyish"/>-->
+<!--        </RadioGroup>-->
         <TextView
             android:id="@+id/textMobile"
             android:layout_width="match_parent"
@@ -143,7 +142,6 @@
             android:text="Name "
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:layout_below="@id/radio_button"
             tools:ignore="MissingPrefix" />
 
         <EditText

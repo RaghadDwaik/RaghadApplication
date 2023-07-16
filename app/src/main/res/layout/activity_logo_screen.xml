@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/top_background"
+    android:background="@color/white"
     app:layoutDescription="@xml/activity_logo_screen_scene2"
     tools:context=".LogoScreen">
 
@@ -32,7 +32,7 @@
         android:layout_marginEnd="150dp"
         android:gravity="center"
         android:text="حولينا"
-        android:textColor="@color/white_greyish"
+        android:textColor="@color/nude"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

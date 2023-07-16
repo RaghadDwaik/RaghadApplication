@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/nude"
-    tools:context=".SalonList">
+    android:background="@drawable/top_background"
+    tools:context=".StudyPlacesList">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom"
@@ -23,7 +23,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/restaurantImageView"
+            android:id="@+id/studyplacesImageView"
             android:layout_width="410dp"
             android:layout_height="187dp"
             android:scaleType="fitXY" />
@@ -63,11 +63,11 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/placeList_recycler"
+        android:id="@+id/StudyPlacesList_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="240dp"
-        android:background="@color/nude"
+        android:background="@drawable/top_background"
         android:scrollbars="vertical"
         android:padding="2dp"
         />
