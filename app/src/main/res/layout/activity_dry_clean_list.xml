@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/top_background"
+    android:background="@color/nude"
     tools:context=".DryCleanList">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -58,7 +58,8 @@
             android:layout_marginLeft="60dp"
             android:numStars="5"
             android:rating="0"
-            android:stepSize="0.5" />
+            android:stepSize="0.5"
+            android:outlineAmbientShadowColor="@color/nude"/>
 
     </RelativeLayout>
 
@@ -67,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="240dp"
-        android:background="@drawable/top_background"
+        android:background="@color/nude"
         android:scrollbars="vertical"
         android:padding="2dp"
         />

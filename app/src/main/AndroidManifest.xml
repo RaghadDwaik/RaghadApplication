@@ -9,8 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:overrideLibrary="com.android.car.ui">
-
+        <activity
+            android:name=".StudyPlacesList"
+            android:exported="false" />
+        <activity
+            android:name=".StudyPlaces"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -35,8 +39,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
-
-
 
         <activity
             android:name=".RecentlyView"
@@ -100,7 +102,6 @@
         <!-- android:name=".Login_Fragment" -->
         <!-- android:exported="false" -->
         <!-- android:enableOnBackInvokedCallback="true"/> -->
-
         <activity
             android:name=".Registration"
             android:enableOnBackInvokedCallback="true"

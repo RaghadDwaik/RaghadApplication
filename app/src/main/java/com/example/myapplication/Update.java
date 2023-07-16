@@ -53,9 +53,9 @@ public class Update extends AppCompatActivity {
         setContentView(R.layout.activity_update);
         textName = findViewById(R.id.EditName);
         textPassword = findViewById(R.id.EditPassword);
-        textDob = findViewById(R.id.EditDob);
+//        textDob = findViewById(R.id.EditDob);
         textMobile = findViewById(R.id.EditMobile);
-        RadioGendrr = findViewById(R.id.radio_button);
+//        RadioGendrr = findViewById(R.id.radio_button);
 
 
         textLocation = findViewById(R.id.textLocation);

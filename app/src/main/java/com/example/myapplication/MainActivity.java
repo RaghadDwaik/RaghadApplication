@@ -15,8 +15,10 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -105,11 +107,80 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        love = findViewById(R.id.love);
 //        list = findViewById(R.id.Rlist);
 
+        LanguageUtils.setAppLanguage(this, "ar");  // Set Arabic as the default language
 
         final DrawerLayout drawerLayout = findViewById(R.id.DrawerLayout);
         bottom = findViewById(R.id.bottom);
 
         bottom.setOnNavigationItemSelectedListener(this);
+
+
+        navigationView = findViewById(R.id.navigation);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.home:
+                        Intent in = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(in);
+                        return true;
+                    case R.id.map:
+                        Intent in1 = new Intent(MainActivity.this, Map.class);
+                        startActivity(in1);
+                        return true;
+
+                    case R.id.favorite:
+                        // Check if the user is logged in
+                        if (userLoggedIn) {
+                            Intent in5 = new Intent(MainActivity.this, FavouriteList.class);
+                            startActivity(in5);
+                        } else {
+                            // User is not logged in, show a message or launch the login activity
+                            showLoginPrompt();
+                        }
+                        return true;
+                    case R.id.Recently:
+                        if (userLoggedIn) {
+                            Intent in4 = new Intent(MainActivity.this, RecentlyView.class);
+                            startActivity(in4);
+
+                        } else {
+                            showLoginPrompt();
+                        }
+
+                        return true;
+                    case R.id.profile:
+
+
+                        if (userLoggedIn) {
+                            openProfileActivity();
+                        } else {
+                            openLoginFragment();
+                        }
+
+                        drawerLayout.closeDrawer(GravityCompat.START);
+
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
+        // Enable the toolbar and add a menu icon
+//        Toolbar toolbar = findViewById(R.id.toolBar);
+//        setSupportActionBar(toolbar);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setHomeAsUpIndicator(R.drawable.list); // Replace with your menu icon
+//        actionBar.setDisplayHomeAsUpEnabled(true);
 
 //        love.setOnClickListener(new View.OnClickListener() {
 //
@@ -131,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //            }
 //        });
 
-        findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.toolbar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawerLayout.openDrawer(GravityCompat.START);
@@ -227,11 +298,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         startActivity(intent);
                     }
                 });
-
-
-
-
-
 
             }
 
@@ -472,6 +538,82 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 // Handle any errors that occur during the data retrieval
             }
         });
+
+        //---------------------------------------------------------------------
+
+        DatabaseReference recommendedStudyRef = FirebaseDatabase.getInstance().getReference().child("RecommendedStudy");
+        Query  query4 = recommendedStudyRef.limitToLast(5);
+
+        query4.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot supermarketSnapshot : dataSnapshot.getChildren()) {
+                    String supermarketKey = supermarketSnapshot.getKey();
+                    double totalRating = 0;
+                    int numUsers = 0;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        double rating = ratingSnapshot.child("rating").getValue(Double.class);
+                        totalRating += rating;
+                        numUsers++;
+                    }
+
+                    double averageRating = totalRating / numUsers;
+
+                    // Retrieve other supermarket details such as name, image, etc.
+                    String name = null;
+                    String image = null;
+
+                    for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                        name = ratingSnapshot.child("name").getValue(String.class);
+                        image = ratingSnapshot.child("image").getValue(String.class);
+                        break;
+                    }
+
+                    if (name != null && image != null) {
+                        PlacesClass market = new PlacesClass(name, image);
+                        market.setRating((float) averageRating);
+                        recommendedClean.add(market);
+                    }
+                }
+
+                Collections.sort(recommendedClean, new PlacesClass());
+
+                adapter3 = new RecommendAdapter(recommendedClean);
+                recyclerView3.setAdapter(adapter3);
+                recyclerView3.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                adapter3.notifyDataSetChanged();
+
+                adapter3.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PlacesClass item, int position) {
+                        // Handle the item click event for the specific item
+                        // You can access the item details using item.getId(), item.getRating(), etc.
+                        String StudyPlaceId = item.getId();
+                        float rating = item.getRating();
+                        String name = item.getName();
+                        String image = item.getImage();
+
+                        Intent intent = new Intent(MainActivity.this, DryCleanList.class);
+                        intent.putExtra("StudyPlace_id", StudyPlaceId);
+                        intent.putExtra("StudyPlace_name", name);
+                        intent.putExtra("StudyPlace_image", image);
+                        intent.putExtra("StudyPlace_rating", rating);
+
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors that occur during the data retrieval
+            }
+        });
     }
 
 
@@ -596,6 +738,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Intent in = new Intent(this, Dorms.class);
         startActivity(in);
     }
+    public void StudyClick(View view){
+        Intent in = new Intent(this, StudyPlaces.class);
+        startActivity(in);
+    }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
@@ -696,9 +842,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 // Handle any errors
             }
         });
-
-
         //-----------------------------------------
+
+        DatabaseReference studyplaceRef = FirebaseDatabase.getInstance().getReference().child("StudyPlaces");
+        Query querystudyRef = studyplaceRef.orderByChild("name").equalTo(query);
+        querystudyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    PlacesClass studyplace = snapshot.getValue(PlacesClass.class);
+                    // Perform any action with the searched supermarket
+                    // For example, start the SupermarketItem activity and pass the supermarket ID
+                    Intent intent = new Intent(MainActivity.this, StudyPlacesList.class);
+                    intent.putExtra("studyplace_name", studyplace.getName());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+            //-----------------------------------------
 
         DatabaseReference itemRef = FirebaseDatabase.getInstance().getReference().child("Items");
         Query queryitem = itemRef.orderByChild("name").equalTo(query);

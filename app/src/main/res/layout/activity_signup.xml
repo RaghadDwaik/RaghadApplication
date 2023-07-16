@@ -82,22 +82,22 @@
         android:layout_height="1px"
         android:background="@color/white_greyish" />
 
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/location"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical"
-        android:hint="@string/location"
-        android:inputType="textCapWords"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textSize="16sp" />
+<!--    <EditText-->
+<!--        android:id="@+id/location"-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:background="@android:color/transparent"-->
+<!--        android:drawableLeft="@drawable/location"-->
+<!--        android:drawablePadding="8dp"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:hint="@string/location"-->
+<!--        android:inputType="textCapWords"-->
+<!--        android:padding="10dp"-->
+<!--        android:singleLine="true"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textColorHint="@color/white"-->
+<!--        android:textSize="16sp" />-->
 
     <View
         android:layout_width="fill_parent"
@@ -175,5 +175,22 @@
         android:text="@string/already_user"
         android:textColor="@color/white_greyish"
         android:textSize="15sp" />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:text="or Sign up with"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+/>
 
 </LinearLayout>
