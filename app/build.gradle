@@ -22,6 +22,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs  "ar","en" // Add this line to specify supported languages
+
     }
 
     buildTypes {
