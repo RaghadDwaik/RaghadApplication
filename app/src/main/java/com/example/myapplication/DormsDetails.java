@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -19,6 +20,7 @@ import androidx.core.widget.NestedScrollView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.DormsClass;
 import com.example.myapplication.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,13 +31,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class DormsDetails extends AppCompatActivity {
+public class DormsDetails extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private ImageView dormImageView, image1, image2, image3,image4;
     private RatingBar ratingBar;
     private boolean isFavorite = false;
     private ImageButton favorite;
     private CollectionReference favoritesRef;
+
+    private BottomNavigationView bottom;
 
     private SearchView searchView;
     String dormsId,dormsName,dormsImage,image, imagee, imageee,imageeee;
@@ -45,7 +49,9 @@ public class DormsDetails extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dormsdetails);
-
+        bottom = findViewById(R.id.bottom);
+        bottom.setItemIconTintList(null);
+        bottom.setOnNavigationItemSelectedListener(this);
 
         // Initialize views
         dormImageView = findViewById(R.id.restaurantImageView);
@@ -114,4 +120,35 @@ public class DormsDetails extends AppCompatActivity {
         });
 
 
-}}
+}
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.home:
+                Intent in = new Intent(this, MainActivity.class);
+                startActivity(in);
+                return true;
+            case R.id.map:
+                Intent in1 = new Intent(this, Map.class);
+                startActivity(in1);
+                return true;
+
+            case R.id.favorite:
+                Intent in5 = new Intent(this, FavouriteList.class);
+                startActivity(in5);
+                return true;
+
+            case R.id.Recently:
+                Intent in4 = new Intent(this, RecentlyView.class);
+                startActivity(in4);
+                return true;
+            case R.id.profile:
+                Intent in2 = new Intent(this, Profile.class);
+                startActivity(in2);
+                return true;
+        }
+        return false;
+    }
+
+}
