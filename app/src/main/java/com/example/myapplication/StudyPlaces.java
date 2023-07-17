@@ -39,7 +39,7 @@ public class StudyPlaces extends AppCompatActivity implements BottomNavigationVi
         databaseReference = FirebaseDatabase.getInstance().getReference();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("StudyPlaces");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("StudyPlace");
         studyplace = new ArrayList<>();
 
         setupAdapter();
@@ -75,7 +75,7 @@ public class StudyPlaces extends AppCompatActivity implements BottomNavigationVi
 
 
 
-            Intent intent = new Intent(StudyPlaces.this, RestaurantList.class);
+            Intent intent = new Intent(StudyPlaces.this, StudyPlacesList.class);
             intent.putExtra("studyplace_id", snapshot.getKey());
             intent.putExtra("studyplace_name", supermarket.getName());
             intent.putExtra("studyplace_image", supermarket.getImage());

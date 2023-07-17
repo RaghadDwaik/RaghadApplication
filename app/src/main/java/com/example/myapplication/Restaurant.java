@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +32,8 @@ public class Restaurant extends AppCompatActivity implements BottomNavigationVie
     private PlacesAdapter adapter;
     private DatabaseReference databaseReference;
     private List<PlacesClass> allRestuarant;
+    private boolean userLoggedIn;
+
     private SearchView searchView;
 
     @Override
@@ -41,7 +46,7 @@ public class Restaurant extends AppCompatActivity implements BottomNavigationVie
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Resturant");
         allRestuarant = new ArrayList<>();
-
+        userLoggedIn = checkUserLoggedIn();
         setupAdapter();
         setupAdapterClickListener();
 
@@ -136,6 +141,22 @@ public class Restaurant extends AppCompatActivity implements BottomNavigationVie
         adapter.stopListening();
     }
 
+    private boolean checkUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+
+    }
+
+    private void openProfileActivity() {
+        Intent intent = new Intent(this, Profile.class);
+        startActivity(intent);
+    }
+
+    private void openLoginFragment() {
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -150,19 +171,43 @@ public class Restaurant extends AppCompatActivity implements BottomNavigationVie
                 return true;
 
             case R.id.favorite:
-                Intent in5 = new Intent(this, FavouriteList.class);
-                startActivity(in5);
+                // Check if the user is logged in
+                if (userLoggedIn) {
+                    Intent in5 = new Intent(this, FavouriteList.class);
+                    startActivity(in5);
+                } else {
+                    // User is not logged in, show a message or launch the login activity
+                    showLoginPrompt();
+                }
                 return true;
-
             case R.id.Recently:
-                Intent in4 = new Intent(this, RecentlyView.class);
-                startActivity(in4);
+                if (userLoggedIn) {
+                    Intent in4 = new Intent(this, RecentlyView.class);
+                    startActivity(in4);
+
+                } else {
+                    showLoginPrompt();
+                }
+
                 return true;
             case R.id.profile:
-                Intent in2 = new Intent(this, Profile.class);
-                startActivity(in2);
+
+
+                if (userLoggedIn) {
+                    openProfileActivity();
+                } else {
+                    openLoginFragment();
+                }
                 return true;
         }
         return false;
+    }
+    private void showLoginPrompt() {
+        View view = findViewById(android.R.id.content); // Replace with the appropriate View ID
+
+        new CustomToast().Show_Toast(Restaurant.this, view, "This Feature is not supported whithout login please login ");
+
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
     }
 }

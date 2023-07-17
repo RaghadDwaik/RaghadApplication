@@ -1,12 +1,12 @@
 package com.example.myapplication;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,67 +19,67 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
-public class StudyPlacesList extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, ItemListAdapter.OnItemClickListener {
+public class StudyPlacesList extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener ,ItemListAdapter.OnItemClickListener{
+
+    private DatabaseReference ratedSupermarketsRef;
 
     private BottomNavigationView bottom;
+    private boolean userLoggedIn;
     private RecyclerView recyclerView;
-    private DatabaseReference ratedStudyPlacesRef;
-
     private ItemListAdapter adapter;
-    private RatingBar rating;
-    private String studyplaceId;
-    private String studyplaceName;
-
     private DatabaseReference servicesRef;
     private SearchView searchView;
-    private String Image ;
-    float rate;
+    private RatingBar rating;
+
+    private String studyid;
+    String StudyPlaceName;
+    String studyimage;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_places_list);
+        recyclerView = findViewById(R.id.studyplace_recycler);
 
-        recyclerView = findViewById(R.id.StudyPlacesList_recycler);
-        rating = findViewById(R.id.ratingBar);
-        ImageView imageView = findViewById(R.id.studyplacesImageView);
         searchView = findViewById(R.id.searchButton);
 
+        rating = findViewById(R.id.ratingBar);
+        userLoggedIn = checkUserLoggedIn();
+
+
+        ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
+
+        // Get the details of the selected restaurant from the intent
         Intent intent = getIntent();
-      String  Image = intent.getStringExtra("studyplace_image");
+        String restaurantImage = intent.getStringExtra("studyplace_image");
 
-        // Load the supermarket image into the ImageView using Glide
+        // Load the restaurant image into the ImageView using Glide
         Glide.with(this)
-                .load(Image)
+                .load(restaurantImage)
                 .centerCrop()
-                .into(imageView);
+                .into(restaurantImageView);
 
-        // Get the details of the selected supermarket from the intent
-        studyplaceId = intent.getStringExtra("studyplace_id");
-        studyplaceName = intent.getStringExtra("studyplace_name");
-        float studyplaceRating = getIntent().getFloatExtra("studyplace_rating", 0.0f);
-        rating.setRating(studyplaceRating);
-        // rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
-        // Construct the database reference for the services of the selected supermarket
+        studyid = intent.getStringExtra("studyplace_id");
+        StudyPlaceName = intent.getStringExtra("studyplace_name");
+        studyimage = intent.getStringExtra("studyplace_image");
+        float supermarketRating = getIntent().getFloatExtra("studyplace_rating", 0.0f);
+        rating.setRating(supermarketRating);
+
         servicesRef = FirebaseDatabase.getInstance().getReference().child("studyplaceItems");
-        Query servicesQuery = servicesRef.orderByChild("StudyPlaces").equalTo(studyplaceName);
+        Query servicesQuery = servicesRef.orderByChild("StudyPlaces").equalTo(StudyPlaceName);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<ServicesClass> options =
                 new FirebaseRecyclerOptions.Builder<ServicesClass>()
@@ -87,25 +87,28 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
                         .build();
 
         adapter = new ItemListAdapter(options);
-        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+
 
         bottom = findViewById(R.id.bottom);
-        bottom.setItemIconTintList(null);
+        BottomNavigationView nav1 = findViewById(R.id.bottom);
+        nav1.setItemIconTintList(null);
+
+
         bottom.setOnNavigationItemSelectedListener(this);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("tttttttttttttttttttttttttttttttttt");
 
         if (currentUser != null) {
             String userId = currentUser.getUid();
             CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
             System.out.println("ooooooooooooooooooooooooooooo");
 
-            if (studyplaceId != null) {
+            if (studyid != null) {
                 DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
-                DocumentReference studyplaceRatingDocRef = userRatingDocRef.collection("Rating").document(studyplaceId);
-                studyplaceRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
+                DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(studyid);
+                restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
                     try {
                         if (e != null) {
                             throw e; // Throw the exception if it's not null
@@ -130,6 +133,7 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
         }
 
 
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -144,9 +148,69 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
                 return true;
             }
         });
-
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
+
     }
+    private boolean checkUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+
+    }
+
+    private void openProfileActivity() {
+        Intent intent = new Intent(this, Profile.class);
+        startActivity(intent);
+    }
+
+    private void openLoginFragment() {
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
+
+
+
+    private void updateRating(float rating) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedStudyPlace");
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                .document(userId)
+                .collection("Rating")
+                .document(studyid);
+
+        // Create a new document for the supermarket with the user's rating
+        HashMap<String, Object> ratingData = new HashMap<>();
+        ratingData.put("name", StudyPlaceName);
+        ratingData.put("image", studyimage);
+        ratingData.put("rating", rating);
+        restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+
+                } else {
+                    // User has not rated the supermarket yet
+                    restaurantRatingDocRef.set(ratingData)
+                            .addOnSuccessListener(aVoid -> {
+                                DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(studyid).push();
+                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
+
+                                userSupermarketRef.child("id").setValue(studyid);
+                                userSupermarketRef.child("image").setValue(studyimage);
+                                userSupermarketRef.child("name").setValue(StudyPlaceName);
+                                userSupermarketRef.child("rating").setValue(rating);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update the rating
+                            });
+                }
+            } else {
+                // Handle the failure to check the existing rating
+            }
+        });
+    }
+
 
     private void searchFirebase(String query) {
         Query searchQuery = servicesRef.orderByChild("name")
@@ -159,51 +223,9 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
                         .build();
 
         adapter.updateOptions(options);
+
     }
 
-    private void updateRating(float rating) {
-
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ratedStudyPlacesRef = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
-
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        DocumentReference studyplaceRatingDocRef = firestore.collection("User")
-                .document(userId)
-                .collection("Rating")
-                .document(studyplaceId);
-
-        // Create a new document for the supermarket with the user's rating
-        HashMap<String, Object> ratingData = new HashMap<>();
-        ratingData.put("name", studyplaceName);
-        ratingData.put("image", Image);
-        ratingData.put("rating", rating);
-        studyplaceRatingDocRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-
-                } else {
-                    // User has not rated the supermarket yet
-                    studyplaceRatingDocRef.set(ratingData)
-                            .addOnSuccessListener(aVoid -> {
-                                DatabaseReference userSupermarketRef = ratedStudyPlacesRef.child(studyplaceId).push();
-                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
-
-                                userSupermarketRef.child("id").setValue(studyplaceId);
-                                userSupermarketRef.child("image").setValue(Image);
-                                userSupermarketRef.child("name").setValue(studyplaceName);
-                                userSupermarketRef.child("rating").setValue(rating);
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle the failure to update the rating
-                            });
-                }
-            } else {
-                // Handle the failure to check the existing rating
-            }
-        });
-    }
 
     @Override
     protected void onStart() {
@@ -231,56 +253,81 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
                 return true;
 
             case R.id.favorite:
-                Intent in5 = new Intent(this, FavouriteList.class);
-                startActivity(in5);
+                // Check if the user is logged in
+                if (userLoggedIn) {
+                    Intent in5 = new Intent(this, FavouriteList.class);
+                    startActivity(in5);
+                } else {
+                    // User is not logged in, show a message or launch the login activity
+                    showLoginPrompt();
+                }
                 return true;
-
             case R.id.Recently:
-                Intent in4 = new Intent(this, RecentlyView.class);
-                startActivity(in4);
+                if (userLoggedIn) {
+                    Intent in4 = new Intent(this, RecentlyView.class);
+                    startActivity(in4);
+
+                } else {
+                    showLoginPrompt();
+                }
+
                 return true;
             case R.id.profile:
-                Intent in2 = new Intent(this, Profile.class);
-                startActivity(in2);
+
+
+                if (userLoggedIn) {
+                    openProfileActivity();
+                } else {
+                    openLoginFragment();
+                }
                 return true;
         }
         return false;
     }
 
+    private void showLoginPrompt() {
+    }
+
     @Override
     public void onItemClick(DataSnapshot snapshot, int position) {
-        ServicesClass rest = snapshot.getValue(ServicesClass.class);
+        if (userLoggedIn) {
+            ServicesClass rest = snapshot.getValue(ServicesClass.class);
 
-        String id = rest.getId();
-        String itemName = rest.getName();
-        String itemImage = rest.getImage();
-        double price = rest.getPrice();
+            String id = rest.getId();
+            String itemName = rest.getName();
+            String itemImage = rest.getImage();
+            double price = rest.getPrice();
 
-        ServicesClass selectedItem = new ServicesClass(id, itemName, itemImage, price);
+            ServicesClass selectedItem = new ServicesClass(id, itemName, itemImage, price);
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference recentlyViewedRef = firestore.collection("User")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())// Replace "userId" with the actual user ID
-                .collection("RecentlyV");
-        DocumentReference documentRef = recentlyViewedRef.document(itemName);
 
-        documentRef.set(selectedItem)
-                .addOnSuccessListener(aVoid -> {
-                    // Successfully added the item to RecentlyV collection
-                    // Proceed with starting the ServiceDetails activity
-                    Intent intent = new Intent(StudyPlacesList.this, ServiceDetails.class);
-                    intent.putExtra("id", snapshot.getKey());
-                    intent.putExtra("name", rest.getName());
-                    intent.putExtra("price", rest.getPrice());
-                    intent.putExtra("desc", rest.getDescription());
-                    intent.putExtra("image", rest.getImage());
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            CollectionReference recentlyViewedRef = firestore.collection("User")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())// Replace "userId" with the actual user ID
+                    .collection("RecentlyV");
+            DocumentReference documentRef = recentlyViewedRef.document(itemName);
 
-                    // Add any other necessary data as extras
-                    startActivity(intent);
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the failure to add the item to RecentlyV collection
-                    // Display an error message or take appropriate action
-                });
+            documentRef.set(selectedItem)
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully added the item to RecentlyV collection
+                        // Proceed with starting the ServiceDetails activity
+                        Intent intent = new Intent(StudyPlacesList.this, ServiceDetails.class);
+                        intent.putExtra("id", snapshot.getKey());
+                        intent.putExtra("name", rest.getName());
+                        intent.putExtra("price", rest.getPrice());
+                        intent.putExtra("desc", rest.getDescription());
+                        intent.putExtra("image", rest.getImage());
+
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the failure to add the item to RecentlyV collection
+                        // Display an error message or take appropriate action
+                    });
+        } else {
+            // User is not logged in, show a message to log in
+            Toast.makeText(this, "Please log in to perform this action.", Toast.LENGTH_LONG).show();
+        }
     }
 }

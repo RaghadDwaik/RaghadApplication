@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/nude"
-    tools:context=".SalonList">
+    tools:context=".StudyPlacesList">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom"
@@ -16,7 +16,6 @@
         app:menu="@menu/bottom_nav"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="1.0" />
-
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,7 +27,6 @@
             android:layout_height="187dp"
             android:scaleType="fitXY" />
 
-
         <SearchView
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
@@ -36,6 +34,8 @@
             android:layout_gravity="top|end"
             android:background="@android:color/transparent"
             android:padding="10dp"
+            android:queryHint="ابحث هنا"
+            android:textColor="@android:color/black"
             android:src="@drawable/baseline_search_24"
             android:contentDescription="Search" />
 
@@ -47,31 +47,30 @@
         android:layout_height="wrap_content"
         android:paddingStart="0dp"
         android:paddingEnd="0dp"
-        app:layout_constraintTop_toTopOf="parent">
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <RatingBar
             android:id="@+id/ratingBar"
-            android:layout_width="247dp"
+            android:layout_width="wrap_content"
             android:layout_height="39dp"
-            android:layout_marginTop="194dp"
-            android:layout_marginLeft="60dp"
             android:numStars="5"
             android:rating="0"
-            android:stepSize="0.5" />
+            android:stepSize="0.5"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/placeList_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="240dp"
         android:background="@color/nude"
         android:scrollbars="vertical"
         android:padding="2dp"
-        />
-
-
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

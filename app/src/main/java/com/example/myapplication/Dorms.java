@@ -87,7 +87,7 @@ public class Dorms extends AppCompatActivity implements BottomNavigationView.OnN
 
 
 
-            Intent intent = new Intent(Dorms.this, RestaurantList.class);
+            Intent intent = new Intent(Dorms.this, DormsDetails.class);
             intent.putExtra("Dorms_id", snapshot.getKey());
             intent.putExtra("Dorms_name", supermarket.getName());
             intent.putExtra("Dorms_image", supermarket.getImage());

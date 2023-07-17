@@ -3,9 +3,11 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +37,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
     private BottomNavigationView bottom;
     private RecyclerView recyclerView;
     private DatabaseReference ratedSupermarketsRef;
+    private boolean userLoggedIn;
 
     private ItemListAdapter adapter;
     private DatabaseReference servicesRef;
@@ -50,6 +53,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_list);
         searchView = findViewById(R.id.searchButton);
+        userLoggedIn = checkUserLoggedIn();
 
         recyclerView = findViewById(R.id.placeList_recycler);
 
@@ -221,6 +225,22 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         adapter.stopListening();
     }
 
+    private boolean checkUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+
+    }
+
+    private void openProfileActivity() {
+        Intent intent = new Intent(this, Profile.class);
+        startActivity(intent);
+    }
+
+    private void openLoginFragment() {
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -235,57 +255,85 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                 return true;
 
             case R.id.favorite:
-                Intent in5 = new Intent(this, FavouriteList.class);
-                startActivity(in5);
+                // Check if the user is logged in
+                if (userLoggedIn) {
+                    Intent in5 = new Intent(this, FavouriteList.class);
+                    startActivity(in5);
+                } else {
+                    // User is not logged in, show a message or launch the login activity
+                    showLoginPrompt();
+                }
                 return true;
-
             case R.id.Recently:
-                Intent in4 = new Intent(this, RecentlyView.class);
-                startActivity(in4);
+                if (userLoggedIn) {
+                    Intent in4 = new Intent(this, RecentlyView.class);
+                    startActivity(in4);
+
+                } else {
+                    showLoginPrompt();
+                }
+
                 return true;
             case R.id.profile:
-                Intent in2 = new Intent(this, Profile.class);
-                startActivity(in2);
+
+
+                if (userLoggedIn) {
+                    openProfileActivity();
+                } else {
+                    openLoginFragment();
+                }
                 return true;
         }
         return false;
     }
+    private void showLoginPrompt() {
+        View view = findViewById(android.R.id.content); // Replace with the appropriate View ID
+
+        new CustomToast().Show_Toast(SalonList.this, view, "This Feature is not supported whithout login please login ");
+
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onItemClick(DataSnapshot snapshot, int position) {
-        ServicesClass rest = snapshot.getValue(ServicesClass.class);
+        if (userLoggedIn) {
+            ServicesClass rest = snapshot.getValue(ServicesClass.class);
 
-        String id = rest.getId();
-        String itemName = rest.getName();
-        String itemImage = rest.getImage();
-        double price = rest.getPrice();
+            String id = rest.getId();
+            String itemName = rest.getName();
+            String itemImage = rest.getImage();
+            double price = rest.getPrice();
 
-        ServicesClass selectedItem = new ServicesClass(id,itemName, itemImage,price);
+            ServicesClass selectedItem = new ServicesClass(id, itemName, itemImage, price);
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference recentlyViewedRef = firestore.collection("User")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())// Replace "userId" with the actual user ID
-                .collection("RecentlyV");
-        DocumentReference documentRef = recentlyViewedRef.document(itemName);
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            CollectionReference recentlyViewedRef = firestore.collection("User")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())// Replace "userId" with the actual user ID
+                    .collection("RecentlyV");
+            DocumentReference documentRef = recentlyViewedRef.document(itemName);
 
-        documentRef.set(selectedItem)
-                .addOnSuccessListener(aVoid -> {
-                    // Successfully added the item to RecentlyV collection
-                    // Proceed with starting the ServiceDetails activity
-                    Intent intent = new Intent(SalonList.this, ServiceDetails.class);
-                    intent.putExtra("id", snapshot.getKey());
-                    intent.putExtra("name", rest.getName());
-                    intent.putExtra("price", rest.getPrice());
-                    intent.putExtra("desc", rest.getDescription());
-                    intent.putExtra("image", rest.getImage());
+            documentRef.set(selectedItem)
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully added the item to RecentlyV collection
+                        // Proceed with starting the ServiceDetails activity
+                        Intent intent = new Intent(SalonList.this, ServiceDetails.class);
+                        intent.putExtra("id", snapshot.getKey());
+                        intent.putExtra("name", rest.getName());
+                        intent.putExtra("price", rest.getPrice());
+                        intent.putExtra("desc", rest.getDescription());
+                        intent.putExtra("image", rest.getImage());
 
-                    // Add any other necessary data as extras
-                    startActivity(intent);
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the failure to add the item to RecentlyV collection
-                    // Display an error message or take appropriate action
-                });
+                        // Add any other necessary data as extras
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the failure to add the item to RecentlyV collection
+                        // Display an error message or take appropriate action
+                    });
+        } else {
+            // User is not logged in, show a message to log in
+            Toast.makeText(this, "Please log in to perform this action.", Toast.LENGTH_LONG).show();
+        }
     }
-
 }
