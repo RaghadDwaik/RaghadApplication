@@ -66,7 +66,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
         // Get the details of the selected restaurant from the intent
         Intent intent = getIntent();
-        String restaurantImage = intent.getStringExtra("restaurant_image");
+        String restaurantImage = intent.getStringExtra("dryclean_image");
 
         // Load the restaurant image into the ImageView using Glide
         Glide.with(this)
@@ -82,7 +82,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         rating.setRating(supermarketRating);
 
         // Construct the database reference for the services of the selected Restaurant
-        servicesRef = FirebaseDatabase.getInstance().getReference().child("Services");
+        servicesRef = FirebaseDatabase.getInstance().getReference().child("DryCleanServices");
         Query query = servicesRef.orderByChild("DryClean").equalTo(drycleanName);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<ServicesClass> options =

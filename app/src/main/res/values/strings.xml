@@ -21,8 +21,8 @@
     <string name="submit">SUBMIT</string>
     <string name="back">BACK</string>
     <string name="title_activity_map">title_activity_map</string>
-<!--    <string name="Gender">"\n "</string>-->
-<!--    <string name="date_of_birth_dd_mm_yy" />-->
+    <!--    <string name="Gender">"\n "</string>-->
+    <!--    <string name="date_of_birth_dd_mm_yy" />-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!--    <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAdB1Pp6kJCePZbP8puwusIqrYb7GlgQiU</string>-->
@@ -30,8 +30,7 @@
     <!--    AIzaSyDQRo11Au3mI9ZM2Ppp-015nLMHZQp2FSs-->
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-<!--    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>-->
-
+    <!--    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>-->
 
 
 </resources>

@@ -36,6 +36,8 @@
             android:layout_gravity="top|end"
             android:background="@android:color/transparent"
             android:padding="10dp"
+            android:queryHint="ابحث هنا"
+            android:textColor="@android:color/black"
             android:src="@drawable/baseline_search_24"
             android:contentDescription="Search" />
 

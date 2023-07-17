@@ -23,7 +23,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/studyplacesImageView"
+            android:id="@+id/restaurantImageView"
             android:layout_width="410dp"
             android:layout_height="187dp"
             android:scaleType="fitXY" />
@@ -37,6 +37,8 @@
             android:background="@android:color/transparent"
             android:padding="10dp"
             android:src="@drawable/baseline_search_24"
+            android:queryHint="ابحث هنا"
+            android:textColor="@android:color/black"
             android:contentDescription="Search" />
 
     </FrameLayout>
@@ -63,7 +65,7 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/StudyPlacesList_recycler"
+        android:id="@+id/studyplace_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="240dp"
