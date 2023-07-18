@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +41,6 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
     private DatabaseReference servicesRef;
     private SearchView searchView;
     private RatingBar rating;
-
     private String studyid;
     String StudyPlaceName;
     String studyimage;
@@ -52,6 +52,8 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_places_list);
         recyclerView = findViewById(R.id.studyplace_recycler);
+        recyclerView = findViewById(R.id.studyplace_recycler);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 11));
 
         searchView = findViewById(R.id.searchButton);
 
@@ -64,7 +66,7 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
         // Get the details of the selected restaurant from the intent
         Intent intent = getIntent();
         String restaurantImage = intent.getStringExtra("studyplace_image");
-
+        DormsClass study = new DormsClass();
         // Load the restaurant image into the ImageView using Glide
         Glide.with(this)
                 .load(restaurantImage)
@@ -78,8 +80,8 @@ public class StudyPlacesList extends AppCompatActivity implements BottomNavigati
         float supermarketRating = getIntent().getFloatExtra("studyplace_rating", 0.0f);
         rating.setRating(supermarketRating);
 
-        servicesRef = FirebaseDatabase.getInstance().getReference().child("studyplaceItems");
-        Query servicesQuery = servicesRef.orderByChild("StudyPlaces").equalTo(StudyPlaceName);
+        servicesRef = FirebaseDatabase.getInstance().getReference().child("StudyPlaceItems");
+        Query servicesQuery = servicesRef.orderByChild("StudyPlace").equalTo(StudyPlaceName);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<ServicesClass> options =
                 new FirebaseRecyclerOptions.Builder<ServicesClass>()

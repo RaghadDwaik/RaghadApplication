@@ -32,7 +32,9 @@
         android:id="@+id/language"
         android:icon="@drawable/language"
         android:title="language"
+
         />
+
     <item
         android:id="@+id/about"
         android:icon="@drawable/error1"

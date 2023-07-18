@@ -8,6 +8,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+<!--            <Spinner-->
+<!--                android:id="@+id/languageSpinner"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content" />-->
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +31,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/nude"
+            android:background="@color/quantum_grey"
             android:titleTextColor="@android:color/white"
             app:title="حولينا"
             android:textStyle="bold"
@@ -37,6 +43,9 @@
             android:layout_height="wrap_content"
             android:paddingStart="0dp"
             android:paddingEnd="0dp">
+
+
+
 
 <!--            <ImageView-->
 <!--                android:id="@+id/menu"-->
@@ -67,7 +76,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
@@ -79,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@color/green">
+                    android:background="@color/quantum_grey">
 
                     <!-- Add your card views here -->
                     <androidx.cardview.widget.CardView
@@ -90,7 +100,7 @@
                         android:layout_marginTop="10dp"
                         android:onClick="salonclick"
                         tools:ignore="SpeakableTextPresentCheck"
-                        android:backgroundTint="@color/green"
+                        android:backgroundTint="@color/quantum_grey"
                        >
 
                         <ImageView
@@ -111,7 +121,7 @@
                         android:layout_marginTop="10dp"
                         android:onClick="superMarketclick"
                         tools:ignore="SpeakableTextPresentCheck"
-                        android:backgroundTint="@color/green">
+                        android:backgroundTint="@color/quantum_grey">
 
                         <ImageView
                             android:id="@+id/superimage"
@@ -218,7 +228,7 @@
                     android:id="@+id/Recommended_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/green"
+                    android:background="@color/quantum_grey"
                     android:scrollbars="vertical"
                     android:padding="2dp" />
 
@@ -327,6 +337,7 @@
                         android:scrollbars="vertical"
                         android:padding="2dp"
                         />
+
 
             </LinearLayout>
         </ScrollView>
