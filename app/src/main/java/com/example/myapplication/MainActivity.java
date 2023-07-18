@@ -132,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         Intent in = new Intent(MainActivity.this, MainActivity.class);
                         startActivity(in);
                         return true;
+                    case  R.id.about:
+                    Intent in5 = new Intent(MainActivity.this, AboutUs.class);
+                    startActivity(in5);
+                    return true;
                     case R.id.map:
                         Intent in1 = new Intent(MainActivity.this, Map.class);
                         startActivity(in1);
@@ -140,8 +144,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     case R.id.favorite:
                         // Check if the user is logged in
                         if (userLoggedIn) {
-                            Intent in5 = new Intent(MainActivity.this, FavouriteList.class);
-                            startActivity(in5);
+                            Intent in9 = new Intent(MainActivity.this, FavouriteList.class);
+                            startActivity(in9);
                         } else {
                             // User is not logged in, show a message or launch the login activity
                             showLoginPrompt();

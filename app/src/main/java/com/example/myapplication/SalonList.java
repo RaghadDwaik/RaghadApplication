@@ -246,8 +246,12 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         int id = item.getItemId();
         switch (id) {
             case R.id.home:
-                Intent in = new Intent(this, MainActivity.class);
+                Intent in = new Intent(SalonList.this, MainActivity.class);
                 startActivity(in);
+                return true;
+            case  R.id.about:
+                Intent in5 = new Intent(SalonList.this, AboutUs.class);
+                startActivity(in5);
                 return true;
             case R.id.map:
                 Intent in1 = new Intent(this, Map.class);
@@ -257,8 +261,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
             case R.id.favorite:
                 // Check if the user is logged in
                 if (userLoggedIn) {
-                    Intent in5 = new Intent(this, FavouriteList.class);
-                    startActivity(in5);
+                    Intent in9 = new Intent(this, FavouriteList.class);
+                    startActivity(in9);
                 } else {
                     // User is not logged in, show a message or launch the login activity
                     showLoginPrompt();

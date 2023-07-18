@@ -93,7 +93,6 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
 
                         descriptionTextView.setText(dormDetails.getDescription());
 
-                        // After setting the description, scroll to the bottom
                     }
                 }
 
