@@ -69,37 +69,46 @@
 
                 <ImageView
                     android:id="@+id/image1"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="187dp"
-                    android:layout_marginTop="20dp"
                     android:layout_below="@id/ratingBar"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:scaleType="fitXY" />
 
                 <ImageView
                     android:id="@+id/image2"
                     android:layout_width="190dp"
                     android:layout_height="187dp"
-                    android:layout_marginTop="60dp"
-                    android:layout_marginRight="20dp"
-
-                    android:layout_toLeftOf="@id/image1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_below="@id/ratingBar"
+                    android:layout_toRightOf="@id/image1"
                     android:scaleType="fitXY" />
 
 
                 <ImageView
                     android:id="@+id/image3"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="187dp"
                     android:layout_marginTop="40dp"
                     android:layout_below="@id/image2"
+                    android:layout_marginLeft="10dp"
+
                     android:scaleType="fitXY" />
 
                 <ImageView
                     android:id="@+id/image4"
                     android:layout_width="190dp"
                     android:layout_height="187dp"
-                    android:layout_toLeftOf="@id/image3"
-                    android:layout_marginTop="290dp"
+                    android:layout_toRightOf="@id/image3"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_below="@id/image1"
+
                     android:layout_marginRight="20dp"
                     android:scaleType="fitXY" />
 

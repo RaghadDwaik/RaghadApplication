@@ -68,9 +68,9 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
         Intent intent = getIntent();
         if (intent != null) {
-            studyId = intent.getStringExtra("study_id");
-            studyName = intent.getStringExtra("study_name");
-            studyImage = intent.getStringExtra("study_image");
+            studyId = intent.getStringExtra("studyplace_id");
+            studyName = intent.getStringExtra("studyplace_name");
+            studyImage = intent.getStringExtra("studyplace_image");
 
             // Use Glide to load the dormitory image
             Glide.with(this)

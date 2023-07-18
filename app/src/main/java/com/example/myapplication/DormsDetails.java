@@ -69,8 +69,8 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
         Intent intent = getIntent();
         if (intent != null) {
             dormsId = intent.getStringExtra("Dorms_id");
-             dormsName = intent.getStringExtra("Dorms_name");
-             dormsImage = intent.getStringExtra("Dorms_image");
+            dormsName = intent.getStringExtra("Dorms_name");
+            dormsImage = intent.getStringExtra("Dorms_image");
 
             // Use Glide to load the dormitory image
             Glide.with(this)

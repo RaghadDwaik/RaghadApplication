@@ -23,7 +23,7 @@
             android:name=".DormsDetails"
             android:exported="false" />
         <activity
-            android:name=".StudyPlacesList"
+            android:name=".StudyPlacesDetails"
             android:exported="false" />
         <activity
             android:name=".StudyPlaces"
