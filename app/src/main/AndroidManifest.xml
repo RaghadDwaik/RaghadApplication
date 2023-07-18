@@ -21,6 +21,9 @@
         android:theme="@style/Theme.MyApplication"
         tools:overrideLibrary="com.android.car.ui">
         <activity
+            android:name=".StudyPlacesDetails"
+            android:exported="false" />
+        <activity
             android:name=".DormsDetails"
             android:exported="false" />
         <activity

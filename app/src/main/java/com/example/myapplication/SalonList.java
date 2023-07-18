@@ -76,7 +76,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         rating.setRating(supermarketRating);
         //  rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
-        servicesRef = FirebaseDatabase.getInstance().getReference().child("Services");
+        servicesRef = FirebaseDatabase.getInstance().getReference().child("salonServices");
         Query query = servicesRef.orderByChild("salon").equalTo(salonName);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<ServicesClass> options =
