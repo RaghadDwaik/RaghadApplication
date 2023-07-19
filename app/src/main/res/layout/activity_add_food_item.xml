@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/top_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="698dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:text="Add Food Item"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editText_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Item Name"
+            android:inputType="text"
+            android:textColorHint="@color/white" />
+
+        <EditText
+            android:id="@+id/editText_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Item Description"
+            android:inputType="textMultiLine"
+            android:textColorHint="@color/white" />
+
+        <EditText
+            android:id="@+id/editText_item_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Item Price"
+            android:inputType="numberDecimal"
+            android:textColorHint="@color/white" />
+
+        <ImageView
+            android:id="@+id/imageView_food_item"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/button_add"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:tooltipText="add image"
+            android:scaleType="centerCrop" />
+
+        <Button
+            android:id="@+id/button_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/loginbutton_selector"
+            android:text="Add Item"
+            android:textColor="@color/blue"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</LinearLayout>
