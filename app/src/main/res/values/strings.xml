@@ -37,4 +37,14 @@
         <item>Arabic</item>
     </string-array>
 
+    <string-array name="plasec">
+        <item>Resturant</item>
+        <item>Dorms</item>
+        <item>DryClean</item>
+        <item>salon</item>
+        <item>Supermarket</item>
+        <item>StudyPlace</item>
+        <!-- Add more items as needed -->
+    </string-array>
+
 </resources>

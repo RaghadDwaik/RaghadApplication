@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/top_background"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <!-- Add your desired UI elements here -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Dorm"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Location input field -->
+    <EditText
+        android:id="@+id/et_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location"
+        android:inputType="text"
+        android:textColorHint="@color/white"
+        android:padding="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- Price input field -->
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price"
+        android:textColorHint="@color/white"
+        android:inputType="numberDecimal"
+        android:padding="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- Image input field -->
+    <Button
+        android:id="@+id/btn_choose_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Image"
+        android:textColor="@color/blue"
+        android:background="@drawable/loginbutton_selector"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp" />
+
+    <!-- Display selected image -->
+    <ImageView
+        android:id="@+id/iv_selected_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
+
+    <!-- Save button -->
+    <Button
+        android:id="@+id/btn_save_dorm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textColor="@color/blue"
+        android:background="@drawable/loginbutton_selector"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp" />
+
+
+
+</LinearLayout>

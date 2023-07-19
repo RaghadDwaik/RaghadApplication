@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Profile">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:menu="@menu/bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/top_background"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="-72dp"
+        tools:layout_editor_absoluteY="-252dp">
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginTop="30dp"-->
+        <!--            tools:ignore="ContentDescription,HardcodedText,MissingConstraints"-->
+        <!--            tools:srcCompat="@tools:sample/avatars"-->
+        <!--            android:contentDescription="TODO" />-->
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/person" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Asma"
+            android:textColor="@color/white_greyish"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,MissingConstraints" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textName"
+                android:layout_width="216dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Name"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                tools:ignore="ExtraText" />
+
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/edit"
+                android:onClick="editName"/>
+
+        </LinearLayout>
+
+        <!--        <View-->
+        <!--            android:layout_width="fill_parent"-->
+        <!--            android:layout_height="2dp"-->
+        <!--            android:background="@color/white_greyish" />-->
+
+        <!--pass-->
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="horizontal">-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/textPassword"-->
+        <!--                android:layout_width="165dp"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_margin="20dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:text="Password"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="17sp" />-->
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/imageView3"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_margin="20dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                app:srcCompat="@drawable/edit"-->
+        <!--                android:onClick="editPassword"/>-->
+        <!--        </LinearLayout>-->
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/white_greyish" />
+        <!-- Email-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textEmail"
+                android:layout_width="168dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:text="Email"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/edit"
+                android:onClick="editEmail"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/white_greyish" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textDob"
+                android:layout_width="216dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Date of Birth"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                tools:ignore="ExtraText" />
+
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/edit"
+                android:onClick="editDOB"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/white_greyish" />
+        <!--  Location-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textLocation"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:text="Location"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/location"
+                android:onClick="editLocation"/>
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/white_greyish" />
+
+        <!--Mobile Number  -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textMobile"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:text="MobileNumber"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/edit"
+                android:onClick="editMobileNumber"/>
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/white_greyish" />
+
+        <!--        <Button-->
+        <!--            android:id="@+id/button"-->
+        <!--            android:layout_width="303dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginTop="40dp"-->
+        <!--            android:background="@drawable/loginbutton_selector"-->
+        <!--            android:shadowRadius="@android:integer/config_longAnimTime"-->
+        <!--            android:text="Edit Profile" />-->
+        <Button
+            android:id="@+id/button_add"
+            android:layout_width="303dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/loginbutton_selector"
+            android:shadowRadius="@android:integer/config_longAnimTime"
+            android:textColor="@color/blue"
+            android:text="Add Item" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="303dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/loginbutton_selector"
+            android:shadowRadius="@android:integer/config_longAnimTime"
+            android:text="Logout"
+            android:textColor="@color/blue"/>
+        <!--            android:onClick="btnlogout"-->
+        <!--            tools:ignore="DuplicateIds"-->
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

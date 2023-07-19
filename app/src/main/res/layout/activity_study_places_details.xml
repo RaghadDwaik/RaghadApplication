@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -69,54 +68,59 @@
                     android:rating="0"
                     android:stepSize="0.5" />
 
-                <!-- First Image -->
-                <ImageView
-                    android:id="@+id/image1"
-                    android:layout_width="190dp"
-                    android:layout_height="187dp"
+                <!-- HorizontalScrollView for images -->
+                <HorizontalScrollView
+                    android:id="@id/horizontalScrollContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/ratingBar"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitXY" />
+                    android:layout_marginTop="20dp">
 
-                <!-- Second Image -->
-                <ImageView
-                    android:id="@+id/image2"
-                    android:layout_width="190dp"
-                    android:layout_height="187dp"
-                    android:layout_below="@id/ratingBar"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@id/image1"
-                    android:scaleType="fitXY" />
+                    <LinearLayout
+                        android:id="@+id/horizontalScrollContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <!-- Third Image -->
-                <ImageView
-                    android:id="@+id/image3"
-                    android:layout_width="190dp"
-                    android:layout_height="187dp"
-                    android:layout_below="@id/ratingBar"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@id/image2"
-                    android:scaleType="fitXY" />
+                        <!-- First Image -->
+                        <ImageView
+                            android:id="@+id/image1"
+                            android:layout_width="190dp"
+                            android:layout_height="187dp"
+                            android:scaleType="fitXY" />
 
-                <!-- Fourth Image -->
-                <ImageView
-                    android:id="@+id/image4"
-                    android:layout_width="190dp"
-                    android:layout_height="187dp"
-                    android:layout_below="@id/ratingBar"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@id/image3"
-                    android:scaleType="fitXY" />
+                        <!-- Second Image -->
+                        <ImageView
+                            android:id="@+id/image2"
+                            android:layout_width="190dp"
+                            android:layout_height="187dp"
+                            android:layout_marginStart="10dp"
+                            android:scaleType="fitXY" />
+
+                        <!-- Third Image -->
+                        <ImageView
+                            android:id="@+id/image3"
+                            android:layout_width="190dp"
+                            android:layout_height="187dp"
+                            android:layout_marginStart="10dp"
+                            android:scaleType="fitXY" />
+
+                        <!-- Fourth Image -->
+                        <ImageView
+                            android:id="@+id/image4"
+                            android:layout_width="190dp"
+                            android:layout_height="187dp"
+                            android:layout_marginStart="10dp"
+                            android:scaleType="fitXY" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
 
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/image1"
+                    android:layout_below="@id/horizontalScrollContainer"
                     android:layout_marginStart="31dp"
                     android:layout_marginTop="10dp"
                     android:text="description"

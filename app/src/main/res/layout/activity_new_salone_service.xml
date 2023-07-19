@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/top_background"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <!-- Add your desired UI elements here -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Service"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/white"/>
+
+    <!-- Service name input field -->
+    <EditText
+        android:id="@+id/et_service_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Service Name"
+        android:inputType="text"
+        android:textColorHint="@color/white"
+        android:padding="8dp" />
+
+    <!-- Service price input field -->
+    <EditText
+        android:id="@+id/et_service_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Service Price"
+        android:textColorHint="@color/white"
+        android:inputType="numberDecimal"
+        android:padding="8dp"
+        android:layout_marginTop="8dp" />
+    <ImageView
+        android:id="@+id/imageView_service"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/btn_save_service"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop" />
+
+    <!-- Save button -->
+    <Button
+        android:id="@+id/btn_save_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Service"
+        android:background="@drawable/loginbutton_selector"
+        android:layout_gravity="center"
+        android:textColor="@color/blue"
+        android:layout_marginTop="16dp" />
+
+    <!-- Add more UI elements as needed -->
+
+</LinearLayout>
