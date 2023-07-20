@@ -47,6 +47,11 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
+            android:name=".AboutUs"
+            android:label="About Us">
+            <!-- Add any other activity configurations if needed -->
+        </activity>
+        <activity
             android:name=".RecentlyView"
             android:exported="false" />
         <activity
