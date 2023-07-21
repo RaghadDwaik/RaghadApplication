@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     ImageView love;
     ImageView list;
+    EditText View;
 
 
 
@@ -101,14 +104,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient mFusedLocationClient;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageView v = findViewById(R.id.slide);
-        AnimationDrawable u = (AnimationDrawable) v.getDrawable();
-        u.start();
+//        ImageView v = findViewById(R.id.slide);
+//        AnimationDrawable u = (AnimationDrawable) v.getDrawable();
+//        u.start();
         userLoggedIn = checkUserLoggedIn();
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+
 
 
 //        love = findViewById(R.id.love);
@@ -125,51 +132,34 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
-        final DrawerLayout drawerLayout = findViewById(R.id.DrawerLayout);
+//        final DrawerLayout drawerLayout = findViewById(R.id.DrawerLayout);
         bottom = findViewById(R.id.bottom);
 
         bottom.setOnNavigationItemSelectedListener(this);
         
-//        languageSpinner = findViewById(R.id.languageSpinner);
-//        // Set up the language spinner
-//        ArrayAdapter <CharSequence> adapter = ArrayAdapter.createFromResource(
-//                this,
-//                R.array.languages_array,
-//                android.R.layout.simple_spinner_item
-//        );
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        languageSpinner.setAdapter(adapter);
-//
-//        // Set the selected language based on the saved preference
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        String selectedLanguage = preferences.getString("language", "ar");
-//        int selectedLanguageIndex = selectedLanguage.equals("en") ? 1 : 0;
-//        languageSpinner.setSelection(selectedLanguageIndex);
-//
-//        // Set an OnItemSelectedListener to handle spinner item selection
-//        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                // Handle language selection
-//                String selectedLanguage = position == 0 ? "en" : "ar";
-//                changeLanguage(selectedLanguage);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // Do nothing
-//            }
-//        });
 
-        navigationView = findViewById(R.id.navigation);
-        
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+//
+//        navigationView = findViewById(R.id.navigation);
+//
+//        ImageView imageMenu= findViewById(R.id.imageMenu);
+//        Toolbar toolbar = findViewById(R.id.toolBar);
+//        setSupportActionBar(toolbar);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, imageMenu, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        imageMenu.addDrawerListener(toggle);
+//        toggle.syncState();
+        ImageView imageMenu = findViewById(R.id.imageMenu);
+        imageMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        navigationView = findViewById(R.id.navigationView);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
@@ -178,10 +168,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         Intent in = new Intent(MainActivity.this, MainActivity.class);
                         startActivity(in);
                         return true;
+
                     case  R.id.about:
                     Intent in5 = new Intent(MainActivity.this, AboutUs.class);
                     startActivity(in5);
                     return true;
+
                     case R.id.map:
                         Intent in1 = new Intent(MainActivity.this, Map.class);
                         startActivity(in1);
@@ -252,21 +244,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //            }
 //        });
 
-        findViewById(R.id.toolbar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-        NavigationView nav = findViewById(R.id.navigation);
-        nav.setItemIconTintList(null);
+//        findViewById(R.id.toolbar).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                drawerLayout.openDrawer(GravityCompat.START);
+//            }
+//        });
+//        NavigationView nav = findViewById(R.id.navigation);
+//        nav.setItemIconTintList(null);
 
         BottomNavigationView nav1 = findViewById(R.id.bottom);
         nav1.setItemIconTintList(null);
 
-        searchView = findViewById(R.id.search);
-        searchView.setOnQueryTextListener(this);
-        searchView.setQueryHint("ابحث هنا");
+//         searchView = findViewById(R.id.search);
+//        searchView.setOnQueryTextListener(this);
+//       searchView.setQueryHint("ابحث هنا....");
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -668,23 +660,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
     }
 
-    private void changeLanguage(String newLanguage) {
-        // Save the new language preference
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.edit().putString("language", newLanguage).apply();
-
-        // Set the new language configuration
-        Locale locale = new Locale(newLanguage);
-        Locale.setDefault(locale);
-
-        Configuration config = new Configuration();
-        config.locale = locale;
-
-        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-
-        // Recreate the activity to apply the language change
-        recreate();
-    }
+//    private void changeLanguage(String newLanguage) {
+//        // Save the new language preference
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        preferences.edit().putString("language", newLanguage).apply();
+//
+//        // Set the new language configuration
+//        Locale locale = new Locale(newLanguage);
+//        Locale.setDefault(locale);
+//
+//        Configuration config = new Configuration();
+//        config.locale = locale;
+//
+//        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+//
+//        // Recreate the activity to apply the language change
+//        recreate();
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

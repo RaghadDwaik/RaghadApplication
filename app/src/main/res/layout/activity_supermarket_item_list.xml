@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/top_background"
     tools:context=".SupermarketItemList">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -15,7 +14,8 @@
         android:background="@color/white"
         app:menu="@menu/bottom_nav"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        app:itemIconTint="@color/background_color"/>
 
 
     <FrameLayout
@@ -29,7 +29,7 @@
             android:scaleType="fitXY" />
 
 
-        <SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="247dp"
-            android:layout_height="39dp"
+            android:layout_height="54dp"
             android:layout_marginTop="194dp"
             android:layout_marginLeft="60dp"
             android:numStars="5"
@@ -69,7 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="240dp"
-        android:background="@drawable/top_background"
         android:scrollbars="vertical"
         android:padding="2dp"
         />

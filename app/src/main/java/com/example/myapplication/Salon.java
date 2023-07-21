@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,7 +44,7 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
         recyclerView = findViewById(R.id.supermarket_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         userLoggedIn = checkUserLoggedIn();
-
+        //  SearchView searchView = findViewById(R.id.search);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("salon");
         allSalons = new ArrayList<>();
 
@@ -56,21 +56,24 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
 
         bottom.setOnNavigationItemSelectedListener(this);
 
-        searchView = findViewById(R.id.search);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Do nothing when the search query is submitted
-                return false;
-            }
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // Do nothing when the search query is submitted
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Call searchFirebase method to filter the data based on the entered query
-                searchFirebase(newText);
-                return true;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // Call searchFirebase method to filter the data based on the entered query
+                    searchFirebase(newText);
+                    return true;
+                }
+            });
+        } else {
+            // Log an error or take appropriate action if the SearchView is null.
+        }
     }
 
     private void setupAdapter() {

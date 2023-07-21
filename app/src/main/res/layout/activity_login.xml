@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/nude"
-    android:padding="20dp">
+  >
 
 
     <LinearLayout
         android:id="@+id/login_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
@@ -21,47 +19,44 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/login"
-            android:textColor="@color/white_greyish"
-            android:textSize="25sp"
+            android:text="تسجيل الدخول"
+            android:textColor="@color/white"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/login_emailid"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/email"
+            android:layout_height="50dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/white_box"
+            android:drawableLeft="@drawable/baseline_email_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
-            android:hint="@string/email"
+            android:hint="البريد الالكتروني"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/background_color"
+            android:textColorHint="@color/background_color"
             android:textSize="16sp" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1px"
-            android:background="@color/white_greyish" />
 
         <EditText
             android:id="@+id/login_password"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/password"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/white_box"
+            android:drawableLeft="@drawable/baseline_password_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
-            android:hint="@string/password"
+            android:hint="كلمة السر"
             android:inputType="textPassword"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/background_color"
+            android:textColorHint="@color/background_color"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -75,32 +70,34 @@
                 android:id="@+id/show_hide_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:text="@string/show_pwd"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:text="اظهار كلمة السر"
+                android:textColor="@color/background_color"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:padding="5dp"
-                android:text="@string/forgot"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:text="هل نسيت كلمة السر؟"
+                android:textColor="@color/background_color"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/loginbutton_selector"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/white_box"
             android:padding="3dp"
-            android:text="@string/login"
-            android:textColor="@color/blue"
+            android:text="تسجيل الدخول"
+            android:textColor="@color/background_color"
             android:textSize="17sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -111,23 +108,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:padding="5dp"
-        android:text="@string/newUser"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:text="ليس لديك حساب؟ اضغط هنا لانشاء حساب "
+        android:textColor="@color/background_color"
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/google_sign_in_button"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="16dp"
-        android:text="or Sign up with"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="11dp"
+        android:text="أو قم بتسجيل الدخول عن طريق جوجل"
         android:textAlignment="center"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="20dp" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
@@ -137,20 +135,7 @@
         android:layout_alignParentStart="true"
         android:layout_gravity="center"
         android:layout_marginStart="142dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="-151dp" />
-
-
-    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottom"-->
-<!--        android:layout_width="391dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginBottom="0dp"-->
-<!--        android:background="@color/white"-->
-<!--        app:menu="@menu/bottom_nav"-->
-<!--        tools:ignore="MissingConstraints"-->
-<!--        tools:layout_editor_absoluteX="0dp"-->
-<!--        tools:layout_editor_absoluteY="659dp" />-->
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="-130dp" />
 </RelativeLayout>
 

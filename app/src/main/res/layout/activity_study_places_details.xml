@@ -1,10 +1,10 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/top_background"
+    android:background="@color/nude"
     tools:context=".StudyPlacesDetails">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:itemTextColor="@color/background_color"/>
 
     <ScrollView
         android:id="@+id/scroll"
@@ -38,12 +38,11 @@
                     android:layout_height="187dp"
                     android:scaleType="fitXY" />
 
-                <SearchView
+                <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|end"
-                    android:background="@android:color/transparent"
                     android:padding="10dp"
                     android:src="@drawable/baseline_search_24"
                     android:queryHint="ابحث هنا"
@@ -124,10 +123,11 @@
                     android:layout_marginStart="31dp"
                     android:layout_marginTop="10dp"
                     android:text="description"
+                    android:textColor="@color/background_color"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

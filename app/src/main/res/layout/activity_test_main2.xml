@@ -349,11 +349,14 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-            <ScrollView
-                android:layout_width="400dp"
+            <HorizontalScrollView
+                android:layout_width="410dp"
                 android:layout_height="20dp"
+                app:layout_constraintStart_toStartOf="@+id/study_place"
+                app:layout_constraintTop_toBottomOf="@id/dorm"
                 tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="799dp">
+                tools:layout_editor_absoluteY="799dp"
+                >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -363,13 +366,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Recommended SuperMarket"
-                        android:textColor="@color/green" />
+                        />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/Recommended_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/quantum_grey"
                         android:scrollbars="vertical"
                         android:padding="2dp" />
 
@@ -381,7 +383,6 @@
                         android:text="Recommended Restaurant"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/green"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="433dp" />
 
@@ -389,9 +390,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/RecommendedR_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@color/nude"
                         android:scrollbars="vertical"
                         android:padding="2dp"
                         />
@@ -401,7 +401,6 @@
                         android:layout_height="wrap_content"
                         android:text="Recommended DryClean"
                         android:textStyle="bold"
-                        android:textColor="@color/green"
                         android:layout_marginTop="10dp"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="433dp" />
@@ -410,9 +409,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/RecommendedD_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@color/nude"
                         android:scrollbars="vertical"
                         android:padding="2dp"
                         />
@@ -422,7 +420,6 @@
                         android:text="Recommended Salon"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/green"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="433dp" />
 
@@ -430,9 +427,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/RecommendedS_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@color/nude"
                         android:scrollbars="vertical"
                         android:padding="2dp"
                         />
@@ -443,7 +439,6 @@
                         android:text="Recommended StudyPlaces"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/green"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="433dp" />
 
@@ -451,9 +446,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/RecommendedSt_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@color/nude"
                         android:scrollbars="vertical"
                         android:padding="2dp"
                         />
@@ -464,7 +458,6 @@
                         android:text="Recommended Dorms"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/green"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="433dp" />
 
@@ -472,16 +465,13 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/RecommendedDo_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@color/nude"
                         android:scrollbars="vertical"
                         android:padding="2dp"
                         />
                 </LinearLayout>
-            </ScrollView>
-
-
+            </HorizontalScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

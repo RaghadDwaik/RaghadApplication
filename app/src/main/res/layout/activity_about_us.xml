@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/top_background"
-
+    android:background="@color/background_color"
     tools:context=".AboutUs">
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:itemTextColor="@color/background_color"/>
     <RelativeLayout
         android:id="@+id/toolBar"
 
@@ -38,14 +38,13 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_marginTop="100dp"
             android:layout_marginRight="18dp"
-android:text="تطبيق حولينا هو تطبيق متميز يهدف إلى تسهيل حياة طلاب السكنات وتلبية احتياجاتهم بسهولة وراحة. يتيح التطبيق للمستخدمين الوصول إلى مجموعة متنوعة من الخدمات والمرافق، مثل اماكن الدراسة والسكنات والمطاعم وغيرها .                   نود أن نشكر جميع المستخدمين الذين اختاروا استخدام تطبيقنا، ونعدكم بأننا سنواصل تحسين التطبيق وتقديم كل ما هو جديد ومبتكر لضمان تجربة مميزة وفعّالة للجميع.
-
-
+android:text="تطبيق حولينا هو تطبيق متميز يهدف إلى تسهيل حياة طلاب السكنات وتلبية احتياجاتهم بسهولة وراحة. يتيح التطبيق للمستخدمين الوصول إلى مجموعة متنوعة من الخدمات والمرافق، مثل اماكن الدراسة والسكنات والمطاعم وغيرها .
+             نود أن نشكر جميع المستخدمين الذين اختاروا استخدام تطبيقنا، ونعدكم بأننا سنواصل تحسين التطبيق وتقديم كل ما هو جديد ومبتكر لضمان تجربة مميزة وفعّالة للجميع.
 "
-            android:textSize="33dp"
+            android:textSize="29dp"
             android:textStyle="bold" />
 
 
@@ -57,4 +56,4 @@ android:text="تطبيق حولينا هو تطبيق متميز يهدف إلى
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

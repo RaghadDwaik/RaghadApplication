@@ -39,7 +39,7 @@ public class Profile extends AppCompatActivity implements BottomNavigationView.O
     private TextView textPassword;
     private TextView textEmail;
    // private TextView textDob;
-    private TextView textLocation;
+//    private TextView textLocation;
     private TextView textMobile;
     private Button button,button2;
     private FirebaseFirestore db;
@@ -61,7 +61,7 @@ public class Profile extends AppCompatActivity implements BottomNavigationView.O
         textPassword = findViewById(R.id.textPassword);
         textEmail = findViewById(R.id.textEmail);
         //  textDob = findViewById(R.id.textDob);
-        textLocation = findViewById(R.id.textLocation);
+//        textLocation = findViewById(R.id.textLocation);
         textMobile = findViewById(R.id.textMobile);
         title = findViewById(R.id.title);
        // button = findViewById(R.id.button);
@@ -118,13 +118,13 @@ public class Profile extends AppCompatActivity implements BottomNavigationView.O
                                 String fullName = document.getString("fullName");
                                 String email = document.getString("email");
                                 String mobileNumber = document.getString("mobileNumber");
-                                String location = document.getString("location");
+//                                String location = document.getString("location");
 
                                 // Set the user's data in the respective TextViews
                                 textName.setText(fullName);
                                 textEmail.setText(email);
                                 textMobile.setText(mobileNumber);
-                                textLocation.setText(location);
+//                                textLocation.setText(location);
                             } else {
                                 // Document doesn't exist
                                 Toast.makeText(Profile.this, "User document does not exist", Toast.LENGTH_SHORT).show();
@@ -170,13 +170,13 @@ public class Profile extends AppCompatActivity implements BottomNavigationView.O
                         String name = firebaseUser.getDisplayName();
                         String email = firebaseUser.getEmail();
                      //   String password = details.getPassword();
-                        String location = details.getLocation();
+//                        String location = details.getLocation();
                         String mobile = details.getMobileNumber();
 
                         textName.setText(name);
                         textEmail.setText(email);
 //                        textPassword.setText(password);
-                        textLocation.setText(location);
+//                        textLocation.setText(location);
                         textMobile.setText(mobile);
                         title.setText(name);
 
@@ -353,60 +353,60 @@ public class Profile extends AppCompatActivity implements BottomNavigationView.O
     public void editDOB(View view) {
     }
 
-    public void editLocation(View view) {
-        TextView textLocation = findViewById(R.id.textLocation);
-        String currentLocation = textLocation.getText().toString();
-
-        // Launch an edit dialog or activity to modify the location
-        // For example, you can use an AlertDialog or start a new activity with an EditText field
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Edit Location");
-
-        final EditText editLocation = new EditText(this);
-        editLocation.setText(currentLocation);
-
-        builder.setView(editLocation);
-
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newLocation = editLocation.getText().toString();
-                textLocation.setText(newLocation);
-
-                // Save the changes to the profile data
-                // Add your code here to update the location in your data storage (e.g., a database)
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
-                    String userId = currentUser.getUid();
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    DocumentReference userRef = db.collection("User").document(userId);
-                    userRef.update("location", newLocation)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(Profile.this, "location updated successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(Profile.this, "Failed to update location", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-            }
-        });
-
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
+//    public void editLocation(View view) {
+//        TextView textLocation = findViewById(R.id.textLocation);
+//        String currentLocation = textLocation.getText().toString();
+//
+//        // Launch an edit dialog or activity to modify the location
+//        // For example, you can use an AlertDialog or start a new activity with an EditText field
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Edit Location");
+//
+//        final EditText editLocation = new EditText(this);
+//        editLocation.setText(currentLocation);
+//
+//        builder.setView(editLocation);
+//
+//        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                String newLocation = editLocation.getText().toString();
+//                textLocation.setText(newLocation);
+//
+//                // Save the changes to the profile data
+//                // Add your code here to update the location in your data storage (e.g., a database)
+//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                if (currentUser != null) {
+//                    String userId = currentUser.getUid();
+//                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                    DocumentReference userRef = db.collection("User").document(userId);
+//                    userRef.update("location", newLocation)
+//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                    Toast.makeText(Profile.this, "location updated successfully", Toast.LENGTH_SHORT).show();
+//                                }
+//                            })
+//                            .addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Toast.makeText(Profile.this, "Failed to update location", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                }
+//            }
+//        });
+//
+//
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+//    }
 
     public void editMobileNumber(View view) {
         TextView textMobile = findViewById(R.id.textMobile);

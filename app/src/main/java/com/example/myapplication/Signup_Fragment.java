@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 
 public class Signup_Fragment extends Fragment implements OnClickListener {
     private View view;
-    private EditText fullName, email, mobileNumber, location,
+    private EditText fullName, email, mobileNumber,
             password, confirmPassword;
     private TextView login;
     private Button signUpButton;
@@ -209,7 +209,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         String getFullName = fullName.getText().toString();
         String getEmailId = email.getText().toString();
         String getMobileNumber = mobileNumber.getText().toString();
-        String getLocation = location.getText().toString();
+
 
 
         String getPassword = password.getText().toString();
@@ -223,7 +223,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         if (getFullName.isEmpty()
                 || getEmailId.isEmpty()
                 || getMobileNumber.isEmpty()
-                || getLocation.isEmpty()
                 || getPassword.isEmpty()
                 || getConfirmPassword.isEmpty()) {
             new CustomToast().Show_Toast(getActivity(), view, "All fields are required.");
@@ -270,7 +269,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("fullName", getFullName);
                                     userInfo.put("email", getEmailId);
                                     userInfo.put("mobileNumber", getMobileNumber);
-                                    userInfo.put("location", getLocation);
                                     userInfo.put("isOwner", isOwner);
 
                                     // Set the user information in the Firestore document

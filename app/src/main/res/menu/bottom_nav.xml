@@ -5,7 +5,7 @@
     <item
         android:id="@+id/map"
         android:icon="@drawable/location"
-        android:title="Map"
+        android:title="الخريطة"
 
 
 
@@ -13,27 +13,26 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/home"
-        android:title="Home"
+        android:title="الصفحة الرئيسية"
+
         />
 
 
     <item
         android:id="@+id/profile"
         android:icon="@drawable/person"
-        android:title="Profile"
+        android:title="الملف الشخصي"
 
         />
     <item
         android:id="@+id/favorite"
         android:icon="@drawable/baseline_favorite_24"
-        android:title="Favorite"
+        android:title="المفضلة"
 
         />
     <item
         android:id="@+id/Recently"
         android:icon="@drawable/list"
-        android:title="Recently"
-
+        android:title="المشاهدة مؤخرا"
         />
-
 </menu>

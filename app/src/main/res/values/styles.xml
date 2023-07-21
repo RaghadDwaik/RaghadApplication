@@ -3,4 +3,9 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
 
     </style>
+    <style name="BottomNavStyle" parent="Widget.Design.BottomNavigationView">
+        <!-- Customize the title color here -->
+        <item name="android:textColor">@color/background_color</item>
+    </style>
+
 </resources>

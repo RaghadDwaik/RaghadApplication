@@ -3,161 +3,117 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/top_background">
+    android:padding="20dp">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        android:text="@string/signUp"
-        android:textColor="@color/white_greyish"
+        android:text="انشاء حساب"
+        android:textColor="@color/white"
         android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
 
     <EditText
         android:id="@+id/fullName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/user"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/white_box"
+        android:drawableLeft="@drawable/person"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:hint="@string/fullName"
+        android:hint="الاسم الكامل"
         android:inputType="textCapWords"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textSize="16sp" />
+        android:textColor="@color/background_color"
+        android:textColorHint="@color/background_color"
+        android:textSize="16sp"
+        />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
 
     <EditText
         android:id="@+id/userEmailId"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/email"
+        android:background="@drawable/white_box"
+        android:drawableLeft="@drawable/baseline_email_24"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:hint="@string/email"
+        android:hint="البريد الالكتروني"
         android:inputType="textEmailAddress"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/background_color"
+        android:textColorHint="@color/background_color"
         android:textSize="16sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
 
     <EditText
         android:id="@+id/mobileNumber"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/phone"
+        android:background="@drawable/white_box"
+        android:drawableLeft="@drawable/baseline_phone_24"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:hint="@string/mobileNumber"
+        android:hint="رقم الهاتف"
         android:inputType="phone"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/background_color"
+        android:textColorHint="@color/background_color"
         android:textSize="16sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
-
-<!--    <EditText-->
-<!--        android:id="@+id/location"-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        android:background="@android:color/transparent"-->
-<!--        android:drawableLeft="@drawable/location"-->
-<!--        android:drawablePadding="8dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:hint="@string/location"-->
-<!--        android:inputType="textCapWords"-->
-<!--        android:padding="10dp"-->
-<!--        android:singleLine="true"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textColorHint="@color/white"-->
-<!--        android:textSize="16sp" />-->
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/password"
+        android:background="@drawable/white_box"
+        android:drawableLeft="@drawable/baseline_password_24"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:hint="@string/password"
+        android:hint="كلمة السر"
         android:inputType="textPassword"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/background_color"
+        android:textColorHint="@color/background_color"
         android:textSize="16sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
 
     <EditText
         android:id="@+id/confirmPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/confirm_password"
+        android:background="@drawable/white_box"
+        android:drawableLeft="@drawable/baseline_password_24"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:hint="@string/confirmPassword"
+        android:hint="تأكيد كلمة السر"
         android:inputType="textPassword"
         android:padding="10dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/background_color"
+        android:textColorHint="@color/background_color"
         android:textSize="16sp" />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Your position"
-        android:textSize="16sp"
+        android:text="ما هو منصبك :"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/white"
 
+
         />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
+
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
@@ -168,22 +124,19 @@
             android:id="@+id/radioButtonOption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Owner"
+            android:text="مالك "
             android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/radioButtonOption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User"
+            android:text="مستخدم"
             android:textColor="@color/white"/>
 
 
     </RadioGroup>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/white_greyish" />
+
 
 
     <CheckBox
@@ -191,8 +144,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
-        android:text="@string/terms_conditions"
-        android:textColor="@color/white"
+        android:text="بالضغط على زر انشاء حساب انت تقبل بالاحكام والشروط"
+        android:textColor="@color/background_color"
         android:textSize="14sp" />
 
     <Button
@@ -200,10 +153,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:background="@drawable/loginbutton_selector"
+        android:background="@drawable/white_box"
         android:padding="3dp"
-        android:text="@string/signUp"
-        android:textColor="@color/blue"
+        android:text="انشاء حساب "
+        android:textColor="@color/background_color"
         android:textSize="17sp"
         android:textStyle="bold" />
 
@@ -215,8 +168,8 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:padding="10dp"
-        android:text="@string/already_user"
-        android:textColor="@color/white_greyish"
+        android:text="لديك حساب؟اضغط هنا لتسجيل الدخول"
+        android:textColor="@color/background_color"
         android:textSize="15sp" />
 
     <TextView
@@ -224,7 +177,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:text="or Sign up with"
+        android:text="أو قم بتسجيل الدخول عن طريق جوجل"
         android:textAlignment="center"
         android:textColor="@color/white" />
 
