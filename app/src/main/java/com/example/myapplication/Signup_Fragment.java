@@ -209,9 +209,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         String getFullName = fullName.getText().toString();
         String getEmailId = email.getText().toString();
         String getMobileNumber = mobileNumber.getText().toString();
-
-
-
         String getPassword = password.getText().toString();
         String getConfirmPassword = confirmPassword.getText().toString();
 

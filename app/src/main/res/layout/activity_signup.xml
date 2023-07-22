@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:background="@drawable/white_box"
-        android:drawableLeft="@drawable/person"
+        android:drawableRight="@drawable/person"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:hint="الاسم الكامل"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/white_box"
-        android:drawableLeft="@drawable/baseline_email_24"
+        android:drawableRight="@drawable/baseline_email_24"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:hint="البريد الالكتروني"
@@ -58,9 +58,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/white_box"
-        android:drawableLeft="@drawable/baseline_phone_24"
+        android:drawableRight="@drawable/baseline_phone_24"
         android:drawablePadding="8dp"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|end"
         android:hint="رقم الهاتف"
         android:inputType="phone"
         android:padding="10dp"
@@ -75,9 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/white_box"
-        android:drawableLeft="@drawable/baseline_password_24"
+        android:drawableRight="@drawable/baseline_password_24"
         android:drawablePadding="8dp"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|end"
         android:hint="كلمة السر"
         android:inputType="textPassword"
         android:padding="10dp"
@@ -92,9 +92,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/white_box"
-        android:drawableLeft="@drawable/baseline_password_24"
+        android:drawableRight="@drawable/baseline_password_24"
         android:drawablePadding="8dp"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|end"
         android:hint="تأكيد كلمة السر"
         android:inputType="textPassword"
         android:padding="10dp"
@@ -108,36 +108,36 @@
         android:layout_height="wrap_content"
         android:text="ما هو منصبك :"
         android:textSize="18sp"
+        android:gravity="center_vertical"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
-
-
         />
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <RadioButton
             android:id="@+id/radioButtonOption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="مالك "
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:gravity="right"
+            />
 
         <RadioButton
             android:id="@+id/radioButtonOption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="مستخدم"
-            android:textColor="@color/white"/>
-
+            android:textColor="@color/white"
+            android:gravity="right"/>
 
     </RadioGroup>
-
-
 
     <CheckBox
         android:id="@+id/terms_conditions"
