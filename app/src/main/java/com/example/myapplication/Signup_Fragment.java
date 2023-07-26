@@ -53,10 +53,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     private CheckBox terms_conditions;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private static final int RC_SIGN_IN = 123; // Request code for sign-in
-    private SignInButton googleSignInButton;
-    private GoogleSignInClient mGoogleSignInClient;
-    private static final String TAG = "Signup_Fragment";
     private RadioGroup radioGroup;
     private RadioButton radioButton1,radioButton2;
 
@@ -98,7 +94,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         signUpButton = view.findViewById(R.id.signUpBtn);
         login = view.findViewById(R.id.already_user);
         terms_conditions = view.findViewById(R.id.terms_conditions);
-         googleSignInButton =view.findViewById(R.id.google_sign_in_button);
         radioGroup = view.findViewById(R.id.radioGroup);
         radioButton1=view.findViewById(R.id.radioButtonOption1);
         radioButton2= view.findViewById(R.id.radioButtonOption2);
@@ -125,7 +120,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     private void setListeners() {
         signUpButton.setOnClickListener(this);
         login.setOnClickListener(this);
-         googleSignInButton.setOnClickListener(this);
 
     }
 
@@ -141,67 +135,11 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                 // Replace login fragment
                 new Registration().replaceLoginFragment();
                 break;
-            case R.id.google_sign_in_button:
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-
-                googleSignInButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                        startActivityForResult(signInIntent, RC_SIGN_IN);
-                    }
-                });
-
-
-
-
-            break;
 
         }
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
-            try {
-                // Google Sign-In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-                // Google Sign-In failed, handle the error
-                Log.w(TAG, "Google sign-in failed", e);
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign-in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // Continue with your app logic
-                        } else {
-                            // Sign-in failed, display a message to the user
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
 
     // Check Validation Method
     private void checkValidation() {
@@ -244,7 +182,9 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
             String selectedOption = selectedRadioButton.getText().toString();
 
             // Determine if the registration is for an owner
-            boolean isOwner = selectedOption.equals("Owner");
+        boolean isOwner = radioButton1.isChecked();
+            Log.d("Signup_Fragment", "Selected option: " + selectedOption);
+            Log.d("Signup_Fragment", "isOwner: " + isOwner);
 
             // Create user with email and password
             mAuth.createUserWithEmailAndPassword(getEmailId, getPassword)
@@ -266,7 +206,9 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("fullName", getFullName);
                                     userInfo.put("email", getEmailId);
                                     userInfo.put("mobileNumber", getMobileNumber);
-                                    userInfo.put("isOwner", isOwner);
+                                    userInfo.put("isUser", isOwner);
+                                    userInfo.put("id", userId);
+
 
                                     // Set the user information in the Firestore document
                                     userRef.set(userInfo)
@@ -274,9 +216,11 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     // Document successfully written
-                                                    if (isOwner) {
+                                                    if (isOwner)
+                                                    {
                                                         // Handle owner registration (specify owner of a place) here
                                                         handleOwnerRegistration(userId);
+                                                        Log.d("Signup_Fragment", "Redirecting to OwnerHomePage");
                                                     } else {
                                                         // Handle user registration here
                                                         handleUserRegistration();
@@ -304,9 +248,8 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     }
     // Method to handle owner registration (specify owner of a place)
     private void handleOwnerRegistration(String ownerId) {
-
         // For example, you can start a new activity to add the place details and associate it with the owner
-        Intent intent = new Intent(getActivity(), OwnerPlaceRegistrationActivity.class);
+        Intent intent = new Intent(getActivity(), OwnerHomePage.class);
         intent.putExtra("ownerId", ownerId);
         startActivity(intent);
     }
@@ -317,4 +260,3 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         startActivity(intent);
     }
 }
-

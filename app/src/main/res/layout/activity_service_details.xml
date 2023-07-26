@@ -90,6 +90,31 @@
                 android:src="@drawable/baseline_favorite_24"
                 android:contentDescription="Favorite List"
                 android:layout_marginTop="15dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/contact"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="100dp"
+                    android:contentDescription="Contact With Owner"
+                    android:src="@drawable/img_6"
+                    android:background="@android:color/transparent"/>
+
+                <TextView
+                    android:id="@+id/c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginRight="0dp"
+                    android:text="Contact With Owner"
+                    android:textSize="20dp" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
