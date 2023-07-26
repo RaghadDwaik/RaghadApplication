@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    tools:context=".OwnerHomePage">
+
+    <!-- App title at the top -->
+    <TextView
+        android:id="@+id/tvAppTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Dashboard"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:background="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"/>
+
+    <!-- Message button -->
+    <Button
+        android:id="@+id/btnMessage"
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_height="wrap_content"
+        android:text="Message"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_below="@id/tvAppTitle"
+
+        android:layout_marginTop="72dp"
+        android:padding="16dp"/>
+
+    <!-- Add Place button -->
+    <Button
+        android:id="@+id/btnAddPlace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Place"
+        android:background="@color/black"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:onClick="btn"
+        android:layout_below="@id/btnMessage"
+        android:layout_marginTop="66dp"
+        android:padding="16dp"
+        tools:ignore="OnClick" />
+
+    <!-- View My Place button -->
+    <Button
+        android:id="@+id/btnViewMyPlace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View My Place"
+        android:background="@color/black"
+        android:onClick="btnshow"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_below="@id/btnAddPlace"
+        android:layout_marginTop="66dp"
+        android:padding="16dp"/>
+
+</RelativeLayout>

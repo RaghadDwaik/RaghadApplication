@@ -37,6 +37,7 @@ public class UserAdapter extends FirestoreRecyclerAdapter<ServicesClass, UserAda
     @Override
     protected void onBindViewHolder(@NonNull SalonViewHolder holder, int position, @NonNull ServicesClass model) {
         holder.bind(model);
+
     }
 
     @NonNull

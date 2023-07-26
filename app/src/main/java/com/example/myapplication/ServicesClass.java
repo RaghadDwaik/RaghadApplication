@@ -8,6 +8,16 @@ public class ServicesClass {
 
     private String id;
     private String name;
+
+    public String getPlacename() {
+        return placename;
+    }
+
+    public void setPlacename(String placename) {
+        this.placename = placename;
+    }
+
+    private String placename;
     private String image;
     private double price;
     private String description;
@@ -20,6 +30,15 @@ public class ServicesClass {
         this.image = image;
         this.price = price;
         this.description = description;
+    }
+
+    public ServicesClass(String name, String image, double price, String description, String placename) {
+
+        this.name = name;
+        this.image = image;
+        this.price = price;
+        this.description = description;
+        this.placename=placename;
     }
 
     public ServicesClass(String id,String name, String image, double price) {

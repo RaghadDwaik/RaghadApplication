@@ -322,7 +322,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
                         intent.putExtra("price", rest.getPrice());
                         intent.putExtra("desc", rest.getDescription());
                         intent.putExtra("image", rest.getImage());
-
+                        intent.putExtra("place", drycleanName);
                         // Add any other necessary data as extras
                         startActivity(intent);
                     })

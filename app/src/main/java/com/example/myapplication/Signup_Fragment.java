@@ -98,7 +98,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         signUpButton = view.findViewById(R.id.signUpBtn);
         login = view.findViewById(R.id.already_user);
         terms_conditions = view.findViewById(R.id.terms_conditions);
-         googleSignInButton =view.findViewById(R.id.google_sign_in_button);
+        googleSignInButton =view.findViewById(R.id.google_sign_in_button);
         radioGroup = view.findViewById(R.id.radioGroup);
         radioButton1=view.findViewById(R.id.radioButtonOption1);
         radioButton2= view.findViewById(R.id.radioButtonOption2);
@@ -125,7 +125,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     private void setListeners() {
         signUpButton.setOnClickListener(this);
         login.setOnClickListener(this);
-         googleSignInButton.setOnClickListener(this);
+        googleSignInButton.setOnClickListener(this);
 
     }
 
@@ -160,7 +160,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
 
 
 
-            break;
+                break;
 
         }
     }
@@ -266,7 +266,9 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("fullName", getFullName);
                                     userInfo.put("email", getEmailId);
                                     userInfo.put("mobileNumber", getMobileNumber);
-                                    userInfo.put("isOwner", isOwner);
+                                    userInfo.put("isUser", isOwner);
+                                    userInfo.put("id", userId);
+
 
                                     // Set the user information in the Firestore document
                                     userRef.set(userInfo)
@@ -274,7 +276,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     // Document successfully written
-                                                    if (isOwner) {
+                                                    if (isOwner== false) {
                                                         // Handle owner registration (specify owner of a place) here
                                                         handleOwnerRegistration(userId);
                                                     } else {
@@ -306,7 +308,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     private void handleOwnerRegistration(String ownerId) {
 
         // For example, you can start a new activity to add the place details and associate it with the owner
-        Intent intent = new Intent(getActivity(), OwnerPlaceRegistrationActivity.class);
+        Intent intent = new Intent(getActivity(), OwnerHomePage.class);
         intent.putExtra("ownerId", ownerId);
         startActivity(intent);
     }
@@ -317,4 +319,3 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         startActivity(intent);
     }
 }
-

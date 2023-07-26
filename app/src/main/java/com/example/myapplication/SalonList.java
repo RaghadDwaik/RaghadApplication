@@ -71,6 +71,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
         salonId = intent.getStringExtra("salon_id");
         salonName = intent.getStringExtra("salon_name");
+
         salonImage = intent.getStringExtra("salon_image");
         float supermarketRating = getIntent().getFloatExtra("salon_rating", 0.0f);
         rating.setRating(supermarketRating);
@@ -327,6 +328,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                         intent.putExtra("price", rest.getPrice());
                         intent.putExtra("desc", rest.getDescription());
                         intent.putExtra("image", rest.getImage());
+                        intent.putExtra("place", salonName);
+
 
                         // Add any other necessary data as extras
                         startActivity(intent);
