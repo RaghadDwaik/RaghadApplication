@@ -276,7 +276,8 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     // Document successfully written
-                                                    if (isOwner== false) {
+                                                    if (isOwner== false)
+                                                    {
                                                         // Handle owner registration (specify owner of a place) here
                                                         handleOwnerRegistration(userId);
                                                     } else {
