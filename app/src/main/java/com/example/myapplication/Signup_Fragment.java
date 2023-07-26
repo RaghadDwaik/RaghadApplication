@@ -54,8 +54,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private static final int RC_SIGN_IN = 123; // Request code for sign-in
-    private SignInButton googleSignInButton;
-    private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "Signup_Fragment";
     private RadioGroup radioGroup;
     private RadioButton radioButton1,radioButton2;
@@ -98,7 +96,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         signUpButton = view.findViewById(R.id.signUpBtn);
         login = view.findViewById(R.id.already_user);
         terms_conditions = view.findViewById(R.id.terms_conditions);
-         googleSignInButton =view.findViewById(R.id.google_sign_in_button);
         radioGroup = view.findViewById(R.id.radioGroup);
         radioButton1=view.findViewById(R.id.radioButtonOption1);
         radioButton2= view.findViewById(R.id.radioButtonOption2);
@@ -125,7 +122,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     private void setListeners() {
         signUpButton.setOnClickListener(this);
         login.setOnClickListener(this);
-         googleSignInButton.setOnClickListener(this);
 
     }
 
@@ -141,27 +137,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                 // Replace login fragment
                 new Registration().replaceLoginFragment();
                 break;
-            case R.id.google_sign_in_button:
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-
-                googleSignInButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                        startActivityForResult(signInIntent, RC_SIGN_IN);
-                    }
-                });
-
-
-
-
-            break;
-
         }
     }
     @Override
@@ -215,6 +190,11 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         // Pattern match for email id
         Pattern p = Pattern.compile(Utils.regEx);
         Matcher m = p.matcher(getEmailId);
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        if (!getPassword.matches(passwordPattern)) {
+            new CustomToast().Show_Toast(getActivity(), view, "Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+            return;
+        }
 
         // Check if all strings are null or empty
         if (getFullName.isEmpty()
@@ -244,7 +224,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
             String selectedOption = selectedRadioButton.getText().toString();
 
             // Determine if the registration is for an owner
-            boolean isOwner = selectedOption.equals("Owner");
+            boolean isOwner = selectedOption.equals("مالك");
 
             // Create user with email and password
             mAuth.createUserWithEmailAndPassword(getEmailId, getPassword)

@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -256,9 +256,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView nav1 = findViewById(R.id.bottom);
         nav1.setItemIconTintList(null);
 
-//         searchView = findViewById(R.id.search);
-//        searchView.setOnQueryTextListener(this);
-//       searchView.setQueryHint("ابحث هنا....");
+         searchView = findViewById(R.id.search);
+        searchView.setOnQueryTextListener(this);
+       searchView.setQueryHint("ابحث هنا....");
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

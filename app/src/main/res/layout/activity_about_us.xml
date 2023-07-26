@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/white"
     tools:context=".AboutUs">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,44 +15,71 @@
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav"
         app:itemTextColor="@color/background_color"/>
-    <RelativeLayout
-        android:id="@+id/toolBar"
 
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/bottom"
+        android:padding="8dp">
 
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/title"
+        <!-- Content Container -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="حولينا"
-            android:textColor="@color/white"
-            android:textSize="33dp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
+    <!-- Header -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/location"
+        android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:layout_marginTop="100dp"
-            android:layout_marginRight="18dp"
-android:text="تطبيق حولينا هو تطبيق متميز يهدف إلى تسهيل حياة طلاب السكنات وتلبية احتياجاتهم بسهولة وراحة. يتيح التطبيق للمستخدمين الوصول إلى مجموعة متنوعة من الخدمات والمرافق، مثل اماكن الدراسة والسكنات والمطاعم وغيرها .
-             نود أن نشكر جميع المستخدمين الذين اختاروا استخدام تطبيقنا، ونعدكم بأننا سنواصل تحسين التطبيق وتقديم كل ما هو جديد ومبتكر لضمان تجربة مميزة وفعّالة للجميع.
-"
-            android:textSize="29dp"
-            android:textStyle="bold" />
+    <!-- App Description -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="     تطبيق حولينا هو تطبيق متميز يهدف إلى تسهيل حياة طلاب السكنات وتلبية احتياجاتهم بسهولة وراحة. يتيح التطبيق للمستخدمين الوصول إلى مجموعة متنوعة من الخدمات والمرافق، مثل اماكن الدراسة والسكنات والمطاعم وغيرها.  "
+        android:textSize="26sp"
+        android:textStyle="bold"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="نود أن نشكر جميع المستخدمين الذين اختاروا استخدام تطبيقنا، ونعدكم بأننا سنواصل تحسين التطبيق وتقديم كل ما هو جديد ومبتكر لضمان تجربة مميزة وفعّالة للجميع"
+        android:textSize="26sp"
+        android:textStyle="bold"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:background="@color/background_color"
+                android:layout_marginTop="50dp"/>
 
+    <!-- Team Information -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="فريقنا:  ندى كلغاصي , رغد دويك ,أسماء رماني"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginTop="110dp"/>
 
+    <!-- Contact Information -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="تواصلوا معناعبر البريد الالكتروني:"
+        android:textSize="25sp"
+       />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" aroundus2023n@gmail.com"
+        android:textSize="24sp"
+        android:gravity="center"
+    />
+        </LinearLayout>
 
-    </RelativeLayout>
-
-
-
-
+    </ScrollView>
 </RelativeLayout>

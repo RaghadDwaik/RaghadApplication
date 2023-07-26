@@ -118,6 +118,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_gravity="right"
+        android:layoutDirection="rtl"
         >
 
         <RadioButton
@@ -143,16 +145,18 @@
         android:id="@+id/terms_conditions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="10dp"
         android:text="بالضغط على زر انشاء حساب انت تقبل بالاحكام والشروط"
         android:textColor="@color/background_color"
+        android:layoutDirection="rtl"
+        android:layout_marginLeft="57dp"
         android:textSize="14sp" />
 
     <Button
         android:id="@+id/signUpBtn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/white_box"
         android:padding="3dp"
         android:text="انشاء حساب "
@@ -165,27 +169,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:padding="10dp"
         android:text="لديك حساب؟اضغط هنا لتسجيل الدخول"
         android:textColor="@color/background_color"
         android:textSize="15sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:text="أو قم بتسجيل الدخول عن طريق جوجل"
-        android:textAlignment="center"
-        android:textColor="@color/white" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp" />
 
 </LinearLayout>

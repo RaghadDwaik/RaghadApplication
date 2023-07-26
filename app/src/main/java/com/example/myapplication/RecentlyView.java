@@ -2,11 +2,17 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,11 +31,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecentlyView extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, UserAdapter.OnItemClickListener {
+public class RecentlyView extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, UserAdapter.OnItemClickListener, View.OnClickListener {
 
     private RecyclerView recyclerView;
     private BottomNavigationView bottom;
     private UserAdapter adapter;
+    private ImageView imageButton;
 
    // private List<PlacesClass> recentlyViewedList;
     private SearchView searchView;
@@ -40,6 +47,20 @@ public class RecentlyView extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recently_view);
+//        imageButton  = findViewById(R.id.backButton);
+//       imageButton.setOnClickListener(this);
+//        imageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("ImageButton", "Back button clicked");
+//                Toast.makeText(RecentlyView.this, "Back button clicked", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(RecentlyView.this, MainActivity.class);
+//                startActivity(intent);
+//
+//            }
+//        });
+
+
 
         recyclerView = findViewById(R.id.Recently_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -62,7 +83,14 @@ public class RecentlyView extends AppCompatActivity implements BottomNavigationV
         bottom = findViewById(R.id.bottom);
         bottom.setItemIconTintList(null);
         bottom.setOnNavigationItemSelectedListener(this);
+
+
+
+
+
     }
+
+
 
     @Override
     protected void onStart() {
@@ -123,4 +151,16 @@ public class RecentlyView extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+//    public void backButton(View view) {
+//        Intent intent = new Intent(RecentlyView.this, MainActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
+
+    @Override
+    public void onClick(View v) {
+//        Intent intent = new Intent(RecentlyView.this, MainActivity.class);
+//        startActivity(intent);
+//        finish();
+    }
 }

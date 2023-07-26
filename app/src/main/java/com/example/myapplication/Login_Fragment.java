@@ -63,6 +63,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     private static Button loginButton;
     private static TextView forgotPassword, signUp;
     private static CheckBox show_hide_password;
+    private static TextView textView ;
     private static LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
@@ -112,7 +113,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                 .findViewById(R.id.show_hide_password);
         loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
         googleSignInButton =view.findViewById(R.id.google_sign_in_button);
-
+        textView = view.findViewById(R.id.textView);
         // Load ShakeAnimation
         shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.shake);
@@ -153,15 +154,15 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                         // password
                         if (isChecked) {
 
-                            show_hide_password.setText(R.string.hide_pwd);// change
+                            textView.setText(R.string.hide_pwd);// change
                             // checkbox
-                            // text
+                            // text R.string.hide_password
 
                             password.setInputType(InputType.TYPE_CLASS_TEXT);
                             password.setTransformationMethod(HideReturnsTransformationMethod
                                     .getInstance());// show password
                         } else {
-                            show_hide_password.setText(R.string.show_pwd);// change
+                            textView.setText(R.string.show_pwd);// change
                             // checkbox
                             // text
 
