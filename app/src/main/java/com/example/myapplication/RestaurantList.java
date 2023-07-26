@@ -317,6 +317,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
                     intent.putExtra("price", rest.getPrice());
                     intent.putExtra("desc", rest.getDescription());
                     intent.putExtra("image", rest.getImage());
+                    intent.putExtra("place", restaurantName);
 
                     // Add any other necessary data as extras
                     startActivity(intent);

@@ -73,6 +73,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         // Get the details of the selected supermarket from the intent
         supermarketId = intent.getStringExtra("supermarket_id");
         supermarketName = intent.getStringExtra("supermarket_name");
+
         float supermarketRating = getIntent().getFloatExtra("supermarket_rating", 0.0f);
         rating.setRating(supermarketRating);
         // rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
@@ -265,6 +266,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                     intent.putExtra("price", rest.getPrice());
                     intent.putExtra("desc", rest.getDescription());
                     intent.putExtra("image", rest.getImage());
+                    intent.putExtra("place", supermarketName);
 
                     // Add any other necessary data as extras
                     startActivity(intent);

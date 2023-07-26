@@ -6,6 +6,16 @@ import java.util.Comparator;
 public class PlacesClass implements Comparator<PlacesClass> {
     private String name;
 
+    public String getOwnerid() {
+        return ownerid;
+    }
+
+    public void setOwnerid(String ownerid) {
+        this.ownerid = ownerid;
+    }
+
+    private String ownerid;
+
     public String getId() {
         return id;
     }
@@ -57,8 +67,9 @@ public class PlacesClass implements Comparator<PlacesClass> {
         this.name = name;
 
     }
-    public PlacesClass(String id,String name, String image) {
-        this.id=id;
+
+    public PlacesClass(String name, String image, String ownerid) {
+        this.ownerid=ownerid;
         this.name = name;
         this.image = image;
     }
