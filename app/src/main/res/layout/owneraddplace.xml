@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/top_background"
+    android:background="@color/background_color"
     android:layout_gravity="center"
-    android:gravity="center"
     tools:context=".OwnerAddPlace">
 
     <ScrollView
@@ -16,53 +15,67 @@
         <!-- Single parent layout to contain all the views -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="600dp"
+            android:orientation="vertical"
+            >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Place Name"
-                android:textSize="20sp"
-                android:textColor="@color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="اضافة مكان"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:layout_marginTop="100dp"/>
 
-            <EditText
+
+    <EditText
                 android:id="@+id/placeNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter place name"
-                android:textSize="15sp"
-                android:textColorHint="@color/white"/>
+                android:hint="ادخل اسم المكان"
+                android:textColorHint="@color/background_color"
+                android:background="@drawable/white_box"
+                android:padding="10dp"
+        android:layout_marginTop="20dp"
+                android:textSize="15dp" />
 
             <EditText
                 android:id="@+id/imagee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:hint="Enter image url"
-                android:textSize="15sp"
-                android:textColorHint="@color/white"/>
+                android:layout_marginTop="20dp"
+                android:hint="ادخل رابط الصورة"
+                android:textColorHint="@color/background_color"
+                android:background="@drawable/white_box"
+                android:padding="10dp"
+                android:textSize="15sp" />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/plasec"
-                android:outlineAmbientShadowColor="@color/white"
+                android:background="@drawable/white_box"
                 android:contentDescription="Place type"
+                android:entries="@array/places"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:outlineAmbientShadowColor="@color/white"
                 android:outlineSpotShadowColor="@color/white"
-                android:background="@drawable/top_background"/>
+                />
+
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/loginbutton_selector"
-                android:textColor="@color/blue"
-                android:layout_marginTop="20dp"
-                android:textSize="20sp"
-                android:text="Save"
-                android:onClick="saveButtonClicked" />
+                android:layout_marginTop="30dp"
+                android:background="@drawable/white_box"
+                android:onClick="saveButtonClicked"
+                android:text="حفظ"
+                android:textStyle="bold"
+                android:textColor="@color/background_color"
+                android:textSize="20sp" />
 
         </LinearLayout>
 

@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white"
+    android:background="@color/background_color"
     tools:context=".OwnerHomePage">
+
 
     <!-- App title at the top -->
     <TextView
@@ -14,24 +15,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="My Dashboard"
-        android:textColor="@color/background_color"
+        android:textColor="@color/white"
         android:textSize="30sp"
-        android:background="@drawable/white_box"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:padding="10dp"/>
 
     <!-- Message button -->
+
+
     <Button
         android:id="@+id/btnMessage"
         android:layout_width="match_parent"
-        android:background="@color/black"
         android:layout_height="wrap_content"
         android:text="Message"
-        android:textColor="@android:color/white"
+        android:textColor="@color/background_color"
         android:textSize="17sp"
         android:layout_below="@id/tvAppTitle"
-
+        android:background="@drawable/white_box"
         android:layout_marginTop="72dp"
         android:padding="16dp"/>
 
@@ -41,8 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Place"
-        android:background="@color/black"
-        android:textColor="@android:color/white"
+        android:background="@drawable/white_box"
+        android:textColor="@color/background_color"
         android:textSize="18sp"
         android:onClick="btn"
         android:layout_below="@id/btnMessage"
@@ -56,9 +57,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View My Place"
-        android:background="@color/black"
+        android:background="@drawable/white_box"
         android:onClick="btnshow"
-        android:textColor="@android:color/white"
+        android:textColor="@color/background_color"
         android:textSize="18sp"
         android:layout_below="@id/btnAddPlace"
         android:layout_marginTop="66dp"

@@ -71,7 +71,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     private static Button loginButton;
     private static TextView forgotPassword, signUp;
     private static CheckBox show_hide_password;
-    private static TextView textView ;
+    private static TextView textView;
     private static LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
@@ -119,11 +119,11 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         loginButton = (Button) view.findViewById(R.id.loginBtn);
         forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
         signUp = (TextView) view.findViewById(R.id.createAccount);
-        show_hide_password = (CheckBox) view
-                .findViewById(R.id.show_hide_password);
+        show_hide_password = (CheckBox) view.findViewById(R.id.show_hide_password);
+        textView=view.findViewById(R.id.textView);
         loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
         googleSignInButton =view.findViewById(R.id.google_sign_in_button);
-        textView = view.findViewById(R.id.textView);
+
         // Load ShakeAnimation
         shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.shake);
@@ -168,7 +168,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
                             textView.setText(R.string.hide_pwd);// change
                             // checkbox
-                            // text R.string.hide_password
+                            // text
 
                             password.setInputType(InputType.TYPE_CLASS_TEXT);
                             password.setTransformationMethod(HideReturnsTransformationMethod
@@ -327,7 +327,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
                             Intent intent = new Intent(getActivity(), OwnerHomePage.class);
                             intent.putExtra("ownerId", userId);
-System.out.println("1111111111111111111111111111111111111111111111111111111111111111 "+userId);
+                            System.out.println("1111111111111111111111111111111111111111111111111111111111111111 "+userId);
                             startActivity(intent);
                         } else {
                             // User is not an owner, redirect to the regular user's activity
