@@ -35,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -113,6 +114,76 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
             });
         }
 
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+
+            String ownerId = currentUser.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference placeRef = db.collection("Places").document(dormsId);
+            placeRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String owner = document.getString("ownerId");
+                        if (owner != null && owner.equals(ownerId)) {
+                            Button deleteButton = findViewById(R.id.deleteButton);
+                            deleteButton.setVisibility(View.VISIBLE);
+                            deleteButton.setOnClickListener(v -> deletePlace(dormsId));
+
+                            Button editButton = findViewById(R.id.edit);
+
+                            editButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    showEditDialog();
+                                }
+                            });
+
+                        } else {
+
+                            Button editButton = findViewById(R.id.edit);
+                            editButton.setVisibility(View.GONE);
+
+                            Button deleteButton = findViewById(R.id.deleteButton);
+                            deleteButton.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            });
+
+
+            //---------------------------------------------
+            String userId = currentUser.getUid();
+            CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
+
+            if (dormsId != null) {
+                DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
+                DocumentReference restaurantRatingDocRef = userRatingDocRef.collection("Rating").document(dormsId);
+                restaurantRatingDocRef.addSnapshotListener((documentSnapshot, e) -> {
+                    try {
+                        if (e != null) {
+                            throw e; // Throw the exception if it's not null
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Float ratingValue = documentSnapshot.getDouble("rating").floatValue();
+                            ratingBar.setRating(ratingValue);
+                        } else {
+                            // If the restaurant doesn't exist in the user's ratings, set the rating to zero
+                            ratingBar.setRating(0.0f);
+                        }
+                    } catch (Exception exception) {
+                        // Handle the exception
+                        System.out.println("Error retrieving rating snapshot: " + exception.getMessage());
+                        exception.printStackTrace();
+                    }
+                });
+            }
+        } else {
+            // Handle the case when the currentUser is null
+        }
+
         // Implement the search functionality (assuming it's used to search for other dormitories)
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -128,14 +199,7 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
             }
         });
 
-        Button editButton = findViewById(R.id.edit);
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditDialog();
-            }
-        });
 }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -197,13 +261,13 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference restaurantRef = db.collection("Places").document(dormsId);
 
-        HashMap<String, Object> updates = new HashMap<>();
-        updates.put("name", newName);
-        updates.put("image", newImage);
+        java.util.Map<String, Object> firestoreUpdates = new HashMap<>();
+        firestoreUpdates.put("name", newName);
+        firestoreUpdates.put("image", newImage);
 
-        restaurantRef.update(updates)
+        restaurantRef.update(firestoreUpdates)
                 .addOnSuccessListener(aVoid -> {
-                    // Update successful
+                    // Update successful in Firestore
                     // You can show a success message or take appropriate action
                     // Update the UI with the new name and image if needed
                     dormsName = newName;
@@ -215,13 +279,82 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
                             .load(dormsImage)
                             .centerCrop()
                             .into(restaurantImageView);
+
+                    // After updating in Firestore, now update in Realtime Database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference r = database.getReference("Dorms").child(dormsName);
+
+                    java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
+                    realtimeUpdates.put("name", newName);
+                    realtimeUpdates.put("image", newImage);
+
+                    r.updateChildren(realtimeUpdates)
+                            .addOnSuccessListener(aVoid1 -> {
+                                // Update successful in Realtime Database
+                                // You can show a success message or take appropriate action
+                                // Update the UI with the new name and image if needed
+                                dormsName = newName;
+                                dormsImage = newImage;
+
+                                // Reload the image using Glide
+                                Glide.with(this)
+                                        .load(dormsImage)
+                                        .centerCrop()
+                                        .into(restaurantImageView);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update in Realtime Database
+                                Toast.makeText(this, "Failed to update restaurant details in Realtime Database", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
                 })
                 .addOnFailureListener(e -> {
-                    // Handle the failure to update the restaurant details
-                    // You can show an error message or take appropriate action
-                    Toast.makeText(this, "Failed to update restaurant details", Toast.LENGTH_SHORT).show();
+                    // Handle the failure to update in Firestore
+                    Toast.makeText(this, "Failed to update restaurant details in Firestore", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 });
     }
+
+    private void deletePlace(String placeId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("هل أنت متأكد من أنك تريد حذف هذا المكان؟")
+                .setPositiveButton("نعم", (dialog, which) -> {
+                    // Delete from Firebase Realtime Database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference placeRef = database.getReference("Supermarket").child(dormsName);
+
+                    placeRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                // Deletion from Realtime Database successful
+                                // You can add any specific actions you want after deletion
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from Realtime Database
+                                e.printStackTrace();
+                            });
+
+                    // Delete from Firestore
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Places").document(placeId)
+                            .delete()
+                            .addOnSuccessListener(aVoid -> {
+                                // Deletion from Firestore successful
+                                Toast.makeText(this, "تم حذف المكان بنجاح", Toast.LENGTH_SHORT).show();
+                                finish(); // Finish the activity after deletion
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from Firestore
+                                Toast.makeText(this, "فشل في حذف المكان", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
+                })
+                .setNegativeButton("لا", (dialog, which) -> {
+                    // User clicked "لا", do nothing
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 
 }

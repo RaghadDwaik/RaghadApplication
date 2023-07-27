@@ -199,15 +199,31 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("هل أنت متأكد من أنك تريد حذف هذا المكان؟")
                 .setPositiveButton("نعم", (dialog, which) -> {
-                    // Perform the deletion logic here, e.g., delete the place from Firestore
+                    // Delete from Firebase Realtime Database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference placeRef = database.getReference("salon").child(salonName);
+
+                    placeRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                // Deletion from Realtime Database successful
+                                // You can add any specific actions you want after deletion
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from Realtime Database
+                                e.printStackTrace();
+                            });
+
+                    // Delete from Firestore
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("Places").document(salonId)
+                    db.collection("Places").document(placeId)
                             .delete()
                             .addOnSuccessListener(aVoid -> {
+                                // Deletion from Firestore successful
                                 Toast.makeText(this, "تم حذف المكان بنجاح", Toast.LENGTH_SHORT).show();
                                 finish(); // Finish the activity after deletion
                             })
                             .addOnFailureListener(e -> {
+                                // Handle the failure to delete from Firestore
                                 Toast.makeText(this, "فشل في حذف المكان", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             });
@@ -312,13 +328,13 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference restaurantRef = db.collection("Places").document(salonId);
 
-        HashMap<String, Object> updates = new HashMap<>();
-        updates.put("name", newName);
-        updates.put("image", newImage);
+        java.util.Map<String, Object> firestoreUpdates = new HashMap<>();
+        firestoreUpdates.put("name", newName);
+        firestoreUpdates.put("image", newImage);
 
-        restaurantRef.update(updates)
+        restaurantRef.update(firestoreUpdates)
                 .addOnSuccessListener(aVoid -> {
-                    // Update successful
+                    // Update successful in Firestore
                     // You can show a success message or take appropriate action
                     // Update the UI with the new name and image if needed
                     salonName = newName;
@@ -330,11 +346,38 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                             .load(salonImage)
                             .centerCrop()
                             .into(restaurantImageView);
+
+                    // After updating in Firestore, now update in Realtime Database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference r = database.getReference("salon").child(salonName);
+
+                    java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
+                    realtimeUpdates.put("name", newName);
+                    realtimeUpdates.put("image", newImage);
+
+                    r.updateChildren(realtimeUpdates)
+                            .addOnSuccessListener(aVoid1 -> {
+                                // Update successful in Realtime Database
+                                // You can show a success message or take appropriate action
+                                // Update the UI with the new name and image if needed
+                                salonName = newName;
+                                salonImage = newImage;
+
+                                // Reload the image using Glide
+                                Glide.with(this)
+                                        .load(salonImage)
+                                        .centerCrop()
+                                        .into(restaurantImageView);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update in Realtime Database
+                                Toast.makeText(this, "Failed to update restaurant details in Realtime Database", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
                 })
                 .addOnFailureListener(e -> {
-                    // Handle the failure to update the restaurant details
-                    // You can show an error message or take appropriate action
-                    Toast.makeText(this, "Failed to update restaurant details", Toast.LENGTH_SHORT).show();
+                    // Handle the failure to update in Firestore
+                    Toast.makeText(this, "Failed to update restaurant details in Firestore", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 });
     }
