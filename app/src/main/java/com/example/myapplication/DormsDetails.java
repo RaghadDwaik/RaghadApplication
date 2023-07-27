@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +34,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class DormsDetails extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +48,8 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
     private CollectionReference favoritesRef;
 
     private BottomNavigationView bottom;
+    private AlertDialog editDialog;
+
 
     private SearchView searchView;
     String dormsId,dormsName,dormsImage,image, imagee, imageee,imageeee;
@@ -118,7 +128,14 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
             }
         });
 
+        Button editButton = findViewById(R.id.edit);
 
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditDialog();
+            }
+        });
 }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -148,6 +165,63 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
                 return true;
         }
         return false;
+    }
+
+    private void showEditDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
+        EditText editTextName = dialogView.findViewById(R.id.editTextName);
+        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+
+        // Pre-fill the EditText fields with the existing data
+        editTextName.setText(dormsName);
+        editTextImage.setText(dormsImage);
+
+        // Build the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
+                    String newName = editTextName.getText().toString().trim();
+                    String newImage = editTextImage.getText().toString().trim();
+                    updateRestaurantDetails(newName, newImage);
+                })
+                .setNegativeButton("تخطي", null);
+
+        // Show the AlertDialog
+        editDialog = builder.create();
+        editDialog.show();
+    }
+
+    private void updateRestaurantDetails(String newName, String newImage) {
+        // Update the restaurant details in the Firebase Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference restaurantRef = db.collection("Places").document(dormsId);
+
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put("name", newName);
+        updates.put("image", newImage);
+
+        restaurantRef.update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    // Update successful
+                    // You can show a success message or take appropriate action
+                    // Update the UI with the new name and image if needed
+                    dormsName = newName;
+                    dormsImage = newImage;
+
+                    // Reload the image using Glide
+                    ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
+                    Glide.with(this)
+                            .load(dormsImage)
+                            .centerCrop()
+                            .into(restaurantImageView);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the failure to update the restaurant details
+                    // You can show an error message or take appropriate action
+                    Toast.makeText(this, "Failed to update restaurant details", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                });
     }
 
 }

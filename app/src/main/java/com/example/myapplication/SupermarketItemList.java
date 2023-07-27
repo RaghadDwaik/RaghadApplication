@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
@@ -50,6 +51,8 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     private RatingBar rating;
     private String supermarketId;
     private String supermarketName;
+
+    private AlertDialog editDialog;
 
     private DatabaseReference servicesRef;
     private SearchView searchView;
@@ -116,8 +119,21 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                             Button deleteButton = findViewById(R.id.deleteButton);
                             deleteButton.setVisibility(View.VISIBLE);
                             deleteButton.setOnClickListener(v -> deletePlace(supermarketId));
+
+                            Button editButton = findViewById(R.id.edit);
+
+                            editButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    showEditDialog();
+                                }
+                            });
+
                         } else {
-                            // The current user is not the owner, hide the delete button
+
+                            Button editButton = findViewById(R.id.edit);
+                            editButton.setVisibility(View.GONE);
+
                             Button deleteButton = findViewById(R.id.deleteButton);
                             deleteButton.setVisibility(View.GONE);
                         }
@@ -174,7 +190,66 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
             }
         });
 
+
+
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
+    }
+
+    private void showEditDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
+        EditText editTextName = dialogView.findViewById(R.id.editTextName);
+        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+
+        // Pre-fill the EditText fields with the existing data
+        editTextName.setText(supermarketName);
+        editTextImage.setText(Image);
+
+        // Build the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
+                    String newName = editTextName.getText().toString().trim();
+                    String newImage = editTextImage.getText().toString().trim();
+                    updateRestaurantDetails(newName, newImage);
+                })
+                .setNegativeButton("تخطي", null);
+
+        // Show the AlertDialog
+        editDialog = builder.create();
+        editDialog.show();
+    }
+
+    private void updateRestaurantDetails(String newName, String newImage) {
+        // Update the restaurant details in the Firebase Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference restaurantRef = db.collection("Places").document(supermarketId);
+
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put("name", newName);
+        updates.put("image", newImage);
+
+        restaurantRef.update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    // Update successful
+                    // You can show a success message or take appropriate action
+                    // Update the UI with the new name and image if needed
+                    supermarketName = newName;
+                    Image = newImage;
+
+                    // Reload the image using Glide
+                    ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
+                    Glide.with(this)
+                            .load(Image)
+                            .centerCrop()
+                            .into(restaurantImageView);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the failure to update the restaurant details
+                    // You can show an error message or take appropriate action
+                    Toast.makeText(this, "Failed to update restaurant details", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                });
     }
 
     private void deletePlace(String placeId) {
