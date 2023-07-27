@@ -97,6 +97,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         placesClient = Places.createClient(this);
 
+
         getCurrentLocation();
 
         findbutton.setOnClickListener(new View.OnClickListener() {
@@ -229,13 +230,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+
         if (currentLocation != null) {
             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(currentLat, currentLat), 10
             ));
+            getCurrentLocation();
         }
+
+
     }
 
     private void requestLocationUpdates() {
