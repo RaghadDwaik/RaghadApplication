@@ -24,17 +24,17 @@
     <!-- Message button -->
 
 
-    <Button
-        android:id="@+id/btnMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Message"
-        android:textColor="@color/background_color"
-        android:textSize="17sp"
-        android:layout_below="@id/tvAppTitle"
-        android:background="@drawable/white_box"
-        android:layout_marginTop="72dp"
-        android:padding="16dp"/>
+<!--    <Button-->
+<!--        android:id="@+id/btnMessage"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Message"-->
+<!--        android:textColor="@color/background_color"-->
+<!--        android:textSize="17sp"-->
+<!--        android:layout_below="@id/tvAppTitle"-->
+<!--        android:background="@drawable/white_box"-->
+<!--        android:layout_marginTop="72dp"-->
+<!--        android:padding="16dp"/>-->
 
     <!-- Add Place button -->
     <Button
@@ -46,7 +46,7 @@
         android:textColor="@color/background_color"
         android:textSize="18sp"
         android:onClick="btn"
-        android:layout_below="@id/btnMessage"
+        android:layout_below="@id/tvAppTitle"
         android:layout_marginTop="66dp"
         android:padding="16dp"
         tools:ignore="OnClick" />

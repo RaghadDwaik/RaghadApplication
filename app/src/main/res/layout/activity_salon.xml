@@ -26,17 +26,19 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="حولينا"
+            android:text="صالونات"
+            android:layout_marginTop="20dp"
             android:textColor="@color/white"
             android:textSize="33dp"
             android:textStyle="bold" />
 
     <androidx.appcompat.widget.SearchView
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/title"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/white_box"
@@ -46,16 +48,17 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Salon_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="200dp"
+            android:layout_height="500dp"
+            android:layout_marginTop="180dp"
             android:background="@drawable/loginbutton_selector"
             android:scrollbars="vertical"
             />
