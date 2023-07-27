@@ -63,7 +63,13 @@
             android:outlineAmbientShadowColor="@color/nude"/>
 
     </RelativeLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="2100dp"
+            android:orientation="vertical">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/SupermarketItemList_recycler"
         android:layout_width="match_parent"
@@ -73,19 +79,15 @@
         android:scrollbars="vertical"
         android:padding="2dp"
         />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="حذف المكان"
         android:layout_gravity="center"
-        android:layout_marginTop="700dp"
+        android:layout_below="@+id/SupermarketItemList_recycler"
         android:layout_marginLeft="50dp"
-        android:background="@drawable/loginbutton_selector"
         />
 
     <Button
@@ -94,10 +96,10 @@
         android:layout_height="wrap_content"
         android:text="تعديل على المكان"
         android:layout_gravity="center"
-        android:layout_marginTop="700dp"
         android:layout_marginLeft="200dp"
-        android:background="@drawable/loginbutton_selector"
+        android:layout_below="@+id/SupermarketItemList_recycler"
+
         />
     </RelativeLayout>
-
+    </ScrollView>
 </RelativeLayout>
