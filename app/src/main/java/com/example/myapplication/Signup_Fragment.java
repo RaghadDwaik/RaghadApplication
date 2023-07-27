@@ -46,15 +46,19 @@ import java.util.regex.Pattern;
 
 public class Signup_Fragment extends Fragment implements OnClickListener {
     private View view;
-    private EditText fullName, email, mobileNumber,
-            password, confirmPassword;
+    public EditText fullName;
+    public EditText email;
+    public EditText mobileNumber;
+    public EditText password;
+    public EditText confirmPassword;
     private TextView login;
     private Button signUpButton;
-    private CheckBox terms_conditions;
+    public CheckBox terms_conditions;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private RadioGroup radioGroup;
-    private RadioButton radioButton1,radioButton2;
+    public RadioButton radioButton1;
+    public RadioButton radioButton2;
 
     @Override
     public void onStart() {
@@ -144,7 +148,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
 
 
     // Check Validation Method
-    private void checkValidation() {
+    public void checkValidation() {
         // Get all edittext texts
         String getFullName = fullName.getText().toString();
         String getEmailId = email.getText().toString();
@@ -216,10 +220,10 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     // Document successfully written
-                                                    if (isOwner==false) {
+                                                    if (selectedRadioButtonId == R.id.radioButtonOption1) {
                                                         // Handle owner registration (specify owner of a place) here
                                                         handleOwnerRegistration(userId);
-                                                    } else {
+                                                    } else if(selectedRadioButtonId == R.id.radioButtonOption2) {
                                                         // Handle user registration here
                                                         handleUserRegistration();
                                                     }
@@ -245,7 +249,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         }
     }
     // Method to handle owner registration (specify owner of a place)
-    private void handleOwnerRegistration(String ownerId) {
+    public void handleOwnerRegistration(String ownerId) {
 
         // For example, you can start a new activity to add the place details and associate it with the owner
         Intent intent = new Intent(getActivity(), OwnerHomePage.class);
@@ -254,7 +258,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     }
 
     // Method to handle user registration
-    private void handleUserRegistration() {
+    public void handleUserRegistration() {
         Intent intent = new Intent(getActivity(), Profile.class);
         startActivity(intent);
     }
