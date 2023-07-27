@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import java.util.Map;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -250,13 +251,58 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                     Toast.makeText(this, "Failed to update restaurant details", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 });
+
+
+        // Update the restaurant details in the Firebase Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference r = database.getReference("Supermarket").child(supermarketName);
+
+        Map<String, Object> update = new HashMap<>();
+        updates.put("name", newName);
+        updates.put("image", newImage);
+
+        r.updateChildren(update)
+                .addOnSuccessListener(aVoid -> {
+                    // Update successful
+                    // You can show a success message or take appropriate action
+                    // Update the UI with the new name and image if needed
+                    supermarketName = newName;
+                    Image = newImage;
+
+                    // Reload the image using Glide
+                    ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
+                    Glide.with(this)
+                            .load(Image)
+                            .centerCrop()
+                            .into(restaurantImageView);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the failure to update the restaurant details
+                    // You can show an error message or take appropriate action
+                    Toast.makeText(this, "Failed to update restaurant details", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                });
+
+
+
     }
 
     private void deletePlace(String placeId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("هل أنت متأكد من أنك تريد حذف هذا المكان؟")
                 .setPositiveButton("نعم", (dialog, which) -> {
-                    // Perform the deletion logic here, e.g., delete the place from Firestore
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference placeRef = database.getReference("Supermarket").child(supermarketName);
+
+                    placeRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                finish(); // Finish the activity after deletion
+                            })
+                            .addOnFailureListener(e -> {
+                                e.printStackTrace();
+                            });
+
+
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("Places").document(supermarketId)
                             .delete()
