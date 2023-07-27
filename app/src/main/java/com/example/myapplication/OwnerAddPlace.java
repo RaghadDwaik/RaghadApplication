@@ -30,9 +30,11 @@ public class OwnerAddPlace extends AppCompatActivity {
     private EditText placeDescriptionEditText;
     private Button saveButton;
     private Spinner spinner;
+    private String selectedPlace; // This will store the Arabic label of the selected place
+    private String selectedPlaceEnglish; // This will store the corresponding English value
     private EditText image;
     String placeName;
-    String selectedPlace;
+
 
     String ownerId;
     private FirebaseFirestore db;
@@ -54,9 +56,8 @@ public class OwnerAddPlace extends AppCompatActivity {
         image = findViewById(R.id.imagee);
         saveButton = findViewById(R.id.saveButton);
 
-
         spinner = findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.plasec, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.places, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -76,23 +77,59 @@ public class OwnerAddPlace extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String englishPlaceType = convertToEnglish(selectedPlace);
                 savePlaceDetails(ownerId);
                 Intent intent = new Intent(OwnerAddPlace.this, OwnerAddService.class);
-                intent.putExtra("placeType", selectedPlace);
+                intent.putExtra("placeType", englishPlaceType);
+                Toast.makeText(OwnerAddPlace.this, "Selected Place: " + englishPlaceType, Toast.LENGTH_SHORT).show();
                 intent.putExtra("placeName", placeName);
-
                 startActivity(intent);
             }
         });
 
     }
 
+    private String  convertToEnglish(String arabicLabel) {
+        // Use switch statement or custom mapping method to convert Arabic to English
+        switch (arabicLabel) {
+            case "مطعم":
+                return "Resturant";
+            case "سوبرماركت":
+                return "Supermarket";
+            case "صالون":
+                return "salon";
+            case "مكان دراسة":
+                return "StudyPlace";
+            case "سكن":
+                return "Dorms";
+            case "دراي كلين":
+                return "DryClean";
+            // Add more cases for other places
+            default:
+                return ""; // Return empty string or null if no match found
+        }
+    }
+
+//    private String getEnglishValue(String arabicLabel) {
+//         Map<String, String> arabicToEnglishMap = new HashMap<>();
+//        arabicToEnglishMap.put("مطعم", "Resturant");
+//        arabicToEnglishMap.put("سوبرماركت", "Supermarket");
+//        arabicToEnglishMap.put("صالون", "salon");
+//        arabicToEnglishMap.put("مكان دراسة", "StudyPlace");
+//        arabicToEnglishMap.put("سكن", "Dorms");
+//        arabicToEnglishMap.put("دراي كلين", "DryClean");
+//        // Add more mappings as needed
+//        return arabicToEnglishMap.get(arabicLabel);
+//
+//    }
+
     private void savePlaceDetails(String ownerId) {
         // Retrieve the place details from the input fields
         placeName = placeNameEditText.getText().toString();
         String image1 = image.getText().toString();
-        String placeType = spinner.getSelectedItem().toString();
+        String placeTypear = spinner.getSelectedItem().toString();
+      String  placeType= convertToEnglish(placeTypear);
+
 
         // Create a new document in the "Places" collection
         DocumentReference placeRef = db.collection("Places").document();
