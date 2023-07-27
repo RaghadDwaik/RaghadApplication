@@ -82,6 +82,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="700dp"
         android:layout_marginLeft="50dp"
+        android:background="@drawable/loginbutton_selector"
         />
     <Button
         android:id="@+id/edit"
@@ -91,6 +92,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="700dp"
         android:layout_marginLeft="200dp"
+        android:background="@drawable/loginbutton_selector"
         />
 
 

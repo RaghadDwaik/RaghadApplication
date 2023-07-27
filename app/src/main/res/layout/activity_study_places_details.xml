@@ -131,21 +131,22 @@
                     android:id="@+id/deleteButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="حذف المكان"
-                    android:layout_gravity="center"
                     android:layout_below="@id/description"
-
+                    android:layout_gravity="center"
                     android:layout_marginLeft="50dp"
+                    android:layout_marginTop="20dp"
+                    android:text="حذف المكان"
                     />
+
                 <Button
                     android:id="@+id/edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="تعديل على المكان"
                     android:layout_gravity="center"
-                    android:layout_marginTop="700dp"
-                    android:layout_marginLeft="200dp"
-                    />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="310dp"
+                    android:layout_toRightOf="@+id/deleteButton"
+                    android:text="تعديل على المكان" />
 
 
             </RelativeLayout>

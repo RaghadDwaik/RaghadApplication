@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,6 +22,8 @@ public class AddDorms extends AppCompatActivity {
     private EditText productDescriptionEditText, desc;
     private EditText price;
     private Button addProductButton;
+    private TextView textView;
+
 
 
     private DatabaseReference productsReference;
@@ -41,6 +44,8 @@ public class AddDorms extends AppCompatActivity {
             image33 = findViewById(R.id.image3);
             nameee = findViewById(R.id.edit_text_product_name);
             desc = findViewById(R.id.edit_text_product_description);
+            textView=findViewById(R.id.textView);
+            textView.setText("اضافة سكن");
 
             addProductButton = findViewById(R.id.button_add_product);
 
@@ -54,8 +59,8 @@ public class AddDorms extends AppCompatActivity {
                     String imageeee = image33.getText().toString().trim();
                     String name1 = nameee.getText().toString().trim();
 
-                    String namee3 = name.toString();
-                    DormsClass productt = new DormsClass(imageee, imageee, imageeee, des, namee3);
+                    String namee3 = name1.toString();
+                    DormsClass productt = new DormsClass(imagee, imageee, imageeee, des, namee3);
                     productsReference = FirebaseDatabase.getInstance().getReference().child("DormsDetails");
 
                     productsReference.child(name1).setValue(productt)
@@ -82,6 +87,8 @@ public class AddDorms extends AppCompatActivity {
             image33 = findViewById(R.id.image3);
             nameee = findViewById(R.id.edit_text_product_name);
             desc = findViewById(R.id.edit_text_product_description);
+            textView=findViewById(R.id.textView);
+            textView.setText("اضافة مكان للدراسة");
 
             addProductButton = findViewById(R.id.button_add_product);
 
@@ -95,8 +102,8 @@ public class AddDorms extends AppCompatActivity {
                     String imageeee = image33.getText().toString().trim();
                     String name1 = nameee.getText().toString().trim();
 
-                    String namee3 = name.toString();
-                    DormsClass productt = new DormsClass(imageee, imageee, imageeee, des, namee3);
+                    String namee3 = name1.toString();
+                    DormsClass productt = new DormsClass(imagee, imageee, imageeee, des, namee3);
                     productsReference = FirebaseDatabase.getInstance().getReference().child("StudyPlaceItems");
 
                     productsReference.child(name1).setValue(productt)

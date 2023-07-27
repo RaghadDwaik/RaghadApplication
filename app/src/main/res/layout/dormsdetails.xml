@@ -137,8 +137,9 @@
                     android:layout_height="wrap_content"
                     android:text="تعديل على المكان"
                     android:layout_gravity="center"
-                    android:layout_marginTop="700dp"
-                    android:layout_marginLeft="200dp"
+                    android:layout_marginTop="500dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_toRightOf="@+id/deleteButton"
                     />
 
             </RelativeLayout>
