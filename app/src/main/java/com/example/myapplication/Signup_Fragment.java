@@ -194,7 +194,8 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                             FirebaseUser user = mAuth.getCurrentUser();
                             // Continue with your app logic
                         } else {
-                            // Sign-in failed, display a message to the user
+                            // Sign-i
+                            // n failed, display a message to the user
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
