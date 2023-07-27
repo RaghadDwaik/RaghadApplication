@@ -23,6 +23,9 @@
         android:theme="@style/Theme.MyApplication"
         tools:overrideLibrary="com.android.car.ui">
         <activity
+            android:name=".AddDorms"
+            android:exported="false" />
+        <activity
             android:name=".ViewOwnerPlace"
             android:exported="false" />
         <activity

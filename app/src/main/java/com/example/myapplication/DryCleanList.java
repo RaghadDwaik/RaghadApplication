@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
@@ -106,9 +109,32 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
+
+                String ownerId = currentUser.getUid();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference placeRef = db.collection("Places").document(drycleanId);
+                placeRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String owner = document.getString("ownerId");
+                            if (owner != null && owner.equals(ownerId)) {
+                                Button deleteButton = findViewById(R.id.deleteButton);
+                                deleteButton.setVisibility(View.VISIBLE);
+                                deleteButton.setOnClickListener(v -> deletePlace(drycleanId));
+                            } else {
+                                // The current user is not the owner, hide the delete button
+                                Button deleteButton = findViewById(R.id.deleteButton);
+                                deleteButton.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
+
+
+            //---------------------------------------------
             String userId = currentUser.getUid();
             CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
-            System.out.println("ooooooooooooooooooooooooooooo");
 
             if (drycleanId != null) {
                 DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
@@ -134,8 +160,12 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
                 });
             }
         } else {
-            // Handle the case when the currentUser is null
+
+
+            Button deleteButton = findViewById(R.id.deleteButton);
+            deleteButton.setVisibility(View.GONE);
         }
+
 
 
 
@@ -166,6 +196,33 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         Intent intent = new Intent(this, Profile.class);
         startActivity(intent);
     }
+
+    private void deletePlace(String placeId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("هل أنت متأكد من أنك تريد حذف هذا المكان؟")
+                .setPositiveButton("نعم", (dialog, which) -> {
+                    // Perform the deletion logic here, e.g., delete the place from Firestore
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Places").document(drycleanId)
+                            .delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "تم حذف المكان بنجاح", Toast.LENGTH_SHORT).show();
+                                finish(); // Finish the activity after deletion
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "فشل في حذف المكان", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
+                })
+                .setNegativeButton("لا", (dialog, which) -> {
+                    // User clicked "لا", do nothing
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
 
     private void openLoginFragment() {
         Intent intent = new Intent(this, Registration.class);

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/nude"
     tools:context=".SupermarketItemList">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -12,10 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:itemIconTint="@color/background_color"/>
+        app:itemTextColor="@color/background_color"/>
 
 
     <FrameLayout
@@ -23,7 +23,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/restaurantImageView"
             android:layout_width="410dp"
             android:layout_height="187dp"
             android:scaleType="fitXY" />
@@ -31,15 +31,14 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
             android:background="@android:color/transparent"
+            android:contentDescription="Search"
             android:padding="10dp"
             android:queryHint="ابحث هنا"
-            android:textColor="@android:color/black"
-            android:src="@drawable/baseline_search_24"
-            android:contentDescription="Search" />
+            android:src="@drawable/baseline_search_24" />
 
     </FrameLayout>
 
@@ -55,12 +54,13 @@
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="247dp"
-            android:layout_height="54dp"
+            android:layout_height="39dp"
             android:layout_marginTop="194dp"
             android:layout_marginLeft="60dp"
             android:numStars="5"
             android:rating="0"
-            android:stepSize="0.5" />
+            android:stepSize="0.5"
+            android:outlineAmbientShadowColor="@color/nude"/>
 
     </RelativeLayout>
 
@@ -69,10 +69,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="240dp"
+        android:background="@color/nude"
         android:scrollbars="vertical"
         android:padding="2dp"
         />
 
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Place"
+        android:layout_gravity="center"
+        android:layout_marginTop="700dp"
+        android:layout_marginLeft="150dp"
+        />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

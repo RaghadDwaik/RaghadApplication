@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.PlacesAdapter;
 import com.example.myapplication.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -37,14 +39,10 @@ public class ViewOwnerPlace extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        // Retrieve the ownerId from the intent
         ownerId = getIntent().getStringExtra("ownerId");
 
-        // Initialize views
         placesRecyclerView = findViewById(R.id.placesRecyclerView);
-      //  placesList = new ArrayList<>();
 
-        // Query Firestore to fetch the places associated with the ownerId
         Query query = db.collection("Places").whereEqualTo("ownerId", ownerId);
 
         FirestoreRecyclerOptions<PlacesClass> options = new FirestoreRecyclerOptions.Builder<PlacesClass>()
@@ -57,7 +55,60 @@ public class ViewOwnerPlace extends AppCompatActivity {
         placesRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
 
         placesRecyclerView.setAdapter(placesAdapter);
+
+        placesAdapter.setOnItemClickListener(new PlaceOwnerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot snapshot, int position) {
+                PlacesClass place = snapshot.toObject(PlacesClass.class);
+                String placeType = place.getPlaceType();
+                System.out.println("plaaaaaaaaaaaaaaaaceeee " + placeType);
+
+                // Open different activities based on the place type
+                if (placeType.equals("salon")) {
+                    Intent intent = new Intent(ViewOwnerPlace.this, SalonList.class);
+                    intent.putExtra("salon_id", snapshot.getId());
+                    intent.putExtra("salon_name", place.getName());
+                    intent.putExtra("salon_image", place.getImage());
+                    startActivity(intent);
+                } else if (placeType.equals("Supermarket")) {
+                    Intent intent = new Intent(ViewOwnerPlace.this, SupermarketItemList.class);
+
+                    intent.putExtra("supermarket_id", snapshot.getId());
+                    intent.putExtra("supermarket_name", place.getName());
+                    intent.putExtra("supermarket_image", place.getImage());
+                    startActivity(intent);
+
+                } else if (placeType.equals("Resturant")) {
+                    Intent intent = new Intent(ViewOwnerPlace.this, RestaurantList.class);
+                    intent.putExtra("restaurant_id", snapshot.getId());
+                    intent.putExtra("restaurant_name", place.getName());
+                    intent.putExtra("restaurant_image", place.getImage());
+                    startActivity(intent);
+                } else if (placeType.equals("DryClean")) {
+                    Intent intent = new Intent(ViewOwnerPlace.this, DryCleanList.class);
+                    intent.putExtra("dryclean_id", snapshot.getId());
+                    intent.putExtra("dryclean_name", place.getName());
+                    intent.putExtra("dryclean_image", place.getImage());
+                    startActivity(intent);
+
+                } else if (placeType.equals("Dorms")) {
+                    Intent intent = new Intent(ViewOwnerPlace.this, DormsDetails.class);
+                    intent.putExtra("Dorms_id", snapshot.getId());
+                    intent.putExtra("Dorms_name", place.getName());
+                    intent.putExtra("Dorms_image", place.getImage());
+                    startActivity(intent);
+                } else if (placeType.equals("StudyPlace")) {
+                    Intent intent = new Intent(ViewOwnerPlace.this, StudyPlacesDetails.class);
+                    intent.putExtra("studyplace_id", snapshot.getId());
+                    intent.putExtra("studyplace_name", place.getName());
+                    intent.putExtra("studyplace_image", place.getImage());
+                    startActivity(intent);
+                }
+
+            }
+        });
     }
+
 
     @Override
     protected void onStart() {

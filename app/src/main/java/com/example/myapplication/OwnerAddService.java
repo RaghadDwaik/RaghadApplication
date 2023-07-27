@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,9 +42,15 @@ public class OwnerAddService extends AppCompatActivity {
 
         String placeType = getIntent().getStringExtra("placeType");
         String name = getIntent().getStringExtra("placeName");
-        System.out.println("placcccccccccccccccccccccccccccce " + placeType);
 
 
+        if (placeType.equals("Dorms")|| placeType.equals("StudyPlace")) {
+            Intent in = new Intent(OwnerAddService.this, AddDorms.class);
+            in.putExtra("placeType", placeType);
+            in.putExtra("placeName", name);
+
+            startActivity(in);
+        }
 
         addProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +77,7 @@ public class OwnerAddService extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             // Product added successfully
-                                            Toast.makeText(OwnerAddService.this, "Product added to the salon", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OwnerAddService.this, "Product added to the "+placeType, Toast.LENGTH_SHORT).show();
                                             finish(); // Finish the activity after adding the product
                                         }
                                     })
@@ -89,7 +96,7 @@ public class OwnerAddService extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             // Product added successfully
-                                            Toast.makeText(OwnerAddService.this, "Product added to the salon", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OwnerAddService.this, "Product added to the "+placeType, Toast.LENGTH_SHORT).show();
                                             finish(); // Finish the activity after adding the product
                                         }
                                     })
@@ -109,7 +116,7 @@ public class OwnerAddService extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             // Product added successfully
-                                            Toast.makeText(OwnerAddService.this, "Product added to the salon", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OwnerAddService.this, "Product added to the "+placeType, Toast.LENGTH_SHORT).show();
                                             finish(); // Finish the activity after adding the product
                                         }
                                     })
@@ -129,7 +136,7 @@ public class OwnerAddService extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             // Product added successfully
-                                            Toast.makeText(OwnerAddService.this, "Product added to the salon", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OwnerAddService.this, "Product added to the "+placeType, Toast.LENGTH_SHORT).show();
                                             finish(); // Finish the activity after adding the product
                                         }
                                     })
@@ -142,54 +149,10 @@ public class OwnerAddService extends AppCompatActivity {
                                     });
 
                         }
-
-
                     }
                 }
             }
         });
 
-        if (placeType.equals("Dorms")) {
-            setContentView(R.layout.adddorms);
-            image11 = findViewById(R.id.image1);
-            image22 = findViewById(R.id.image2);
-            image33 = findViewById(R.id.image3);
-            nameee = findViewById(R.id.edit_text_product_name);
-            desc = findViewById(R.id.edit_text_product_description);
 
-            // Get additional data from the additional views
-            String des = desc.getText().toString().trim();
-            String imagee = image11.getText().toString().trim();
-            String imageee = image22.getText().toString().trim();
-            String imageeee = image33.getText().toString().trim();
-
-            String namee3 = name.toString();
-            DormsClass productt = new DormsClass(imageee, imageee, imageeee, des, namee3);
-            productsReference = FirebaseDatabase.getInstance().getReference().child("DormsDetails");
-
-            productsReference.child(productName).setValue(productt)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Product added successfully
-                            Toast.makeText(OwnerAddService.this, "Product added to the salon", Toast.LENGTH_SHORT).show();
-                            finish(); // Finish the activity after adding the product
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Error occurred while adding the product
-                            Toast.makeText(OwnerAddService.this, "Failed to add the product", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            addProductButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-
-        }
-    }
-}
+    }}

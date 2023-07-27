@@ -31,15 +31,14 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
             android:background="@android:color/transparent"
+            android:contentDescription="Search"
             android:padding="10dp"
-            android:src="@drawable/baseline_search_24"
             android:queryHint="ابحث هنا"
-            android:textColor="@android:color/black"
-            android:contentDescription="Search" />
+            android:src="@drawable/baseline_search_24" />
 
     </FrameLayout>
 
@@ -55,14 +54,16 @@
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="247dp"
-            android:layout_height="45dp"
+            android:layout_height="39dp"
             android:layout_marginTop="194dp"
             android:layout_marginLeft="60dp"
             android:numStars="5"
             android:rating="0"
-            android:stepSize="0.5" />
+            android:stepSize="0.5"
+            android:outlineAmbientShadowColor="@color/nude"/>
 
     </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RestaurantList_recycler"
         android:layout_width="match_parent"
@@ -72,4 +73,26 @@
         android:scrollbars="vertical"
         android:padding="2dp"
         />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Place"
+        android:layout_gravity="center"
+        android:layout_marginTop="700dp"
+        android:layout_marginLeft="50dp"
+        />
+    <Button
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Place"
+        android:layout_gravity="center"
+        android:layout_marginTop="700dp"
+        android:layout_marginLeft="200dp"
+        />
+
+
+
 </RelativeLayout>

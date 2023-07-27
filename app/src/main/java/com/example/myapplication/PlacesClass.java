@@ -6,6 +6,16 @@ import java.util.Comparator;
 public class PlacesClass implements Comparator<PlacesClass> {
     private String name;
 
+    public String getPlaceType() {
+        return placeType;
+    }
+
+    public void setPlaceType(String placeType) {
+        this.placeType = placeType;
+    }
+
+    private String placeType;
+
     public String getOwnerid() {
         return ownerid;
     }
