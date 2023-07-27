@@ -117,7 +117,7 @@
                     android:layout_below="@id/image3"
                     android:layout_marginStart="31dp"
                     android:layout_marginTop="10dp"
-                    android:text="description"
+                    android:text="الوصف"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 

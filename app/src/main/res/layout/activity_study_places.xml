@@ -27,7 +27,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="حولينا"
+        android:text="أماكن للدراسة"
         android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:textSize="33dp"
@@ -59,7 +59,6 @@
                 android:id="@+id/studyplace_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="180dp"
                 android:background="@drawable/loginbutton_selector"
                 android:scrollbars="vertical" />
