@@ -39,7 +39,7 @@ public class SuperMarket extends AppCompatActivity implements BottomNavigationVi
         recyclerView = findViewById(R.id.supermarket_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Supermarket");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("supermarket");
         allSupermarkets = new ArrayList<>();
 
         setupAdapter();

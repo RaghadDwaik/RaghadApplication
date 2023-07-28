@@ -41,13 +41,14 @@ public class OwnerAddService extends AppCompatActivity {
         addProductButton = findViewById(R.id.button_add_product);
 
         String placeType = getIntent().getStringExtra("placeType");
-        String name = getIntent().getStringExtra("placeName");
+        String name = getIntent().getStringExtra(placeType);
 
+        System.out.println("place Nmae eeeeeeeeeeeeeee "+name);
 
-        if (placeType.equals("Dorms")|| placeType.equals("StudyPlace")) {
+        if (placeType.equals("dorms")|| placeType.equals("studyplace")) {
             Intent in = new Intent(OwnerAddService.this, AddDorms.class);
             in.putExtra("placeType", placeType);
-            in.putExtra("placeName", name);
+            in.putExtra(placeType, name);
 
             startActivity(in);
         }
@@ -60,16 +61,21 @@ public class OwnerAddService extends AppCompatActivity {
                 String productDescription = productDescriptionEditText.getText().toString().trim();
                 String image1 = image.getText().toString().trim();
                 double pricee = Double.parseDouble(price.getText().toString().trim());
-                String namee = name.toString();
+                String namee = placeType.toString();
 
 
-                ServicesClass product = new ServicesClass(productName, image1, pricee, productDescription, name);
 
 
                 if (!TextUtils.isEmpty(productName) && !TextUtils.isEmpty(productDescription)) {
                     if (placeType != null) {
                         if (placeType.equals("salon")) {
 
+                            ServicesClass product = new ServicesClass();
+                            product.setName(productName);
+                            product.setImage(image1);
+                            product.setPrice(pricee);
+                            product.setDescription(productDescription);
+                            product.setSalon(name);
                             productsReference = FirebaseDatabase.getInstance().getReference().child("salonServices"); // Update the DatabaseReference
 
                             productsReference.child(productName).setValue(product)
@@ -88,7 +94,15 @@ public class OwnerAddService extends AppCompatActivity {
                                             Toast.makeText(OwnerAddService.this, "Failed to add the product", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                        } else if (placeType.equals("Supermarket")) {
+                        } else if (placeType.equals("supermarket")) {
+                            ServicesClass product = new ServicesClass();
+                            product.setName(productName);
+                            product.setImage(image1);
+                            product.setPrice(pricee);
+                            product.setDescription(productDescription);
+
+                            product.setSupermarket(name);
+
                             productsReference = FirebaseDatabase.getInstance().getReference().child("SuperMarketItems");
 
                             productsReference.child(productName).setValue(product)
@@ -108,7 +122,15 @@ public class OwnerAddService extends AppCompatActivity {
                                         }
                                     });
 
-                        } else if (placeType.equals("Resturant")) {
+                        } else if (placeType.equals("resturant")) {
+                            ServicesClass product = new ServicesClass();
+                            product.setName(productName);
+                            product.setImage(image1);
+                            product.setPrice(pricee);
+                            product.setDescription(productDescription);
+
+
+                            product.setResturant(name);
                             productsReference = FirebaseDatabase.getInstance().getReference().child("Items");
 
                             productsReference.child(productName).setValue(product)
@@ -128,7 +150,15 @@ public class OwnerAddService extends AppCompatActivity {
                                         }
                                     });
 
-                        } else if (placeType.equals("DryClean")) {
+                        } else if (placeType.equals("dryclean")) {
+                            ServicesClass product = new ServicesClass();
+                            product.setName(productName);
+                            product.setImage(image1);
+                            product.setPrice(pricee);
+                            product.setDescription(productDescription);
+
+                            product.setDryClean(name);
+
                             productsReference = FirebaseDatabase.getInstance().getReference().child("DryCleanServices");
 
                             productsReference.child(productName).setValue(product)

@@ -24,11 +24,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -48,11 +46,14 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
     private ItemListAdapter adapter;
     private DatabaseReference servicesRef;
     private SearchView searchView;
+    Button editButton;
+    Button deleteButton;
 
     private RatingBar rating;
     private String salonId;
     String salonName;
     String salonImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         adapter = new ItemListAdapter(options);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        editButton=findViewById(R.id.edit);
+        deleteButton=findViewById(R.id.deleteButton);
 
         bottom = findViewById(R.id.bottom);
         BottomNavigationView nav1 = findViewById(R.id.bottom);
@@ -104,46 +107,13 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         System.out.println("tttttttttttttttttttttttttttttttttt");
 
+        buttonVisibility();
         if (currentUser != null) {
-
-            String ownerId = currentUser.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference placeRef = db.collection("Places").document(salonId);
-            placeRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String owner = document.getString("ownerId");
-                        if (owner != null && owner.equals(ownerId)) {
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.VISIBLE);
-                            deleteButton.setOnClickListener(v -> deletePlace(salonId));
-                            Button editButton = findViewById(R.id.edit);
-
-                            editButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showEditDialog();
-                                }
-                            });
-
-                        } else {
-
-                            Button editButton = findViewById(R.id.edit);
-                            editButton.setVisibility(View.GONE);
-
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            });
 
 
             //---------------------------------------------
             String userId = currentUser.getUid();
             CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
-            System.out.println("ooooooooooooooooooooooooooooo");
 
             if (salonId != null) {
                 DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
@@ -299,9 +269,9 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
 
     private void showEditDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
 
         // Pre-fill the EditText fields with the existing data
         editTextName.setText(salonName);
@@ -512,4 +482,36 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
             Toast.makeText(this, "Please log in to perform this action.", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void buttonVisibility(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String ownerId = currentUser.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference placeRef = db.collection("Places").document(salonId);
+            placeRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String owner = document.getString("ownerId");
+                        if (owner != null && owner.equals(ownerId)) {
+                            // User is the owner, show the buttons
+                            deleteButton.setVisibility(View.VISIBLE);
+                            editButton.setVisibility(View.VISIBLE);
+                        } else {
+                            // User is not the owner, hide the buttons
+                            deleteButton.setVisibility(View.GONE);
+                            editButton.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            });
+        } else {
+            // User is not logged in, hide the buttons
+            deleteButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.GONE);
+        }
+
+    }
 }
+

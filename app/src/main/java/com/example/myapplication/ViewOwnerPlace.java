@@ -70,7 +70,7 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("salon_name", place.getName());
                     intent.putExtra("salon_image", place.getImage());
                     startActivity(intent);
-                } else if (placeType.equals("Supermarket")) {
+                } else if (placeType.equals("supermarket")) {
                     Intent intent = new Intent(ViewOwnerPlace.this, SupermarketItemList.class);
 
                     intent.putExtra("supermarket_id", snapshot.getId());
@@ -78,26 +78,26 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("supermarket_image", place.getImage());
                     startActivity(intent);
 
-                } else if (placeType.equals("Resturant")) {
+                } else if (placeType.equals("resturant")) {
                     Intent intent = new Intent(ViewOwnerPlace.this, RestaurantList.class);
                     intent.putExtra("restaurant_id", snapshot.getId());
                     intent.putExtra("restaurant_name", place.getName());
                     intent.putExtra("restaurant_image", place.getImage());
                     startActivity(intent);
-                } else if (placeType.equals("DryClean")) {
+                } else if (placeType.equals("dryclean")) {
                     Intent intent = new Intent(ViewOwnerPlace.this, DryCleanList.class);
                     intent.putExtra("dryclean_id", snapshot.getId());
                     intent.putExtra("dryclean_name", place.getName());
                     intent.putExtra("dryclean_image", place.getImage());
                     startActivity(intent);
 
-                } else if (placeType.equals("Dorms")) {
+                } else if (placeType.equals("dorms")) {
                     Intent intent = new Intent(ViewOwnerPlace.this, DormsDetails.class);
                     intent.putExtra("Dorms_id", snapshot.getId());
                     intent.putExtra("Dorms_name", place.getName());
                     intent.putExtra("Dorms_image", place.getImage());
                     startActivity(intent);
-                } else if (placeType.equals("StudyPlace")) {
+                } else if (placeType.equals("studyplace")) {
                     Intent intent = new Intent(ViewOwnerPlace.this, StudyPlacesDetails.class);
                     intent.putExtra("studyplace_id", snapshot.getId());
                     intent.putExtra("studyplace_name", place.getName());

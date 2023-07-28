@@ -2,42 +2,33 @@ package com.example.myapplication;
 
 import static android.app.PendingIntent.getActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View.OnClickListener;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.myapplication.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class ServiceDetails extends AppCompatActivity {
@@ -50,12 +41,12 @@ public class ServiceDetails extends AppCompatActivity {
     private ImageButton favorite, contactButton;
     private FirebaseFirestore db;
     String mobileNumber;
-
+    double salonPrice;
     private CollectionReference favoritesRef;
     String salonName;
     String place;
     String salonId;
-    String salonImageUrl;
+    String salonImageUrl, salonDesc;
 
     private boolean isFavorite = false;
 
@@ -98,10 +89,11 @@ public class ServiceDetails extends AppCompatActivity {
         Intent intent = getIntent();
         place =intent.getStringExtra("place");
 
+
         salonId = intent.getStringExtra("id");
         salonName = intent.getStringExtra("name");
-        double salonPrice = intent.getDoubleExtra("price", 0);
-        String salonDesc = intent.getStringExtra("desc");
+         salonPrice = intent.getDoubleExtra("price", 0);
+         salonDesc = intent.getStringExtra("desc");
         salonImageUrl = intent.getStringExtra("image");
 
 
@@ -192,14 +184,24 @@ public class ServiceDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mobileNumber = "972" + mobileNumber.substring(1);
-                System.out.println("iddddddddddddddddddddddd  "+ mobileNumber);
-
                 Uri uri = Uri.parse("https://wa.me/"+mobileNumber);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
 
             }
         });
+
+
+        Button deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(v ->
+                deleteService(salonId));
+
+
+        Button editButton = findViewById(R.id.edit);
+        editButton.setOnClickListener(v ->
+                EditService(salonId));
+
+
     }
 
     private void addToFavorites(ServicesClass item) {
@@ -222,8 +224,112 @@ public class ServiceDetails extends AppCompatActivity {
                 });
     }
 
+    private void deleteService(String placeId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("هل أنت متأكد من أنك تريد حذف هذه الخدمة او المنتج؟")
+                .setPositiveButton("نعم", (dialog, which) -> {
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    // Example: Delete from "salon" node
+                    DatabaseReference salonRef = database.getReference("salonServices").child(salonName);
+                    salonRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ServiceDetails.this, "Product Or Service Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from "salon" node
+                                e.printStackTrace();
+                            });
+
+                    // Example: Delete from "other_node" node
+                    DatabaseReference sRef = database.getReference("SuperMarketItems").child(salonName);
+                    sRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ServiceDetails.this, "Product Or Service Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from "other_node" node
+                                e.printStackTrace();
+                            });
+
+                    DatabaseReference resRef = database.getReference("Items").child(salonName);
+                    resRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ServiceDetails.this, "Product Or Service Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from "other_node" node
+                                e.printStackTrace();
+                            });
 
 
+
+                    DatabaseReference dryRef = database.getReference("DryCleanServices").child(salonName);
+                    resRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ServiceDetails.this, "لقد تم الحذف بنجاح", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to delete from "other_node" node
+                                e.printStackTrace();
+                            });
+
+
+
+
+                })
+                .setNegativeButton("لا", (dialog, which) -> {
+                    // User clicked "لا", do nothing
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void EditService(String placeId) {
+
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
+        EditText editTextprice = dialogView.findViewById(R.id.Price);
+        EditText editTextdesc = dialogView.findViewById(R.id.description);
+
+        editTextName.setText(salonName);
+        editTextImage.setText(salonImageUrl);
+        String p= String.valueOf(Double.parseDouble(String.valueOf(salonPrice)));
+        editTextprice.setText(p);
+        editTextdesc.setText(salonDesc);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                    String newName = editTextName.getText().toString().trim();
+                    String newImage = editTextImage.getText().toString().trim();
+                    String price = editTextprice.getText().toString().trim();
+                    String des = editTextdesc.getText().toString().trim();
+
+
+                    DatabaseReference salonRef = database.getReference("salonServices").child(salonName);
+                    salonRef.child("price").setValue(price);
+                    salonRef.child("name").setValue(newName); // Update "name" field with the new value
+                    salonRef.child("description").setValue(des); // Update "description" field with the new value
+                    salonRef.child("image").setValue(newImage); // Update "description" field with the new value
+
+                    Toast.makeText(ServiceDetails.this, "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("تخطي", null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
 
 
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -25,22 +24,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 public class SupermarketItemList extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, ItemListAdapter.OnItemClickListener {
 
@@ -88,7 +79,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
 
         // Construct the database reference for the services of the selected supermarket
         servicesRef = FirebaseDatabase.getInstance().getReference().child("SuperMarketItems");
-        Query servicesQuery = servicesRef.orderByChild("Supermarket").equalTo(supermarketName);
+        Query servicesQuery = servicesRef.orderByChild("supermarket").equalTo(supermarketName);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<ServicesClass> options =
                 new FirebaseRecyclerOptions.Builder<ServicesClass>()
@@ -108,45 +99,9 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
 
         if (currentUser != null) {
 
-            String ownerId = currentUser.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference placeRef = db.collection("Places").document(supermarketId);
-            placeRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String owner = document.getString("ownerId");
-                        if (owner != null && owner.equals(ownerId)) {
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.VISIBLE);
-                            deleteButton.setOnClickListener(v -> deletePlace(supermarketId));
 
-                            Button editButton = findViewById(R.id.edit);
-
-                            editButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showEditDialog();
-                                }
-                            });
-
-                        } else {
-
-                            Button editButton = findViewById(R.id.edit);
-                            editButton.setVisibility(View.GONE);
-
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            });
-
-
-            //---------------------------------------------
             String userId = currentUser.getUid();
             CollectionReference userRatingCollectionRef = FirebaseFirestore.getInstance().collection("User");
-            System.out.println("ooooooooooooooooooooooooooooo");
 
             if (supermarketId != null) {
                 DocumentReference userRatingDocRef = userRatingCollectionRef.document(userId);
@@ -197,15 +152,13 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     }
 
     private void showEditDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
 
-        // Pre-fill the EditText fields with the existing data
         editTextName.setText(supermarketName);
         editTextImage.setText(Image);
 
-        // Build the AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView)
                 .setTitle("تعديل المكان")
@@ -222,7 +175,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     }
 
     private void updateRestaurantDetails(String newName, String newImage) {
-        // Update the restaurant details in the Firebase Firestore
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference restaurantRef = db.collection("Places").document(supermarketId);
 
@@ -247,7 +200,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
 
                     // After updating in Firestore, now update in Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference r = database.getReference("Supermarket").child(supermarketName);
+                    DatabaseReference r = database.getReference("supermarket").child(supermarketName);
 
                     Map<String, Object> realtimeUpdates = new HashMap<>();
                     realtimeUpdates.put("name", newName);
@@ -286,7 +239,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                 .setPositiveButton("نعم", (dialog, which) -> {
                     // Delete from Firebase Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference placeRef = database.getReference("Supermarket").child(supermarketName);
+                    DatabaseReference placeRef = database.getReference("supermarket").child(supermarketName);
 
                     placeRef.removeValue()
                             .addOnSuccessListener(aVoid -> {

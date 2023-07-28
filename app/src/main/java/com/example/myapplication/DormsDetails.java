@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -20,11 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.DormsClass;
-import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -232,9 +227,9 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
     }
 
     private void showEditDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
 
         // Pre-fill the EditText fields with the existing data
         editTextName.setText(dormsName);
@@ -282,7 +277,7 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
 
                     // After updating in Firestore, now update in Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference r = database.getReference("Dorms").child(dormsName);
+                    DatabaseReference r = database.getReference("dorms").child(dormsName);
 
                     java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
                     realtimeUpdates.put("name", newName);
@@ -321,7 +316,7 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
                 .setPositiveButton("نعم", (dialog, which) -> {
                     // Delete from Firebase Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference placeRef = database.getReference("Supermarket").child(dormsName);
+                    DatabaseReference placeRef = database.getReference("dorms").child(dormsName);
 
                     placeRef.removeValue()
                             .addOnSuccessListener(aVoid -> {

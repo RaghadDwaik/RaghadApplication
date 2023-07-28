@@ -24,11 +24,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -89,7 +87,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
         // Construct the database reference for the services of the selected Restaurant
         servicesRef = FirebaseDatabase.getInstance().getReference().child("DryCleanServices");
-        Query query = servicesRef.orderByChild("DryClean").equalTo(drycleanName);
+        Query query = servicesRef.orderByChild("dryclean").equalTo(drycleanName);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<ServicesClass> options =
                 new FirebaseRecyclerOptions.Builder<ServicesClass>()
@@ -112,39 +110,6 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
-
-                String ownerId = currentUser.getUid();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference placeRef = db.collection("Places").document(drycleanId);
-                placeRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String owner = document.getString("ownerId");
-                            if (owner != null && owner.equals(ownerId)) {
-                                Button deleteButton = findViewById(R.id.deleteButton);
-                                deleteButton.setVisibility(View.VISIBLE);
-                                deleteButton.setOnClickListener(v -> deletePlace(drycleanId));
-                                Button editButton = findViewById(R.id.edit);
-
-                                editButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        showEditDialog();
-                                    }
-                                });
-
-                            } else {
-
-                                Button editButton = findViewById(R.id.edit);
-                                editButton.setVisibility(View.GONE);
-
-                                Button deleteButton = findViewById(R.id.deleteButton);
-                                deleteButton.setVisibility(View.GONE);
-                            }
-                        }
-                    }
-                });
 
 
             //---------------------------------------------
@@ -217,9 +182,9 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
     }
 
     private void showEditDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
 
         // Pre-fill the EditText fields with the existing data
         editTextName.setText(drycleanName);
@@ -267,7 +232,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
                     // After updating in Firestore, now update in Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference r = database.getReference("Supermarket").child(drycleanName);
+                    DatabaseReference r = database.getReference("dryclean").child(drycleanName);
 
                     java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
                     realtimeUpdates.put("name", newName);
@@ -311,7 +276,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
                 .setPositiveButton("نعم", (dialog, which) -> {
                     // Delete from Firebase Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference placeRef = database.getReference("DryClean").child(drycleanName);
+                    DatabaseReference placeRef = database.getReference("dryclean").child(drycleanName);
 
                     placeRef.removeValue()
                             .addOnSuccessListener(aVoid -> {

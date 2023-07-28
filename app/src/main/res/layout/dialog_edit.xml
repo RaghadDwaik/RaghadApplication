@@ -7,15 +7,17 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextName"
+        android:id="@+id/Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="اسم المكان" />
 
     <EditText
-        android:id="@+id/editTextImage"
+        android:id="@+id/Image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="صورة المكان" />
+
+
 
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -20,12 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -86,7 +83,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         //      rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
         servicesRef = FirebaseDatabase.getInstance().getReference().child("Items");
-        Query query = servicesRef.orderByChild("Resturant").equalTo(restaurantName);
+        Query query = servicesRef.orderByChild("resturant").equalTo(restaurantName);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -109,41 +106,6 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
 
 
         if (currentUser != null) {
-
-            String ownerId = currentUser.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference placeRef = db.collection("Places").document(restaurantId);
-            placeRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String owner = document.getString("ownerId");
-                        if (owner != null && owner.equals(ownerId)) {
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.VISIBLE);
-                            deleteButton.setOnClickListener(v -> deletePlace(restaurantId));
-
-
-                            Button editButton = findViewById(R.id.edit);
-
-                            editButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showEditDialog();
-                                }
-                            });
-
-                        } else {
-
-                            Button editButton = findViewById(R.id.edit);
-                            editButton.setVisibility(View.GONE);
-
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            });
 
 
             //---------------------------------------------
@@ -284,7 +246,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
 
                     // After updating in Firestore, now update in Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference r = database.getReference("Resturant").child(restaurantName);
+                    DatabaseReference r = database.getReference("resturant").child(restaurantName);
 
                     java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
                     realtimeUpdates.put("name", newName);
@@ -323,7 +285,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
                 .setPositiveButton("نعم", (dialog, which) -> {
                     // Delete from Firebase Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference placeRef = database.getReference("Resturant").child(restaurantName);
+                    DatabaseReference placeRef = database.getReference("resturant").child(restaurantName);
 
                     placeRef.removeValue()
                             .addOnSuccessListener(aVoid -> {
@@ -435,9 +397,9 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         startActivity(intent);
     }
     private void showEditDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
 
         // Pre-fill the EditText fields with the existing data
         editTextName.setText(restaurantName);
@@ -446,13 +408,13 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         // Build the AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView)
-                .setTitle("Edit Restaurant")
-                .setPositiveButton("Save Changes", (dialog, which) -> {
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
                     String newName = editTextName.getText().toString().trim();
                     String newImage = editTextImage.getText().toString().trim();
                     updateRestaurantDetails(newName, newImage);
                 })
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton("تخطي", null);
 
         // Show the AlertDialog
         editDialog = builder.create();

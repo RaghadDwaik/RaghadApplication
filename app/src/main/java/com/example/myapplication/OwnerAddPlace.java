@@ -82,7 +82,7 @@ public class OwnerAddPlace extends AppCompatActivity {
                 Intent intent = new Intent(OwnerAddPlace.this, OwnerAddService.class);
                 intent.putExtra("placeType", englishPlaceType);
                 Toast.makeText(OwnerAddPlace.this, "Selected Place: " + englishPlaceType, Toast.LENGTH_SHORT).show();
-                intent.putExtra("placeName", placeName);
+                intent.putExtra(englishPlaceType, placeName);
                 startActivity(intent);
             }
         });
@@ -93,17 +93,17 @@ public class OwnerAddPlace extends AppCompatActivity {
         // Use switch statement or custom mapping method to convert Arabic to English
         switch (arabicLabel) {
             case "مطعم":
-                return "Resturant";
+                return "resturant";
             case "سوبرماركت":
-                return "Supermarket";
+                return "supermarket";
             case "صالون":
                 return "salon";
             case "مكان دراسة":
-                return "StudyPlace";
+                return "studyplace";
             case "سكن":
-                return "Dorms";
+                return "dorms";
             case "دراي كلين":
-                return "DryClean";
+                return "dryclean";
             // Add more cases for other places
             default:
                 return ""; // Return empty string or null if no match found

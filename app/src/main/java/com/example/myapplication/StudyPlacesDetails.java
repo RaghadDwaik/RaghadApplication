@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -20,11 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.DormsClass;
-import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,7 +77,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
             studyName = intent.getStringExtra("studyplace_name");
             studyImage = intent.getStringExtra("studyplace_image");
 
-            // Use Glide to load the dormitory image
+            System.out.println("isssssssssssssssssss "+studyId);
             Glide.with(this)
                     .load(studyImage)
                     .into(studyImageView);
@@ -120,7 +115,8 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
             String ownerId = currentUser.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference placeRef = db.collection("Places").document(studyId);
+            DocumentReference placeRef = db.collection("Places").document();
+            System.out.println("idddddddddddddddddddddd "+studyId);
             placeRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
@@ -204,9 +200,9 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
 
     private void showEditDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_restaurant, null);
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextImage = dialogView.findViewById(R.id.editTextImage);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
 
         // Pre-fill the EditText fields with the existing data
         editTextName.setText(studyName);
@@ -254,7 +250,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
                     // After updating in Firestore, now update in Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference r = database.getReference("StudyPlace").child(studyName);
+                    DatabaseReference r = database.getReference("studyplace").child(studyName);
 
                     java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
                     realtimeUpdates.put("name", newName);
@@ -293,7 +289,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
                 .setPositiveButton("نعم", (dialog, which) -> {
                     // Delete from Firebase Realtime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference placeRef = database.getReference("StudyPlace").child(studyName);
+                    DatabaseReference placeRef = database.getReference("studyplace").child(studyName);
 
                     placeRef.removeValue()
                             .addOnSuccessListener(aVoid -> {

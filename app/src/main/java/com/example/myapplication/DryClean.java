@@ -47,7 +47,7 @@ public class DryClean extends AppCompatActivity implements BottomNavigationView.
         recyclerView = findViewById(R.id.supermarket_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("DryClean");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("dryclean");
         allDryclean = new ArrayList<>();
 
         setupAdapter();

@@ -44,7 +44,7 @@ public class Restaurant extends AppCompatActivity implements BottomNavigationVie
         recyclerView = findViewById(R.id.rest_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Resturant");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("resturant");
         allRestuarant = new ArrayList<>();
         userLoggedIn = checkUserLoggedIn();
         setupAdapter();

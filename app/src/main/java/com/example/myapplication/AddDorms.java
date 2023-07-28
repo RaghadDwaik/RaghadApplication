@@ -38,7 +38,7 @@ public class AddDorms extends AppCompatActivity {
 
         System.out.println("placcccccccccccccccccccccccccccce dd " + placeType);
 
-        if (placeType.equals("Dorms")) {
+        if (placeType.equals("dorms")) {
             image11 = findViewById(R.id.image1);
             image22 = findViewById(R.id.image2);
             image33 = findViewById(R.id.image3);
@@ -81,7 +81,7 @@ public class AddDorms extends AppCompatActivity {
                             });
                 }
             });
-        } else if (placeType.equals("StudyPlace")) {
+        } else if (placeType.equals("studyplace")) {
             image11 = findViewById(R.id.image1);
             image22 = findViewById(R.id.image2);
             image33 = findViewById(R.id.image3);

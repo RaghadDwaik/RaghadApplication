@@ -325,8 +325,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 adapter5.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(PlacesClass item, int position) {
-                        // Handle the item click event for the specific item
-                        // You can access the item details using item.getId(), item.getRating(), etc.
+
                         String supermarketId = item.getId();
                         float rating = item.getRating();
                         String name = item.getName();
@@ -814,7 +813,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void search(String query) {
-        DatabaseReference supermarketRef = FirebaseDatabase.getInstance().getReference().child("Supermarket");
+        DatabaseReference supermarketRef = FirebaseDatabase.getInstance().getReference().child("supermarket");
         Query queryRef = supermarketRef.orderByChild("name").equalTo(query);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -857,7 +856,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
 
         //    ---------------------------------------
-        DatabaseReference RestRef = FirebaseDatabase.getInstance().getReference().child("Resturant");
+        DatabaseReference RestRef = FirebaseDatabase.getInstance().getReference().child("resturant");
         Query queryRest = RestRef.orderByChild("name").equalTo(query);
         queryRest.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -879,7 +878,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
 
         //-----------------------
-        DatabaseReference dryRef = FirebaseDatabase.getInstance().getReference().child("DryClean");
+        DatabaseReference dryRef = FirebaseDatabase.getInstance().getReference().child("dryclean");
         Query querydry = dryRef.orderByChild("name").equalTo(query);
         querydry.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -901,7 +900,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
         //-----------------------------------------
 
-        DatabaseReference studyplaceRef = FirebaseDatabase.getInstance().getReference().child("StudyPlaces");
+        DatabaseReference studyplaceRef = FirebaseDatabase.getInstance().getReference().child("studyplace");
         Query querystudyRef = studyplaceRef.orderByChild("name").equalTo(query);
         querystudyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
