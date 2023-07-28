@@ -58,7 +58,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         recyclerView = findViewById(R.id.SupermarketItemList_recycler);
         rating = findViewById(R.id.ratingBar);
         ImageView imageView = findViewById(R.id.restaurantImageView);
-        searchView = findViewById(R.id.searchButton);
+//        searchView = findViewById(R.id.searchButton);
 
         Intent intent = getIntent();
         Image = intent.getStringExtra("supermarket_image");
@@ -130,21 +130,21 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
             // Handle the case when the currentUser is null
         }
 
+//       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // Do nothing when the search query is submitted
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                // Call searchFirebase method to filter the data based on the entered query
+//                searchFirebase(newText);
+//                return true;
+//            }
+//        });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Do nothing when the search query is submitted
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Call searchFirebase method to filter the data based on the entered query
-                searchFirebase(newText);
-                return true;
-            }
-        });
 
 
 

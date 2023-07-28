@@ -29,16 +29,17 @@
             android:scaleType="fitXY" />
 
 
-        <androidx.appcompat.widget.SearchView
+        <SearchView
             android:id="@+id/searchButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
             android:background="@android:color/transparent"
-            android:contentDescription="Search"
             android:padding="10dp"
             android:queryHint="ابحث هنا"
-            android:src="@drawable/baseline_search_24" />
+            android:textColor="@android:color/black"
+            android:src="@drawable/baseline_search_24"
+            android:contentDescription="Search" />
 
     </FrameLayout>
 
@@ -63,43 +64,45 @@
             android:outlineAmbientShadowColor="@color/nude"/>
 
     </RelativeLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
+
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2100dp"
             android:orientation="vertical">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RestaurantList_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="240dp"
-        android:background="@color/nude"
-        android:scrollbars="vertical"
-        android:padding="2dp"
-        />
 
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="حذف المكان"
-        android:layout_gravity="center"
-        android:layout_marginLeft="50dp"
-        android:layout_below="@+id/RestaurantList_recycler"
-        />
-    <Button
-        android:id="@+id/edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="تعديل على المكان"
-        android:layout_gravity="center"
-        android:layout_marginLeft="200dp"
-        android:layout_below="@+id/RestaurantList_recycler"
 
-        />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RestaurantList_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="240dp"
+                android:background="@color/nude"
+                android:padding="2dp"
+                android:scrollbars="vertical" />
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="500dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="50dp"
+                android:text="حذف المكان" />
+
+            <Button
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="500dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="200dp"
+                android:text="تعديل على المكان"
+
+                />
         </RelativeLayout>
-    </ScrollView>
+
 
 </RelativeLayout>

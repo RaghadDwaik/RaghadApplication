@@ -68,9 +68,7 @@
 <!--    <ScrollView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content">-->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="2100dp"
@@ -92,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
-            android:layout_below="@+id/placeList_recycler"
+android:layout_marginTop="500dp"
             android:text="حذف المكان"
 
             />
@@ -103,9 +101,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="200dp"
+            android:layout_marginTop="500dp"
             android:text="تعديل على المكان"
-            android:layout_below="@+id/placeList_recycler"
             />
     </RelativeLayout>
-    </ScrollView>
+
 </RelativeLayout>

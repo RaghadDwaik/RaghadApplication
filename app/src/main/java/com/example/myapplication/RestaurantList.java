@@ -58,7 +58,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
         recyclerView = findViewById(R.id.RestaurantList_recycler);
-        searchView = findViewById(R.id.searchButton);
+//        searchView = findViewById(R.id.searchButton);
         rating = findViewById(R.id.ratingBar);
         userLoggedIn = checkUserLoggedIn();
 
@@ -140,19 +140,19 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         }
 
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Do nothing when the search query is submitted
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchFirebase(newText);
-                return true;
-            }
-        });
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // Do nothing when the search query is submitted
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                searchFirebase(newText);
+//                return true;
+//            }
+//        });
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
