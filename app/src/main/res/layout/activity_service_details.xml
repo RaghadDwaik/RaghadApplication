@@ -120,24 +120,30 @@
 
             </LinearLayout>
 
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
             <Button
                 android:id="@+id/deleteButton"
-                android:layout_width="67dp"
-                android:layout_height="31dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/loginbutton_selector"
-                android:text="حذف المكان" />
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="90dp"
+                android:textSize="18dp"
+                android:text="حذف المكان"
+              />
 
             <Button
                 android:id="@+id/edit"
-                android:layout_width="67dp"
-                android:layout_height="31dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginLeft="90dp"
-                android:background="@drawable/loginbutton_selector"
+                android:layout_width="140dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="220dp"
+                android:padding="10dp"
+                android:textSize="18dp"
                 android:text="تعديل على المكان" />
+</RelativeLayout>
         </LinearLayout>
+
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
