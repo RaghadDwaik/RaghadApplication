@@ -48,7 +48,9 @@
                     android:contentDescription="Search" />
 
             </FrameLayout>
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="700dp">
             <RelativeLayout
                 android:id="@+id/toolBar"
                 android:layout_width="match_parent"
@@ -118,8 +120,12 @@
                     android:layout_marginStart="31dp"
                     android:layout_marginTop="10dp"
                     android:text="الوصف"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"/>
 
                 <Button
                     android:id="@+id/deleteButton"
@@ -128,7 +134,6 @@
                     android:text="حذف المكان"
                     android:layout_gravity="center"
                     android:layout_below="@id/description"
-
                     android:layout_marginLeft="50dp"
                     />
                 <Button
@@ -136,13 +141,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="تعديل على المكان"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="500dp"
-                    android:layout_marginLeft="50dp"
-                    android:layout_toRightOf="@+id/deleteButton"
+                    android:layout_marginLeft="15dp"
+                    android:layout_below="@id/description"
+                    android:layout_toRightOf="@+id/deleteButton" />
                     />
-
             </RelativeLayout>
+</ScrollView>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
