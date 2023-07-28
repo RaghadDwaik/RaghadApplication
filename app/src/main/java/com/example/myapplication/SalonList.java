@@ -61,6 +61,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         setContentView(R.layout.activity_place_list);
         searchView = findViewById(R.id.searchButton);
         userLoggedIn = checkUserLoggedIn();
+        editButton=findViewById(R.id.edit);
+        deleteButton=findViewById(R.id.deleteButton);
 
         recyclerView = findViewById(R.id.placeList_recycler);
 
@@ -107,7 +109,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         System.out.println("tttttttttttttttttttttttttttttttttt");
 
-        buttonVisibility();
+
         if (currentUser != null) {
 
 
@@ -161,8 +163,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
-
-
+        buttonVisibility();
     }
 
     private void deletePlace(String placeId) {
