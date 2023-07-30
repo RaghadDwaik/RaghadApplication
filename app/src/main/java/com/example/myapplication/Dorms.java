@@ -39,7 +39,7 @@ public class Dorms extends AppCompatActivity implements BottomNavigationView.OnN
         databaseReference = FirebaseDatabase.getInstance().getReference();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Dorms");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("dorms");
         dorm = new ArrayList<>();
 
         setupAdapter();

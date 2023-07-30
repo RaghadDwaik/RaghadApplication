@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private RecommendAdapter adapter3;
     private RecommendAdapter adapter4;
     private RecommendAdapter adapter5;
+    private RecommendAdapter adapter6;
+
 
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReference1;
@@ -274,8 +276,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         recyclerView1 = findViewById(R.id.RecommendedR_recycler);
         recyclerView2 = findViewById(R.id.RecommendedD_recycler);
         recyclerView3 = findViewById(R.id.RecommendedS_recycler);
-        //   recyclerView4 = findViewById(R.id.RecommendedSt_recycler);
-        //    recyclerView5 = findViewById(R.id.RecommendedDo_recycler);
+           recyclerView4 = findViewById(R.id.RecommendedSt_recycler);
+           recyclerView5 = findViewById(R.id.RecommendedDo_recycler);
+
 
 
         DatabaseReference recommendedMarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
@@ -625,12 +628,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                 Collections.sort(recommendedStudy, new PlacesClass());
 
-                adapter3 = new RecommendAdapter(recommendedStudy);
-                recyclerView3.setAdapter(adapter3);
-                recyclerView3.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
-                adapter3.notifyDataSetChanged();
+                adapter4 = new RecommendAdapter(recommendedStudy);
+                recyclerView4.setAdapter(adapter4);
+                recyclerView4.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                adapter4.notifyDataSetChanged();
 
-                adapter3.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                adapter4.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(PlacesClass item, int position) {
                         // Handle the item click event for the specific item
@@ -640,11 +643,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         String name = item.getName();
                         String image = item.getImage();
 
-                        Intent intent = new Intent(MainActivity.this, DryCleanList.class);
-                        intent.putExtra("StudyPlace_id", StudyPlaceId);
-                        intent.putExtra("StudyPlace_name", name);
-                        intent.putExtra("StudyPlace_image", image);
-                        intent.putExtra("StudyPlace_rating", rating);
+                        Intent intent = new Intent(MainActivity.this, StudyPlacesDetails.class);
+                        intent.putExtra("studyplace_id", StudyPlaceId);
+                        intent.putExtra("studyplace_name", name);
+                        intent.putExtra("studyplace_image", image);
+                        intent.putExtra("studyplace_rate", rating);
 
                         // Add any other necessary data as extras
                         startActivity(intent);
@@ -659,7 +662,84 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 // Handle any errors that occur during the data retrieval
             }
         });
-    }
+
+
+
+    //---------------------------------------------------------------------
+
+    DatabaseReference recommendeddor = FirebaseDatabase.getInstance().getReference().child("RecommendedDorms");
+    Query  queryd = recommendeddor.limitToLast(5);
+
+        queryd.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+
+            for (DataSnapshot supermarketSnapshot : dataSnapshot.getChildren()) {
+                String supermarketKey = supermarketSnapshot.getKey();
+                double totalRating = 0;
+                int numUsers = 0;
+
+                for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                    double rating = ratingSnapshot.child("rating").getValue(Double.class);
+                    totalRating += rating;
+                    numUsers++;
+                }
+
+                double averageRating = totalRating / numUsers;
+
+                // Retrieve other supermarket details such as name, image, etc.
+                String name = null;
+                String image = null;
+
+                for (DataSnapshot ratingSnapshot : supermarketSnapshot.getChildren()) {
+                    name = ratingSnapshot.child("name").getValue(String.class);
+                    image = ratingSnapshot.child("image").getValue(String.class);
+                    break;
+                }
+
+                if (name != null && image != null) {
+                    PlacesClass market = new PlacesClass(name, image);
+                    market.setRating((float) averageRating);
+                    recommendedDorms.add(market);
+                }
+            }
+
+            Collections.sort(recommendedDorms, new PlacesClass());
+
+            adapter6 = new RecommendAdapter(recommendedDorms);
+            recyclerView5.setAdapter(adapter6);
+            recyclerView5.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            adapter6.notifyDataSetChanged();
+
+            adapter6.setOnItemClickListener(new RecommendAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(PlacesClass item, int position) {
+                    // Handle the item click event for the specific item
+                    // You can access the item details using item.getId(), item.getRating(), etc.
+                    String StudyPlaceId = item.getId();
+                    float rating = item.getRating();
+                    String name = item.getName();
+                    String image = item.getImage();
+
+                    Intent intent = new Intent(MainActivity.this, DormsDetails.class);
+                    intent.putExtra("Dorms_id", StudyPlaceId);
+                    intent.putExtra("Dorms_name", name);
+                    intent.putExtra("Dorms_image", image);
+
+                    // Add any other necessary data as extras
+                    startActivity(intent);
+                }
+            });
+
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Handle any errors that occur during the data retrieval
+        }
+    });
+}
 
 
 
