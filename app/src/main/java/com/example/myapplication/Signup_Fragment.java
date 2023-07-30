@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -66,10 +68,18 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Toast.makeText(getActivity(), "Successfully", Toast.LENGTH_SHORT)
-                    .show();
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
+            currentUser.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    FirebaseUser updatedUser = mAuth.getCurrentUser();
+                    if (updatedUser != null && updatedUser.isEmailVerified()) {
+                        // If the email is verified, navigate to the main activity
+                        Toast.makeText(getActivity(), "Email verified. Logging in...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
     }
 
@@ -99,8 +109,8 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         login = view.findViewById(R.id.already_user);
         terms_conditions = view.findViewById(R.id.terms_conditions);
         radioGroup = view.findViewById(R.id.radioGroup);
-        radioButton1=view.findViewById(R.id.radioButtonOption1);
-        radioButton2= view.findViewById(R.id.radioButtonOption2);
+        radioButton1 = view.findViewById(R.id.radioButtonOption1);
+        radioButton2 = view.findViewById(R.id.radioButtonOption2);
 
 
         // Initialize Firebase Auth and Firestore
@@ -146,7 +156,6 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
     }
 
 
-
     // Check Validation Method
     public void checkValidation() {
         // Get all edittext texts
@@ -179,7 +188,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         // Make sure the user has checked the Terms and Conditions checkbox
         else if (!terms_conditions.isChecked()) {
             new CustomToast().Show_Toast(getActivity(), view, "Please accept the Terms and Conditions.");
-        }  else if (!radioButton2.isChecked()&& !radioButton1.isChecked()) {
+        } else if (!radioButton2.isChecked() && !radioButton1.isChecked()) {
             new CustomToast().Show_Toast(getActivity(), view, "This field is required.");
         } else {
             // Get the selected radio button value
@@ -213,7 +222,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("isUser", isOwner);
                                     userInfo.put("id", userId);
 
-
+                                    sendEmailVerification(user);
                                     // Set the user information in the Firestore document
                                     userRef.set(userInfo)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -223,7 +232,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                                     if (selectedRadioButtonId == R.id.radioButtonOption1) {
                                                         // Handle owner registration (specify owner of a place) here
                                                         handleOwnerRegistration(userId);
-                                                    } else if(selectedRadioButtonId == R.id.radioButtonOption2) {
+                                                    } else if (selectedRadioButtonId == R.id.radioButtonOption2) {
                                                         // Handle user registration here
                                                         handleUserRegistration();
                                                     }
@@ -248,18 +257,99 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                     });
         }
     }
+
+    private void sendEmailVerification(FirebaseUser user) {
+        user.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            if(user.isEmailVerified()){
+                            Log.d("SignUpActivity", "Email verification sent.");
+                            // Add code to inform the user that the verification email has been sent.
+                            startActivity(new Intent(getActivity(),MainActivity.class));
+                        } else {
+                            Log.e("SignUpActivity", "sendEmailVerification:failure", task.getException());
+                            // Add code to handle the failure to send the verification email.
+                        }
+                    }else {
+                            Toast.makeText(getActivity(),task.getException().getMessage(),Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+        signUpButton.setOnClickListener(( view) -> {
+            startActivity(new Intent(getActivity(), MainActivity.class));
+        });
+    }
+
+
     // Method to handle owner registration (specify owner of a place)
     public void handleOwnerRegistration(String ownerId) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            if (user.isEmailVerified()) {
+                // For example, you can start a new activity to add the place details and associate it with the owner
+                Intent intent = new Intent(getActivity(), OwnerHomePage.class);
+                intent.putExtra("ownerId", ownerId);
+                startActivity(intent);
+            } else{
+                    // User's email is not verified, show a dialog to inform the user
+                    showEmailVerificationDialog();
+                }
+            }
+        }
 
-        // For example, you can start a new activity to add the place details and associate it with the owner
-        Intent intent = new Intent(getActivity(), OwnerHomePage.class);
-        intent.putExtra("ownerId", ownerId);
-        startActivity(intent);
+
+        // Method to handle user registration
+        public void handleUserRegistration() {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                if (user.isEmailVerified()) {
+                    Intent intent = new Intent(getActivity(), Profile.class);
+                    startActivity(intent);
+                } else {
+                    // User's email is not verified, show a dialog to inform the user
+                    showEmailVerificationDialog();
+                }
+            }
+        }
+
+
+    private void showEmailVerificationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Your email address is not verified. Please check your email for the verification link.")
+                .setTitle("Email Verification")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Resend Verification Email", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendVerificationEmail();
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
 
-    // Method to handle user registration
-    public void handleUserRegistration() {
-        Intent intent = new Intent(getActivity(), Profile.class);
-        startActivity(intent);
+    private void sendVerificationEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getActivity(), "Verification email sent.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }
+

@@ -113,7 +113,7 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
     private FirebaseAuth mAuth;
     private int loginAttemptsCounter = 0;
     private static final int MAX_LOGIN_ATTEMPTS = 3;
-    private static final int RC_SIGN_IN = 123; // Request code for sign-in
+    private static final int RC_SIGN_IN = 9001; // Request code for sign-in
     private SignInButton googleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
     private static final String SHARED_PREF_NAME = "MySharedPref";
@@ -290,21 +290,18 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
                         .addToBackStack(null) // Add this line to add the fragment to the back stack
                         .commit();
                 break;
+// Inside onClick() method
             case R.id.google_sign_in_button:
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
                         .build();
 
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+                      mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
-                googleSignInButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
                         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                         startActivityForResult(signInIntent, RC_SIGN_IN);
-                    }
-                });
+
                 break;
         }
     }
@@ -406,37 +403,42 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
     // Method to handle login based on user or owner
     private void handleLogin(FirebaseUser user) {
         if (user != null) {
-            String userId = user.getUid();
-            DocumentReference userRef = db.collection("User").document(userId);
+            if (!user.isEmailVerified()) {
+                // Email is not verified, show a dialog to inform the user
+                showEmailVerificationDialog();
+            } else {
+                String userId = user.getUid();
+                DocumentReference userRef = db.collection("User").document(userId);
 
-            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
-                        Boolean isOwner = documentSnapshot.getBoolean("isUser");
-                        if (isOwner != null && !isOwner) {
+                userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Boolean isOwner = documentSnapshot.getBoolean("isUser");
+                            if (isOwner != null && isOwner) {
 
-                            Intent intent = new Intent(getActivity(), OwnerHomePage.class);
-                            intent.putExtra("ownerId", userId);
-                            System.out.println("1111111111111111111111111111111111111111111111111111111111111111 "+userId);
-                            startActivity(intent);
+                                Intent intent = new Intent(getActivity(), OwnerHomePage.class);
+                                intent.putExtra("ownerId", userId);
+                                System.out.println("1111111111111111111111111111111111111111111111111111111111111111 " + userId);
+                                startActivity(intent);
+                            } else {
+                                // User is not an owner, redirect to the regular user's activity
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
+                            }
                         } else {
-                            // User is not an owner, redirect to the regular user's activity
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            startActivity(intent);
+                            // Document does not exist, handle the failure case
+                            Toast.makeText(getActivity(), "Failed to get user information.", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        // Document does not exist, handle the failure case
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle the failure case (optional)
                         Toast.makeText(getActivity(), "Failed to get user information.", Toast.LENGTH_SHORT).show();
                     }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Handle the failure case (optional)
-                    Toast.makeText(getActivity(), "Failed to get user information.", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
+            }
         }
     }
 
@@ -446,4 +448,42 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
 
 
     }
-}
+
+
+    private void showEmailVerificationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Your email address is not verified. Please check your email for the verification link.")
+                .setTitle("Email Verification")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Resend Verification Email", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendVerificationEmail();
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void sendVerificationEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getActivity(), "Verification email sent.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+    }
