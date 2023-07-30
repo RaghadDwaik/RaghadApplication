@@ -65,20 +65,21 @@
             android:outlineAmbientShadowColor="@color/nude"/>
 
     </RelativeLayout>
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
 
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="2100dp"-->
-<!--        android:orientation="horizontal">-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolBar">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="2100dp"
+        android:orientation="horizontal">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/placeList_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="240dp"
         android:background="@color/nude"
         android:scrollbars="vertical"
         android:padding="2dp"
@@ -90,8 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
-android:layout_marginTop="700dp"
             android:text="حذف المكان"
+            android:layout_below="@+id/placeList_recycler"
 
             />
 
@@ -101,8 +102,10 @@ android:layout_marginTop="700dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="200dp"
-            android:layout_marginTop="700dp"
             android:text="تعديل على المكان"
+            android:layout_below="@+id/placeList_recycler"
             />
+    </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

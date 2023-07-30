@@ -134,14 +134,14 @@
                     android:text="حذف المكان"
                     android:layout_gravity="center"
                     android:layout_below="@id/description"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="90dp"
                     />
                 <Button
                     android:id="@+id/edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="تعديل على المكان"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_below="@id/description"
                     android:layout_toRightOf="@+id/deleteButton" />
                     />
