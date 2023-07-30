@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     List<PlacesClass> recommendedSalon = new ArrayList<>();
     List<PlacesClass> recommendedRest = new ArrayList<>();
     List<PlacesClass> recommendedClean = new ArrayList<>();
+    List<PlacesClass> recommendedStudy = new ArrayList<>();
+    List<PlacesClass> recommendedDorms = new ArrayList<>();
 
     private boolean userLoggedIn;
     Query query;
@@ -617,13 +619,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     if (name != null && image != null) {
                         PlacesClass market = new PlacesClass(name, image);
                         market.setRating((float) averageRating);
-                        recommendedClean.add(market);
+                        recommendedStudy.add(market);
                     }
                 }
 
-                Collections.sort(recommendedClean, new PlacesClass());
+                Collections.sort(recommendedStudy, new PlacesClass());
 
-                adapter3 = new RecommendAdapter(recommendedClean);
+                adapter3 = new RecommendAdapter(recommendedStudy);
                 recyclerView3.setAdapter(adapter3);
                 recyclerView3.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                 adapter3.notifyDataSetChanged();
@@ -658,6 +660,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
         });
     }
+
+
+
 
 //    private void changeLanguage(String newLanguage) {
 //        // Save the new language preference

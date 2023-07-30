@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -320,46 +321,71 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
 
     private void updateRating(float rating) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedClean");
+        if (drycleanId != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                    .document(userId)
+                    .collection("Rating")
+                    .document(drycleanId);
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        DocumentReference restaurantRatingDocRef = firestore.collection("User")
-                .document(userId)
-                .collection("Rating")
-                .document(drycleanId);
+            // Create a new HashMap to store the updated rating data
+            HashMap<String, Object> ratingData = new HashMap<>();
+            ratingData.put("name", drycleanName);
+            ratingData.put("image", drycleanImageUrl);
+            ratingData.put("rating", rating);
 
-        // Create a new document for the supermarket with the user's rating
-        HashMap<String, Object> ratingData = new HashMap<>();
-        ratingData.put("name", drycleanName);
-        ratingData.put("image", drycleanImageUrl);
-        ratingData.put("rating", rating);
-        restaurantRatingDocRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-
+            // Check if the rating document already exists for this user and study place
+            restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // If the rating document exists, update the rating value
+                        restaurantRatingDocRef.update("rating", rating)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Update successful, you can show a success message if needed
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the failure to update the rating
+                                    Toast.makeText(DryCleanList.this, "Failed to update rating.", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        // If the rating document doesn't exist, set the new rating data
+                        restaurantRatingDocRef.set(ratingData)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Set successful, you can show a success message if needed
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the failure to set the new rating data
+                                    Toast.makeText(DryCleanList.this, "Failed to set rating data.", Toast.LENGTH_SHORT).show();
+                                });
+                    }
                 } else {
-                    // User has not rated the supermarket yet
-                    restaurantRatingDocRef.set(ratingData)
-                            .addOnSuccessListener(aVoid -> {
-                                DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(drycleanId).push();
-                                //   System.out.println("iddddddddddddddddddddddd"+userSupermarketRef.toString());
-
-                                userSupermarketRef.child("id").setValue(drycleanId);
-                                userSupermarketRef.child("image").setValue(drycleanImageUrl);
-                                userSupermarketRef.child("name").setValue(drycleanName);
-                                userSupermarketRef.child("rating").setValue(rating);
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle the failure to update the rating
-                            });
+                    // Handle the case when fetching the rating document fails
+                    Toast.makeText(DryCleanList.this, "Failed to fetch rating document.", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                // Handle the failure to check the existing rating
-            }
-        });
+            });
+
+            // Also, update the rating value in the Realtime Database
+            DatabaseReference ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedClean");
+            DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(drycleanId).child(userId);
+            userSupermarketRef.child("id").setValue(drycleanId);
+            userSupermarketRef.child("image").setValue(drycleanImageUrl);
+            userSupermarketRef.child("name").setValue(drycleanName);
+            userSupermarketRef.child("rating").setValue(rating)
+                    .addOnSuccessListener(aVoid -> {
+                        // Rating update in Realtime Database successful, if needed, you can show a success message
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the failure to update the rating in Realtime Database
+                        Toast.makeText(DryCleanList.this, "Failed to update rating in Realtime Database.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(DryCleanList.this, "Invalid study place ID.", Toast.LENGTH_SHORT).show();
+        }
+
     }
+
 
 
     private void searchFirebase(String query) {

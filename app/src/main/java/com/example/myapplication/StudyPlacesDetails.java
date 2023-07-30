@@ -76,11 +76,15 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
             studyId = intent.getStringExtra("studyplace_id");
             studyName = intent.getStringExtra("studyplace_name");
             studyImage = intent.getStringExtra("studyplace_image");
+            float supermarketRating = getIntent().getFloatExtra("studyplace_rate", 0.0f);
+            ratingBar.setRating(supermarketRating);
 
-            System.out.println("isssssssssssssssssss "+studyId);
             Glide.with(this)
+
                     .load(studyImage)
                     .into(studyImageView);
+
+
 
 
             DatabaseReference studyDetailsRef = FirebaseDatabase.getInstance().getReference().child("StudyPlaceItems").child(studyName);
@@ -195,6 +199,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
             }
         });
 
+        ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
     }
 
@@ -281,6 +286,72 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
                     Toast.makeText(this, "Failed to update restaurant details in Firestore", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 });
+    }
+
+    private void updateRating(float rating) {
+        if (studyId != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            DocumentReference restaurantRatingDocRef = firestore.collection("User")
+                    .document(userId)
+                    .collection("Rating")
+                    .document(studyId);
+
+            // Create a new HashMap to store the updated rating data
+            HashMap<String, Object> ratingData = new HashMap<>();
+            ratingData.put("name", studyName);
+            ratingData.put("image", studyImage);
+            ratingData.put("rating", rating);
+
+            // Check if the rating document already exists for this user and study place
+            restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // If the rating document exists, update the rating value
+                        restaurantRatingDocRef.update("rating", rating)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Update successful, you can show a success message if needed
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the failure to update the rating
+                                    Toast.makeText(StudyPlacesDetails.this, "Failed to update rating.", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        // If the rating document doesn't exist, set the new rating data
+                        restaurantRatingDocRef.set(ratingData)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Set successful, you can show a success message if needed
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the failure to set the new rating data
+                                    Toast.makeText(StudyPlacesDetails.this, "Failed to set rating data.", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                } else {
+                    // Handle the case when fetching the rating document fails
+                    Toast.makeText(StudyPlacesDetails.this, "Failed to fetch rating document.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Also, update the rating value in the Realtime Database
+            DatabaseReference ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedStudy");
+            DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(studyId).child(userId);
+            userSupermarketRef.child("id").setValue(studyId);
+            userSupermarketRef.child("image").setValue(studyImage);
+            userSupermarketRef.child("name").setValue(studyName);
+            userSupermarketRef.child("rating").setValue(rating)
+                    .addOnSuccessListener(aVoid -> {
+                        // Rating update in Realtime Database successful, if needed, you can show a success message
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the failure to update the rating in Realtime Database
+                        Toast.makeText(StudyPlacesDetails.this, "Failed to update rating in Realtime Database.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(StudyPlacesDetails.this, "Invalid study place ID.", Toast.LENGTH_SHORT).show();
+        }
+        ratingBar.setRating(rating);
     }
 
     private void deletePlace(String placeId) {

@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -95,7 +96,6 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         bottom.setOnNavigationItemSelectedListener(this);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("tttttttttttttttttttttttttttttttttt");
 
         if (currentUser != null) {
 
@@ -289,7 +289,6 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     }
 
     private void updateRating(float rating) {
-        // Check if supermarketId is not null
         if (supermarketId != null) {
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -298,29 +297,63 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                     .collection("Rating")
                     .document(supermarketId);
 
-            // Create a new document for the supermarket with the user's rating
+            // Create a new HashMap to store the updated rating data
             HashMap<String, Object> ratingData = new HashMap<>();
             ratingData.put("name", supermarketName);
             ratingData.put("image", Image);
             ratingData.put("rating", rating);
-            restaurantRatingDocRef.set(ratingData)
+
+            // Check if the rating document already exists for this user and study place
+            restaurantRatingDocRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // If the rating document exists, update the rating value
+                        restaurantRatingDocRef.update("rating", rating)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Update successful, you can show a success message if needed
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the failure to update the rating
+                                    Toast.makeText(SupermarketItemList.this, "Failed to update rating.", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        // If the rating document doesn't exist, set the new rating data
+                        restaurantRatingDocRef.set(ratingData)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Set successful, you can show a success message if needed
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle the failure to set the new rating data
+                                    Toast.makeText(SupermarketItemList.this, "Failed to set rating data.", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                } else {
+                    // Handle the case when fetching the rating document fails
+                    Toast.makeText(SupermarketItemList.this, "Failed to fetch rating document.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Also, update the rating value in the Realtime Database
+            DatabaseReference ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedClean");
+            DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(supermarketId).child(userId);
+            userSupermarketRef.child("id").setValue(supermarketId);
+            userSupermarketRef.child("image").setValue(Image);
+            userSupermarketRef.child("name").setValue(supermarketName);
+            userSupermarketRef.child("rating").setValue(rating)
                     .addOnSuccessListener(aVoid -> {
-                        DatabaseReference ratedSupermarketsRef = FirebaseDatabase.getInstance().getReference().child("RecommendedMarket");
-                        DatabaseReference userSupermarketRef = ratedSupermarketsRef.child(supermarketId).push();
-                        userSupermarketRef.child("id").setValue(supermarketId);
-                        userSupermarketRef.child("image").setValue(Image);
-                        userSupermarketRef.child("name").setValue(supermarketName);
-                        userSupermarketRef.child("rating").setValue(rating);
+                        // Rating update in Realtime Database successful, if needed, you can show a success message
                     })
                     .addOnFailureListener(e -> {
-                        // Handle the failure to update the rating
-                        Toast.makeText(SupermarketItemList.this, "Failed to update rating.", Toast.LENGTH_SHORT).show();
+                        // Handle the failure to update the rating in Realtime Database
+                        Toast.makeText(SupermarketItemList.this, "Failed to update rating in Realtime Database.", Toast.LENGTH_SHORT).show();
                     });
         } else {
-            // Handle the case when supermarketId is null (optional, you can add your own logic here)
-            Toast.makeText(SupermarketItemList.this, "Invalid supermarket ID.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SupermarketItemList.this, "Invalid study place ID.", Toast.LENGTH_SHORT).show();
         }
+
     }
+
 
 
     @Override
