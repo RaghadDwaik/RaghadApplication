@@ -69,10 +69,10 @@
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content">-->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="2100dp"
-        android:orientation="horizontal">
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2100dp"-->
+<!--        android:orientation="horizontal">-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/placeList_recycler"
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
-android:layout_marginTop="500dp"
+android:layout_marginTop="700dp"
             android:text="حذف المكان"
 
             />
@@ -101,9 +101,8 @@ android:layout_marginTop="500dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="200dp"
-            android:layout_marginTop="500dp"
+            android:layout_marginTop="700dp"
             android:text="تعديل على المكان"
             />
-    </RelativeLayout>
 
 </RelativeLayout>

@@ -3,15 +3,23 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,6 +115,12 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         view = inflater.inflate(R.layout.activity_login, container, false);
         initViews();
         setListeners();
+        // Inside initViews() method or onCreateView(), after initializing views
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id)) // R.string.default_web_client_id should be the client ID from google-services.json
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
         return view;
     }
 
@@ -141,6 +155,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
             forgotPassword.setTextColor(csl);
             show_hide_password.setTextColor(csl);
             signUp.setTextColor(csl);
+
 
         } catch (Exception e) {
         }
@@ -246,12 +261,24 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                         .addToBackStack(null) // Add this line to add the fragment to the back stack
                         .commit();
                 break;
+// Inside onClick() method
             case R.id.google_sign_in_button:
-                // Handle Google Sign-In click here (if needed)
-                // ...
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+
+                googleSignInButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                    }
+                });
                 break;
         }
-
     }
 
     @Override

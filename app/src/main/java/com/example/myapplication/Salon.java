@@ -2,8 +2,10 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Salon extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class Salon extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     private BottomNavigationView bottom;
     private RecyclerView recyclerView;
@@ -39,10 +41,30 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_super_market);
+        setContentView(R.layout.activity_salon);
 
-        recyclerView = findViewById(R.id.supermarket_recycler);
+        RelativeLayout relativeLayout = findViewById(R.id.relativeLayout);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Salon", "RelativeLayout Clicked");
+            }
+        });
+
+        recyclerView = findViewById(R.id.Salon_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setClickable(false);
+        recyclerView.setFocusable(false);
+        recyclerView.setFocusableInTouchMode(false);
+        recyclerView.setOnTouchListener((v, event) -> true);
+
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Salon", "RecyclerView Clicked");
+            }
+        });
+
         userLoggedIn = checkUserLoggedIn();
         //  SearchView searchView = findViewById(R.id.search);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("salon");
@@ -56,6 +78,8 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
 
         bottom.setOnNavigationItemSelectedListener(this);
 
+        searchView = findViewById(R.id.search);
+
         if (searchView != null) {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -66,13 +90,15 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+                    Log.d("Salon", "onQueryTextChange: " + newText);
+
                     // Call searchFirebase method to filter the data based on the entered query
                     searchFirebase(newText);
                     return true;
                 }
             });
         } else {
-            // Log an error or take appropriate action if the SearchView is null.
+
         }
     }
 
@@ -213,5 +239,16 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
 
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        searchFirebase(newText);
+        return false;
     }
 }

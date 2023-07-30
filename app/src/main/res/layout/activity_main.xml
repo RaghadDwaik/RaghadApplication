@@ -58,6 +58,7 @@
                         android:textSize="30sp"
                         android:textStyle="bold"/>
 
+
                     <androidx.appcompat.widget.SearchView
                         android:id="@+id/search"
                         android:layout_width="match_parent"

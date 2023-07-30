@@ -14,6 +14,9 @@ public class PlacesClass implements Comparator<PlacesClass> {
         this.placeType = placeType;
     }
 
+
+
+
     private String placeType;
 
     public String getOwnerid() {
