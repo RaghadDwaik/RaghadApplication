@@ -53,10 +53,6 @@ public class Salon extends AppCompatActivity implements BottomNavigationView.OnN
 
         recyclerView = findViewById(R.id.Salon_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setClickable(false);
-        recyclerView.setFocusable(false);
-        recyclerView.setFocusableInTouchMode(false);
-        recyclerView.setOnTouchListener((v, event) -> true);
 
         recyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
