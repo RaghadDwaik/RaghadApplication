@@ -38,6 +38,10 @@ import java.util.HashMap;
 public class StudyPlacesDetails extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private ImageView studyImageView, image1, image2, image3,image4;
+
+    boolean visited;
+    Button editButton;
+    Button deleteButton;
     private RatingBar ratingBar;
     private boolean isFavorite = false;
     private ImageButton favorite;
@@ -69,7 +73,8 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
         searchView = findViewById(R.id.searchButton);
         descriptionTextView = findViewById(R.id.description);
 
-
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -78,6 +83,8 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
             studyImage = intent.getStringExtra("studyplace_image");
             float supermarketRating = getIntent().getFloatExtra("studyplace_rate", 0.0f);
             ratingBar.setRating(supermarketRating);
+            visited = getIntent().getBooleanExtra("visited", false);
+
 
             Glide.with(this)
 
@@ -117,40 +124,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
         if (currentUser != null) {
 
-         /*   String ownerId = currentUser.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference placeRef = db.collection("Places").document();
-            System.out.println("idddddddddddddddddddddd "+studyId);
-            placeRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String owner = document.getString("ownerId");
-                        if (owner != null && owner.equals(ownerId)) {
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.VISIBLE);
-                            deleteButton.setOnClickListener(v -> deletePlace(studyId));
 
-                            Button editButton = findViewById(R.id.edit);
-
-                            editButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showEditDialog();
-                                }
-                            });
-
-                        } else {
-
-                            Button editButton = findViewById(R.id.edit);
-                            editButton.setVisibility(View.GONE);
-
-                            Button deleteButton = findViewById(R.id.deleteButton);
-                            deleteButton.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            });*/
 
 
             //---------------------------------------------
@@ -198,6 +172,8 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
                 return false;
             }
         });
+
+        buttonVisibility();
 
         ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
@@ -424,6 +400,38 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
                 return true;
         }
         return false;
+    }
+
+    private void buttonVisibility() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            if (visited) {
+                deleteButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.VISIBLE);
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the edit method when the editButton is clicked
+                        showEditDialog();
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the delete method when the deleteButton is clicked
+                        deletePlace(studyId);
+                    }
+                });
+            }
+            else {
+                deleteButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+            }
+
+        }
     }
 
 }

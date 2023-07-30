@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -50,6 +51,9 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     private DatabaseReference servicesRef;
     private SearchView searchView;
     private String Image ;
+    boolean visited;
+    Button editButton;
+    Button deleteButton;
     float rate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         rating = findViewById(R.id.ratingBar);
         ImageView imageView = findViewById(R.id.restaurantImageView);
         searchView = findViewById(R.id.searchButton);
+
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
 
         Intent intent = getIntent();
         Image = intent.getStringExtra("supermarket_image");
@@ -73,6 +80,8 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         // Get the details of the selected supermarket from the intent
         supermarketId = intent.getStringExtra("supermarket_id");
         supermarketName = intent.getStringExtra("supermarket_name");
+        visited = getIntent().getBooleanExtra("visited", false);
+
 
         float supermarketRating = getIntent().getFloatExtra("supermarket_rating", 0.0f);
         rating.setRating(supermarketRating);
@@ -146,6 +155,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         });
 
 
+        buttonVisibility();
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
@@ -434,5 +444,37 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                     // Handle the failure to add the item to RecentlyV collection
                     // Display an error message or take appropriate action
                 });
+    }
+
+    private void buttonVisibility() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            if (visited) {
+                deleteButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.VISIBLE);
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the edit method when the editButton is clicked
+                        showEditDialog();
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the delete method when the deleteButton is clicked
+                        deletePlace(supermarketId);
+                    }
+                });
+            }
+            else {
+                deleteButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+            }
+
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -53,6 +54,10 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
     private String restaurantName;
     private String restaurantImageUrl;
 
+    boolean visited;
+    Button editButton;
+    Button deleteButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,9 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         searchView = findViewById(R.id.searchButton);
         rating = findViewById(R.id.ratingBar);
         userLoggedIn = checkUserLoggedIn();
+
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
 
         ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
 
@@ -79,6 +87,8 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         restaurantName = intent.getStringExtra("restaurant_name");
         restaurantImageUrl = intent.getStringExtra("restaurant_image");
         float RestRating = getIntent().getFloatExtra("restaurant_rating", 0.0f);
+        visited = getIntent().getBooleanExtra("visited", false);
+
         rating.setRating(RestRating);
         //      rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
@@ -154,6 +164,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
             }
         });
 
+        buttonVisibility();
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
     }
@@ -495,4 +506,38 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
     public void onItemClick(DocumentSnapshot snapshot, int position) {
 
     }
+
+    private void buttonVisibility() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            if (visited) {
+                deleteButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.VISIBLE);
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the edit method when the editButton is clicked
+                        showEditDialog();
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the delete method when the deleteButton is clicked
+                        deletePlace(restaurantId);
+                    }
+                });
+            }
+            else {
+                deleteButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+            }
+
+        }
+    }
+
 }
+
