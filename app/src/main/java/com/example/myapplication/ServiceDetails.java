@@ -118,12 +118,12 @@ public class ServiceDetails extends AppCompatActivity {
             if (isFavorite) {
                 removeFromFavorites(salonId);
                 favorite.setColorFilter(Color.WHITE);
-                Toast.makeText(ServiceDetails.this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ServiceDetails.this, "ازالة من المفضلة", Toast.LENGTH_SHORT).show();
             } else {
                 ServicesClass newItem = new ServicesClass(salonId, salonName, salonImageUrl, salonPrice);
                 addToFavorites(newItem);
                 favorite.setColorFilter(Color.RED);
-                Toast.makeText(ServiceDetails.this, "Added to favorites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ServiceDetails.this, "اضافة الى المفضلة", Toast.LENGTH_SHORT).show();
             }
             isFavorite = !isFavorite; // Toggle the favorite state
         });
