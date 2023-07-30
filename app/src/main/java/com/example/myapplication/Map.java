@@ -89,7 +89,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Locati
         findbutton = findViewById(R.id.findbutton);
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
 
-        String[] placeTypeList = {"department_store", "restaurant", "beauty_salon", "laundry", " library", "supermarket"};
+        String[] placeTypeList = {"university", "restaurant", "beauty_salon", "laundry", " library", "supermarket"};
         String[] placeNameList = {"سكنات", "مطاعم", "صالونات", "دراي كلين", "اماكن للدراسة", "سوبرماركت"};
 
         spinner.setAdapter(new ArrayAdapter<>(Map.this, android.R.layout.simple_spinner_dropdown_item, placeNameList));
