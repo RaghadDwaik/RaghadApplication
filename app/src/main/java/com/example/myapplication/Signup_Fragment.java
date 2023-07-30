@@ -219,7 +219,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("fullName", getFullName);
                                     userInfo.put("email", getEmailId);
                                     userInfo.put("mobileNumber", getMobileNumber);
-                                    userInfo.put("isUser", isOwner);
+                                    userInfo.put("isUser", !isOwner);
                                     userInfo.put("id", userId);
 
                                     sendEmailVerification(user);

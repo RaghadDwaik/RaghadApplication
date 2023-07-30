@@ -102,7 +102,7 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
                     DormsClass dormDetails = dataSnapshot.getValue(DormsClass.class);
 
                     if (dormDetails != null) {
-                        ratingBar.setRating(dormDetails.getRating());
+                  //      ratingBar.setRating(dormDetails.getRating());
                         Glide.with(DormsDetails.this).load(dormDetails.getImage1()).into(image1);
                         Glide.with(DormsDetails.this).load(dormDetails.getImage2()).into(image2);
                         Glide.with(DormsDetails.this).load(dormDetails.getImage3()).into(image3);

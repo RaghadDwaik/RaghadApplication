@@ -80,6 +80,8 @@ public class StudyPlaces extends AppCompatActivity implements BottomNavigationVi
             intent.putExtra("studyplace_id", snapshot.getKey());
             intent.putExtra("studyplace_name", supermarket.getName());
             intent.putExtra("studyplace_image", supermarket.getImage());
+            String place = intent.getStringExtra("place");
+
 
             // Add any other necessary data as extras
             startActivity(intent);

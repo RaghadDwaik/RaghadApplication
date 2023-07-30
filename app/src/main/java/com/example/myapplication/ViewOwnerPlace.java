@@ -70,7 +70,9 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     Intent intent = new Intent(ViewOwnerPlace.this, SalonList.class);
                     intent.putExtra("salon_id", snapshot.getId());
                     intent.putExtra("salon_name", place.getName());
-             //       intent.putExtra("visited", true);
+                   intent.putExtra("visited", true);
+                    intent.putExtra("place", place.getPlaceType());
+
 
                     intent.putExtra("salon_image", place.getImage());
                     startActivity(intent);
@@ -81,6 +83,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("supermarket_name", place.getName());
                     intent.putExtra("supermarket_image", place.getImage());
                   intent.putExtra("visited", true);
+                    intent.putExtra("place", placeType);
+
 
                     startActivity(intent);
 
@@ -90,6 +94,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("restaurant_name", place.getName());
                     intent.putExtra("restaurant_image", place.getImage());
                     intent.putExtra("visited", true);
+                    intent.putExtra("place", placeType);
+
 
                     startActivity(intent);
                 } else if (placeType.equals("dryclean")) {
@@ -98,6 +104,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("dryclean_name", place.getName());
                     intent.putExtra("dryclean_image", place.getImage());
                     intent.putExtra("visited", true);
+                    intent.putExtra("place", placeType);
+
 
                     startActivity(intent);
 
@@ -107,6 +115,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("Dorms_name", place.getName());
                     intent.putExtra("Dorms_image", place.getImage());
                     intent.putExtra("visited", true);
+                    intent.putExtra("place", placeType);
+
 
                     startActivity(intent);
                 } else if (placeType.equals("studyplace")) {
@@ -115,6 +125,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     intent.putExtra("studyplace_name", place.getName());
                     intent.putExtra("studyplace_image", place.getImage());
                     intent.putExtra("visited", true);
+                    intent.putExtra("place", placeType);
+
 
                     startActivity(intent);
                 }

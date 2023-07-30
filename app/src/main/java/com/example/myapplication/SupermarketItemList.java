@@ -54,6 +54,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
     boolean visited;
     Button editButton;
     Button deleteButton;
+    String place ="supermarket";
     float rate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         Intent intent = getIntent();
         Image = intent.getStringExtra("supermarket_image");
 
+
         // Load the supermarket image into the ImageView using Glide
         Glide.with(this)
                 .load(Image)
@@ -81,6 +83,7 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
         supermarketId = intent.getStringExtra("supermarket_id");
         supermarketName = intent.getStringExtra("supermarket_name");
         visited = getIntent().getBooleanExtra("visited", false);
+
 
 
         float supermarketRating = getIntent().getFloatExtra("supermarket_rating", 0.0f);
@@ -435,7 +438,10 @@ public class SupermarketItemList extends AppCompatActivity implements BottomNavi
                     intent.putExtra("price", rest.getPrice());
                     intent.putExtra("desc", rest.getDescription());
                     intent.putExtra("image", rest.getImage());
-                    intent.putExtra("place", supermarketName);
+                    intent.putExtra("place1", supermarketName);
+                    intent.putExtra("place", place);
+
+
 
                     // Add any other necessary data as extras
                     startActivity(intent);
