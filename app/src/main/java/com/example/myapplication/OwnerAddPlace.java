@@ -1,16 +1,22 @@
 package com.example.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +42,12 @@ public class OwnerAddPlace extends AppCompatActivity {
     private EditText image;
     String placeName;
     public static boolean visited = false;
+    private ImageView imageView;
 
+    private Uri selectedImageUri;
+    private static final int GALLERY_REQUEST_CODE = 123;
+    private static final int REQUEST_IMAGE_PICK = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
 
     String ownerId;
     private FirebaseFirestore db;
@@ -58,7 +70,15 @@ public class OwnerAddPlace extends AppCompatActivity {
 
         image = findViewById(R.id.imagee);
         saveButton = findViewById(R.id.saveButton);
-
+        imageView = findViewById(R.id.selected_image_view);
+        imageView.setImageURI(selectedImageUri);
+        imageView.setVisibility(View.VISIBLE);
+ imageView.setOnClickListener(new View.OnClickListener() {
+     @Override
+     public void onClick(View v) {
+         showPhotoSelectionDialog();
+     }
+ });
         spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.places, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -195,5 +215,64 @@ public class OwnerAddPlace extends AppCompatActivity {
         savePlaceDetails(ownerId);
 
     }
+
+    private void showPhotoSelectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("اختر صورة");
+        String[] options = {"اختار من الصور على الجهاز", "التقط صورة"};
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        // Open Gallery
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(galleryIntent, REQUEST_IMAGE_PICK);
+                        break;
+                    case 1:
+                        // Open Camera
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Camera not available", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private Uri getImageUri(Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_PICK && data != null) {
+                // Photo selected from gallery
+                selectedImageUri = data.getData();
+                imageView.setImageURI(selectedImageUri);
+                imageView.setVisibility(View.VISIBLE); // Show the selected image in the ImageView
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+                // Photo captured using camera
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                // Convert the Bitmap to Uri
+                selectedImageUri = getImageUri(imageBitmap);
+                imageView.setImageBitmap(imageBitmap);
+                imageView.setVisibility(View.VISIBLE); // Show the selected image in the ImageView
+            }
+        }
+    }
+
+
 }
 

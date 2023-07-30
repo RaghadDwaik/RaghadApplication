@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,6 +33,8 @@ public class OwnerAddService extends AppCompatActivity {
     private StorageReference storageReference;
     private Uri selectedImageUri;
     private static final int GALLERY_REQUEST_CODE = 123;
+    private static final int REQUEST_IMAGE_PICK = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
 
 
     private Button addProductButton;
@@ -95,7 +100,9 @@ public class OwnerAddService extends AppCompatActivity {
                             image.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    openGallery();
+//                                    openGallery();
+
+                                    showPhotoSelectionDialog();
                                 }
                             });
 
@@ -280,5 +287,35 @@ public class OwnerAddService extends AppCompatActivity {
                         Toast.makeText(OwnerAddService.this, "لم تتم عملية الاضافة", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    // Photo Selection Dialog
+    private void showPhotoSelectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("اختر صورة");
+        String[] options = {"اختار من الصور على الجهاز", "التقط صورة"};
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        // Open Gallery
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(galleryIntent, REQUEST_IMAGE_PICK);
+                        break;
+                    case 1:
+                        // Open Camera
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Camera not available", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+            }
+        });
+        builder.show();
     }
 }
