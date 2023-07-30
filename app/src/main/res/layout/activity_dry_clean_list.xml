@@ -64,6 +64,11 @@
 
     </RelativeLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="2100dp"
+        android:layout_below="@+id/toolBar">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2100dp"
@@ -73,7 +78,6 @@
         android:id="@+id/DrycleanList_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="240dp"
         android:background="@color/nude"
         android:scrollbars="vertical"
         android:padding="2dp"
@@ -83,8 +87,8 @@
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
         android:text="حذف المكان"
+        android:layout_below="@+id/DrycleanList_recycler"
         android:layout_gravity="center"
         android:layout_marginLeft="50dp"
          />
@@ -94,10 +98,11 @@
         android:layout_height="wrap_content"
         android:text="تعديل على المكان"
         android:layout_gravity="center"
-android:layout_marginTop="500dp"
         android:layout_marginLeft="200dp"
+        android:layout_below="@+id/DrycleanList_recycler"
+
         />
         </RelativeLayout>
-
+    </ScrollView>
 
 </RelativeLayout>
