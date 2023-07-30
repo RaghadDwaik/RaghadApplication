@@ -29,6 +29,10 @@
             android:name=".ViewOwnerPlace"
             android:exported="false" />
         <activity
+            android:name=".AboutUs"
+            android:exported="false" />
+
+        <activity
             android:name=".OwnerAddPlace"
             android:exported="false" />
         <activity

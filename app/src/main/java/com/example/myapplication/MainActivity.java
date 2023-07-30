@@ -170,8 +170,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         return true;
 
                     case  R.id.about:
-                    Intent in5 = new Intent(MainActivity.this, AboutUs.class);
-                    startActivity(in5);
+                    Intent in8 = new Intent(MainActivity.this, AboutUs.class);
+                    startActivity(in8);
                     return true;
 
                     case R.id.map:

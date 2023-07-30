@@ -34,6 +34,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+import javax.security.auth.callback.Callback;
+
 public class SalonList extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, ItemListAdapter.OnItemClickListener {
 
     private BottomNavigationView bottom;
@@ -61,8 +63,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         setContentView(R.layout.activity_place_list);
         searchView = findViewById(R.id.searchButton);
         userLoggedIn = checkUserLoggedIn();
-        editButton=findViewById(R.id.edit);
-        deleteButton=findViewById(R.id.deleteButton);
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
 
         recyclerView = findViewById(R.id.placeList_recycler);
 
@@ -79,6 +81,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                 .into(salonImageView);
 
         salonId = intent.getStringExtra("salon_id");
+        System.out.println("tttttttttttttttttttttttttttttttttt "+salonId);
+
         salonName = intent.getStringExtra("salon_name");
 
         salonImage = intent.getStringExtra("salon_image");
@@ -97,8 +101,8 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         adapter = new ItemListAdapter(options);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
-        editButton=findViewById(R.id.edit);
-        deleteButton=findViewById(R.id.deleteButton);
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
 
         bottom = findViewById(R.id.bottom);
         BottomNavigationView nav1 = findViewById(R.id.bottom);
@@ -107,7 +111,6 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         bottom.setOnNavigationItemSelectedListener(this);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("tttttttttttttttttttttttttttttttttt");
 
 
         if (currentUser != null) {
@@ -159,7 +162,6 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                 return true;
             }
         });
-
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
@@ -390,7 +392,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                 Intent in = new Intent(SalonList.this, MainActivity.class);
                 startActivity(in);
                 return true;
-            case  R.id.about:
+            case R.id.about:
                 Intent in5 = new Intent(SalonList.this, AboutUs.class);
                 startActivity(in5);
                 return true;
@@ -431,6 +433,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         }
         return false;
     }
+
     private void showLoginPrompt() {
         View view = findViewById(android.R.id.content); // Replace with the appropriate View ID
 
@@ -484,35 +487,50 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         }
     }
 
-    private void buttonVisibility(){
+    private void buttonVisibility() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String ownerId = currentUser.getUid();
+
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference placeRef = db.collection("Places").document(salonId);
+
+
+            DocumentReference placeRef = db.collection("Places").document();
+            CollectionReference placesCollectionRef = db.collection("Places");
+            DocumentReference newPlaceRef = placesCollectionRef.document();
+            String newDocumentId = newPlaceRef.getId();
+            System.out.println("llllllllllllllllllllllll " + newDocumentId);
+
             placeRef.get().addOnCompleteListener(task -> {
+
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         String owner = document.getString("ownerId");
-                        if (owner != null && owner.equals(ownerId)) {
-                            // User is the owner, show the buttons
-                            deleteButton.setVisibility(View.VISIBLE);
-                            editButton.setVisibility(View.VISIBLE);
+                        if (owner != null && !owner.equals(ownerId)) {
+                            System.out.println("ooooooooooooooooooooooooooi " + owner);
+                            runOnUiThread(() -> {
+                                deleteButton.setVisibility(View.VISIBLE);
+                                editButton.setVisibility(View.VISIBLE);
+                            });
                         } else {
                             // User is not the owner, hide the buttons
-                            deleteButton.setVisibility(View.GONE);
-                            editButton.setVisibility(View.GONE);
+                            runOnUiThread(() -> {
+                                deleteButton.setVisibility(View.GONE);
+                                editButton.setVisibility(View.GONE);
+                            });
                         }
                     }
+                } else {
+                    System.out.println("ffffffffffffffail");
                 }
             });
         } else {
             // User is not logged in, hide the buttons
-            deleteButton.setVisibility(View.GONE);
-            editButton.setVisibility(View.GONE);
+            runOnUiThread(() -> {
+                deleteButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+            });
         }
-
     }
 }
-

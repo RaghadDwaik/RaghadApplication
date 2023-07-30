@@ -76,6 +76,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
 
         // Get the details of the selected restaurant from the intent
         restaurantId = intent.getStringExtra("restaurant_id");
+        System.out.println("iiiiiiiiiiiiiiiiiiiiiii "+restaurantId);
         restaurantName = intent.getStringExtra("restaurant_name");
         restaurantImageUrl = intent.getStringExtra("restaurant_image");
         float RestRating = getIntent().getFloatExtra("restaurant_rating", 0.0f);
