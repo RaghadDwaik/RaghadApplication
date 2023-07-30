@@ -824,6 +824,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     // For example, start the SupermarketItem activity and pass the supermarket ID
                     Intent intent = new Intent(MainActivity.this, SupermarketItemList.class);
                     intent.putExtra("supermarket_name", supermarket.getName());
+                    intent.putExtra("supermarket_image", supermarket.getImage());
+
                     startActivity(intent);
                 }
             }
@@ -845,6 +847,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     // For example, start the SupermarketItem activity and pass the supermarket ID
                     Intent intent = new Intent(MainActivity.this, SalonList.class);
                     intent.putExtra("salon_name", supermarket.getName());
+                    intent.putExtra("salon_image", supermarket.getImage());
+
                     startActivity(intent);
                 }
             }
@@ -867,6 +871,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     // For example, start the SupermarketItem activity and pass the supermarket ID
                     Intent intent = new Intent(MainActivity.this,RestaurantList.class);
                     intent.putExtra("restaurant_name", supermarket.getName());
+                    intent.putExtra("restaurant_image", supermarket.getImage());
+
                     startActivity(intent);
                 }
             }
@@ -889,6 +895,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     // For example, start the SupermarketItem activity and pass the supermarket ID
                     Intent intent = new Intent(MainActivity.this, DryCleanList.class);
                     intent.putExtra("dryclean_name", supermarket.getName());
+                    intent.putExtra("dryclean_image", supermarket.getImage());
+
                     startActivity(intent);
                 }
             }
@@ -907,10 +915,39 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     PlacesClass studyplace = snapshot.getValue(PlacesClass.class);
+
+                    Intent intent = new Intent(MainActivity.this, StudyPlacesDetails.class);
+                    intent.putExtra("studyplace_id", snapshot.getKey());
+                    intent.putExtra("studyplace_name", studyplace.getName());
+                    intent.putExtra("studyplace_image", studyplace.getImage());
+
+
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+        //-----------------------------------------
+
+        DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference().child("dorms");
+        Query querystudy= studyplaceRef.orderByChild("name").equalTo(query);
+        querystudy.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    PlacesClass studyplace = snapshot.getValue(PlacesClass.class);
                     // Perform any action with the searched supermarket
                     // For example, start the SupermarketItem activity and pass the supermarket ID
-                    Intent intent = new Intent(MainActivity.this, StudyPlacesList.class);
-                    intent.putExtra("studyplace_name", studyplace.getName());
+                    Intent intent = new Intent(MainActivity.this, DormsDetails.class);
+                    intent.putExtra("Dorms_name", studyplace.getName());
+                    intent.putExtra("Dorms_image", studyplace.getImage());
+
                     startActivity(intent);
                 }
             }
@@ -978,7 +1015,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         //-------------------------------------------------
-        DatabaseReference serviceRef = FirebaseDatabase.getInstance().getReference().child("Services");
+        DatabaseReference serviceRef = FirebaseDatabase.getInstance().getReference().child("salonServices");
         Query queryservice = serviceRef.orderByChild("name").equalTo(query);
         queryservice.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1002,6 +1039,64 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 // Handle any errors
             }
         });
+
+
+
+    //-------------------------------------------------
+    DatabaseReference dormRef = FirebaseDatabase.getInstance().getReference().child("DormsDetails");
+    Query querydorm = dormRef.orderByChild("name").equalTo(query);
+        querydorm.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                ServicesClass supermarket = snapshot.getValue(ServicesClass.class);
+                Intent intent = new Intent(MainActivity.this, ServiceDetails.class);
+
+                intent.putExtra("id", snapshot.getKey());
+                intent.putExtra("name", supermarket.getName());
+                intent.putExtra("price", supermarket.getPrice());
+                intent.putExtra("desc", supermarket.getDescription());
+                intent.putExtra("image", supermarket.getImage());
+
+                startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            // Handle any errors
+        }
+    });
+
+        //-------------------------------------------------
+        DatabaseReference dRef = FirebaseDatabase.getInstance().getReference().child("DryCleanServices");
+        Query queryd = dRef.orderByChild("name").equalTo(query);
+        queryd.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ServicesClass supermarket = snapshot.getValue(ServicesClass.class);
+                    Intent intent = new Intent(MainActivity.this, ServiceDetails.class);
+
+                    intent.putExtra("id", snapshot.getKey());
+                    intent.putExtra("name", supermarket.getName());
+                    intent.putExtra("price", supermarket.getPrice());
+                    intent.putExtra("desc", supermarket.getDescription());
+                    intent.putExtra("image", supermarket.getImage());
+
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+
+
+
+
     }
 
 

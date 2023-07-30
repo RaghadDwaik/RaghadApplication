@@ -113,7 +113,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
         if (currentUser != null) {
 
-            String ownerId = currentUser.getUid();
+         /*   String ownerId = currentUser.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference placeRef = db.collection("Places").document();
             System.out.println("idddddddddddddddddddddd "+studyId);
@@ -146,7 +146,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
                         }
                     }
                 }
-            });
+            });*/
 
 
             //---------------------------------------------

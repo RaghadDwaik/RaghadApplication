@@ -58,7 +58,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
         recyclerView = findViewById(R.id.RestaurantList_recycler);
-//        searchView = findViewById(R.id.searchButton);
+        searchView = findViewById(R.id.searchButton);
         rating = findViewById(R.id.ratingBar);
         userLoggedIn = checkUserLoggedIn();
 
@@ -76,7 +76,6 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
 
         // Get the details of the selected restaurant from the intent
         restaurantId = intent.getStringExtra("restaurant_id");
-        System.out.println("iiiiiiiiiiiiiiiiiiiiiii "+restaurantId);
         restaurantName = intent.getStringExtra("restaurant_name");
         restaurantImageUrl = intent.getStringExtra("restaurant_image");
         float RestRating = getIntent().getFloatExtra("restaurant_rating", 0.0f);
@@ -141,19 +140,19 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         }
 
 
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                // Do nothing when the search query is submitted
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                searchFirebase(newText);
-//                return true;
-//            }
-//        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Do nothing when the search query is submitted
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchFirebase(newText);
+                return true;
+            }
+        });
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));

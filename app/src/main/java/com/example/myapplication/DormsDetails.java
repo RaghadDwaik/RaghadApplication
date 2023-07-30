@@ -110,8 +110,9 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
         }
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
         if (currentUser != null) {
+
+   /*     if (currentUser != null) {
 
             String ownerId = currentUser.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -145,7 +146,7 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
                         }
                     }
                 }
-            });
+            });*/
 
 
             //---------------------------------------------
