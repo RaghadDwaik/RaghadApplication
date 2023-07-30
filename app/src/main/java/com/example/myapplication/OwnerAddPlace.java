@@ -34,6 +34,7 @@ public class OwnerAddPlace extends AppCompatActivity {
     private String selectedPlaceEnglish; // This will store the corresponding English value
     private EditText image;
     String placeName;
+    public static boolean visited = false;
 
 
     String ownerId;
@@ -52,6 +53,8 @@ public class OwnerAddPlace extends AppCompatActivity {
 
         // Initialize views
         placeNameEditText = findViewById(R.id.placeNameEditText);
+        boolean visited = getIntent().getBooleanExtra("visited", false);
+
 
         image = findViewById(R.id.imagee);
         saveButton = findViewById(R.id.saveButton);
@@ -81,7 +84,8 @@ public class OwnerAddPlace extends AppCompatActivity {
                 savePlaceDetails(ownerId);
                 Intent intent = new Intent(OwnerAddPlace.this, OwnerAddService.class);
                 intent.putExtra("placeType", englishPlaceType);
-              //  Toast.makeText(OwnerAddPlace.this, "Selected Place: " + englishPlaceType, Toast.LENGTH_SHORT).show();
+
+                //  Toast.makeText(OwnerAddPlace.this, "Selected Place: " + englishPlaceType, Toast.LENGTH_SHORT).show();
                 intent.putExtra(englishPlaceType, placeName);
                 startActivity(intent);
             }

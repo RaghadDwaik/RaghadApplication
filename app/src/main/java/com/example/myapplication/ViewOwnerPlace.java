@@ -40,6 +40,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         ownerId = getIntent().getStringExtra("ownerId");
+        boolean visited = getIntent().getBooleanExtra("visited", false);
+
 
         placesRecyclerView = findViewById(R.id.placesRecyclerView);
 
@@ -68,6 +70,8 @@ public class ViewOwnerPlace extends AppCompatActivity {
                     Intent intent = new Intent(ViewOwnerPlace.this, SalonList.class);
                     intent.putExtra("salon_id", snapshot.getId());
                     intent.putExtra("salon_name", place.getName());
+                    intent.putExtra("visited", true);
+
                     intent.putExtra("salon_image", place.getImage());
                     startActivity(intent);
                 } else if (placeType.equals("supermarket")) {

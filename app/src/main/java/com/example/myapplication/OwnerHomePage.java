@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 public class OwnerHomePage extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class OwnerHomePage extends AppCompatActivity {
 
         Intent intent = new Intent(OwnerHomePage.this, ViewOwnerPlace.class);
         intent.putExtra("ownerId", ownerId);
-
+        intent.putExtra("visited", true);
         startActivity(intent);
     }
 }

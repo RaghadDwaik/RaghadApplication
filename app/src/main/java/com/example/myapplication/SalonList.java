@@ -55,6 +55,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
     private String salonId;
     String salonName;
     String salonImage;
+    boolean visited;
 
 
     @Override
@@ -74,6 +75,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
         Intent intent = getIntent();
         salonImage = intent.getStringExtra("salon_image");
+        visited = getIntent().getBooleanExtra("visited", false);
 
         Glide.with(this)
                 .load(salonImage)
@@ -81,7 +83,6 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                 .into(salonImageView);
 
         salonId = intent.getStringExtra("salon_id");
-        System.out.println("tttttttttttttttttttttttttttttttttt "+salonId);
 
         salonName = intent.getStringExtra("salon_name");
 
@@ -165,7 +166,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
-        buttonVisibility();
+     //   buttonVisibility();
     }
 
     private void deletePlace(String placeId) {
@@ -513,49 +514,17 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
     }
 
     private void buttonVisibility() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String ownerId = currentUser.getUid();
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-            DocumentReference placeRef = db.collection("Places").document();
-            CollectionReference placesCollectionRef = db.collection("Places");
-            DocumentReference newPlaceRef = placesCollectionRef.document();
-            String newDocumentId = newPlaceRef.getId();
-            System.out.println("llllllllllllllllllllllll " + newDocumentId);
-
-            placeRef.get().addOnCompleteListener(task -> {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String owner = document.getString("ownerId");
-                        if (owner != null && !owner.equals(ownerId)) {
-                            System.out.println("ooooooooooooooooooooooooooi " + owner);
-                            runOnUiThread(() -> {
-                                deleteButton.setVisibility(View.VISIBLE);
-                                editButton.setVisibility(View.VISIBLE);
-                            });
-                        } else {
-                            // User is not the owner, hide the buttons
-                            runOnUiThread(() -> {
-                                deleteButton.setVisibility(View.GONE);
-                                editButton.setVisibility(View.GONE);
-                            });
-                        }
-                    }
-                } else {
-                    System.out.println("ffffffffffffffail");
-                }
-            });
-        } else {
-            // User is not logged in, hide the buttons
-            runOnUiThread(() -> {
+            if (visited) {
+                deleteButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.VISIBLE);
+            }
+            else {
                 deleteButton.setVisibility(View.GONE);
                 editButton.setVisibility(View.GONE);
-            });
+
+
+
         }
     }
 }
