@@ -77,6 +77,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         salonImage = intent.getStringExtra("salon_image");
         visited = getIntent().getBooleanExtra("visited", false);
 
+System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvv "+visited);
         Glide.with(this)
                 .load(salonImage)
                 .centerCrop()
@@ -166,7 +167,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
 
 
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
-     //   buttonVisibility();
+        buttonVisibility();
     }
 
     private void deletePlace(String placeId) {
@@ -346,20 +347,27 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                             .centerCrop()
                             .into(restaurantImageView);
 
-                    // After updating in Firestore, now update in Realtime Database
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference r = database.getReference("salon").child(salonName);
+                    // Now update the data in the Realtime Database
+                    DatabaseReference r = FirebaseDatabase.getInstance().getReference("salon").child(salonName);
 
-                    java.util.Map<String, Object> realtimeUpdates = new HashMap<>();
-                    realtimeUpdates.put("name", newName);
-                    realtimeUpdates.put("image", newImage);
-
-                    r.updateChildren(realtimeUpdates)
+                    r.child("name").setValue(newName)
                             .addOnSuccessListener(aVoid1 -> {
                                 // Update successful in Realtime Database
                                 // You can show a success message or take appropriate action
-                                // Update the UI with the new name and image if needed
+                                // Update the UI with the new name if needed
                                 salonName = newName;
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the failure to update in Realtime Database
+                                Toast.makeText(this, "Failed to update salon name in Realtime Database", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
+
+                    r.child("image").setValue(newImage)
+                            .addOnSuccessListener(aVoid2 -> {
+                                // Update successful in Realtime Database
+                                // You can show a success message or take appropriate action
+                                // Update the UI with the new image if needed
                                 salonImage = newImage;
 
                                 // Reload the image using Glide
@@ -370,16 +378,18 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
                             })
                             .addOnFailureListener(e -> {
                                 // Handle the failure to update in Realtime Database
-                                Toast.makeText(this, "Failed to update restaurant details in Realtime Database", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Failed to update salon image in Realtime Database", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             });
                 })
                 .addOnFailureListener(e -> {
                     // Handle the failure to update in Firestore
-                    Toast.makeText(this, "Failed to update restaurant details in Firestore", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to update salon details in Firestore", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 });
     }
+
+
 
 
     @Override
@@ -514,16 +524,33 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
     }
 
     private void buttonVisibility() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (currentUser != null) {
             if (visited) {
                 deleteButton.setVisibility(View.VISIBLE);
                 editButton.setVisibility(View.VISIBLE);
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the edit method when the editButton is clicked
+                        showEditDialog();
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the delete method when the deleteButton is clicked
+                        deletePlace(salonId);
+                    }
+                });
             }
             else {
                 deleteButton.setVisibility(View.GONE);
                 editButton.setVisibility(View.GONE);
-
-
+            }
 
         }
     }

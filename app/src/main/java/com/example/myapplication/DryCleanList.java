@@ -47,12 +47,16 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
     private ItemListAdapter adapter;
     private DatabaseReference servicesRef;
     private SearchView searchView;
+    Button editButton;
+
     private RatingBar rating;
 
     private String drycleanId;
     String drycleanName;
     String drycleanImageUrl;
+    Button deleteButton;
 
+    boolean visited;
 
 
     @Override
@@ -65,6 +69,10 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
 
         rating = findViewById(R.id.ratingBar);
         userLoggedIn = checkUserLoggedIn();
+
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
+        visited = getIntent().getBooleanExtra("visited", false);
 
 
         ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
@@ -84,6 +92,8 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
         drycleanName = intent.getStringExtra("dryclean_name");
         drycleanImageUrl = intent.getStringExtra("dryclean_image");
         float supermarketRating = getIntent().getFloatExtra("dryclean_rating", 0.0f);
+        visited = getIntent().getBooleanExtra("visited", false);
+
         rating.setRating(supermarketRating);
 
         // Construct the database reference for the services of the selected Restaurant
@@ -152,8 +162,7 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
             });
 
 
-            Button deleteButton = findViewById(R.id.deleteButton);
-            deleteButton.setVisibility(View.GONE);
+
         }
 
 
@@ -174,6 +183,8 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
             }
         });
         rating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
+
+        buttonVisibility();
 
     }
     private boolean checkUserLoggedIn() {
@@ -506,4 +517,37 @@ public class DryCleanList extends AppCompatActivity implements BottomNavigationV
             Toast.makeText(this, "Please log in to perform this action.", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void buttonVisibility() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            if (visited) {
+                deleteButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.VISIBLE);
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the edit method when the editButton is clicked
+                        showEditDialog();
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the delete method when the deleteButton is clicked
+                        deletePlace(drycleanId);
+                    }
+                });
+            }
+            else {
+                deleteButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+            }
+
+        }
+    }
 }
+

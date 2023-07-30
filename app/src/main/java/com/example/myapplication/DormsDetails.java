@@ -45,6 +45,10 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
 
     private BottomNavigationView bottom;
     private AlertDialog editDialog;
+    boolean visited;
+    Button editButton;
+    Button deleteButton;
+
 
 
     private SearchView searchView;
@@ -70,6 +74,8 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
         searchView = findViewById(R.id.searchButton);
         descriptionTextView = findViewById(R.id.description);
 
+        editButton = findViewById(R.id.edit);
+        deleteButton = findViewById(R.id.deleteButton);
 
 
         Intent intent = getIntent();
@@ -79,6 +85,9 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
             dormsImage = intent.getStringExtra("Dorms_image");
             float supermarketRating = getIntent().getFloatExtra("Dorms_rate", 0.0f);
             ratingBar.setRating(supermarketRating);
+
+            visited = getIntent().getBooleanExtra("visited", false);
+
 
             // Use Glide to load the dormitory image
             Glide.with(this)
@@ -198,8 +207,10 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
         });
         ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> updateRating(rating));
 
+        buttonVisibility();
 
-}
+
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -421,6 +432,39 @@ public class DormsDetails extends AppCompatActivity implements BottomNavigationV
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+    private void buttonVisibility() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            if (visited) {
+                deleteButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.VISIBLE);
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the edit method when the editButton is clicked
+                        showEditDialog();
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Call the delete method when the deleteButton is clicked
+                        deletePlace(dormsId);
+                    }
+                });
+            }
+            else {
+                deleteButton.setVisibility(View.GONE);
+                editButton.setVisibility(View.GONE);
+            }
+
+        }
+    }
+
 
 
 }

@@ -87,13 +87,13 @@ public class ServiceDetails extends AppCompatActivity {
         serviceDescriptionTextView = findViewById(R.id.productDesc);
 
         Intent intent = getIntent();
-        place =intent.getStringExtra("place");
+        place = intent.getStringExtra("place");
 
 
         salonId = intent.getStringExtra("id");
         salonName = intent.getStringExtra("name");
-         salonPrice = intent.getDoubleExtra("price", 0);
-         salonDesc = intent.getStringExtra("desc");
+        salonPrice = intent.getDoubleExtra("price", 0);
+        salonDesc = intent.getStringExtra("desc");
         salonImageUrl = intent.getStringExtra("image");
 
 
@@ -132,7 +132,6 @@ public class ServiceDetails extends AppCompatActivity {
                 .load(salonImageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(serviceImageView);
-
 
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -177,14 +176,11 @@ public class ServiceDetails extends AppCompatActivity {
                 });
 
 
-
-
-
         contactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mobileNumber = "972" + mobileNumber.substring(1);
-                Uri uri = Uri.parse("https://wa.me/"+mobileNumber);
+                Uri uri = Uri.parse("https://wa.me/" + mobileNumber);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
 
@@ -266,7 +262,6 @@ public class ServiceDetails extends AppCompatActivity {
                             });
 
 
-
                     DatabaseReference dryRef = database.getReference("DryCleanServices").child(salonName);
                     resRef.removeValue()
                             .addOnSuccessListener(aVoid -> {
@@ -279,8 +274,6 @@ public class ServiceDetails extends AppCompatActivity {
                             });
 
 
-
-
                 })
                 .setNegativeButton("لا", (dialog, which) -> {
                     // User clicked "لا", do nothing
@@ -289,8 +282,8 @@ public class ServiceDetails extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    private void EditService(String placeId) {
 
+    private void EditService(String placeId) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
         EditText editTextName = dialogView.findViewById(R.id.Name);
         EditText editTextImage = dialogView.findViewById(R.id.Image);
@@ -299,28 +292,38 @@ public class ServiceDetails extends AppCompatActivity {
 
         editTextName.setText(salonName);
         editTextImage.setText(salonImageUrl);
-        String p= String.valueOf(Double.parseDouble(String.valueOf(salonPrice)));
+        String p = String.valueOf(salonPrice);
         editTextprice.setText(p);
         editTextdesc.setText(salonDesc);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView)
                 .setTitle("تعديل المكان")
                 .setPositiveButton("حفظ", (dialog, which) -> {
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-
                     String newName = editTextName.getText().toString().trim();
                     String newImage = editTextImage.getText().toString().trim();
-                    String price = editTextprice.getText().toString().trim();
-                    String des = editTextdesc.getText().toString().trim();
+                    double newPrice = Double.parseDouble(editTextprice.getText().toString().trim());
+                    String newDesc = editTextdesc.getText().toString().trim();
 
+                    salonName = newName;
+                    salonImageUrl = newImage;
+                    salonPrice = newPrice;
+                    salonDesc = newDesc;
 
+                    // Update the UI with the new values
+                    serviceNameTextView.setText(salonName);
+                    servicePriceTextView.setText(String.valueOf(salonPrice));
+                    serviceDescriptionTextView.setText(salonDesc);
+                    Glide.with(this).load(salonImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(serviceImageView);
+
+                    // Update the edited details in the Firebase Realtime Database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference salonRef = database.getReference("salonServices").child(salonName);
-                    salonRef.child("price").setValue(price);
-                    salonRef.child("name").setValue(newName); // Update "name" field with the new value
-                    salonRef.child("description").setValue(des); // Update "description" field with the new value
-                    salonRef.child("image").setValue(newImage); // Update "description" field with the new value
+
+                    salonRef.child("name").setValue(newName);
+                    salonRef.child("image").setValue(newImage);
+                    salonRef.child("price").setValue(newPrice);
+                    salonRef.child("desc").setValue(newDesc);
 
                     Toast.makeText(ServiceDetails.this, "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
                 })
@@ -328,8 +331,5 @@ public class ServiceDetails extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
-
-
 }

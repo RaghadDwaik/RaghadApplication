@@ -130,7 +130,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="90dp"
                 android:textSize="18dp"
-                android:text="حذف المكان"
+                android:text="حذف المنتج"
               />
 
             <Button
@@ -141,7 +141,7 @@
                 android:layout_marginLeft="220dp"
                 android:padding="10dp"
                 android:textSize="18dp"
-                android:text="تعديل على المكان" />
+                android:text="تعديل على المنتج" />
 </RelativeLayout>
         </LinearLayout>
 
