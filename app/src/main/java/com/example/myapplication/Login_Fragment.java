@@ -9,6 +9,33 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -72,7 +99,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-public class Login_Fragment extends Fragment implements OnClickListener {
+public class Login_Fragment extends Fragment implements OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private static View view;
 
     private static EditText email, password;
@@ -93,18 +120,24 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     private static final String OWNER_ID_KEY = "ownerId";
     private static final String TAG = "Login_Fragment";
     private FirebaseFirestore db;
+    private GoogleApiClient mGoogleApiClient;
+
 
     @Override
     public void onStart() {
         super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             Toast.makeText(getActivity(), "Successful", Toast.LENGTH_SHORT)
                     .show();
-
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
         }
     }
+
 
     public Login_Fragment() {
 
@@ -115,14 +148,10 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         view = inflater.inflate(R.layout.activity_login, container, false);
         initViews();
         setListeners();
-        // Inside initViews() method or onCreateView(), after initializing views
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // R.string.default_web_client_id should be the client ID from google-services.json
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
         return view;
     }
+
+
 
     // Initiate Views
     private void initViews() {
@@ -261,7 +290,6 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                         .addToBackStack(null) // Add this line to add the fragment to the back stack
                         .commit();
                 break;
-// Inside onClick() method
             case R.id.google_sign_in_button:
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
@@ -311,8 +339,8 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(getActivity(), "Login Successful", Toast.LENGTH_SHORT)
                                     .show();
-                            // Handle login based on user or owner
-                            handleLogin(user);
+                            Intent intent = new Intent(getActivity(),MainActivity.class);startActivity(intent);
+                            // Continue with your app logic
                         } else {
                             // Sign-in failed, display a message to the user
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -412,4 +440,10 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         }
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e("LoginFragment", "onConnectionFailed: " + connectionResult.getErrorMessage());
+
+
+    }
 }
