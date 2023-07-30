@@ -3,15 +3,24 @@ package com.example.myapplication;
 public class DormsClass {
     private String image1;
 
-    public String getPlacename() {
-        return placename;
+    private String dorms;
+    private String studyplace;
+
+    public String getDorms() {
+        return dorms;
     }
 
-    public void setPlacename(String placename) {
-        this.placename = placename;
+    public void setDorms(String dorms) {
+        this.dorms = dorms;
     }
 
-    String placename;
+    public String getStudyplace() {
+        return studyplace;
+    }
+
+    public void setStudyplace(String studyplace) {
+        this.studyplace = studyplace;
+    }
 
     public DormsClass(String image1, String id, String image2, String image3, String image4, String description, float rating) {
         this.image1 = image1;
@@ -23,13 +32,14 @@ public class DormsClass {
         this.rating = rating;
     }
 
-    public DormsClass(String image1, String image2, String image3,  String description, String placename) {
+    public DormsClass(String image1, String image2, String image3,  String description, String dorms,String studyplace) {
         this.image1 = image1;
         this.image2 = image2;
         this.image3 = image3;
         this.image4 = image4;
         this.description = description;
-        this.placename = placename;
+        this.dorms=dorms;
+        this.studyplace=studyplace;
     }
     public DormsClass(String id,String name, String image){
 

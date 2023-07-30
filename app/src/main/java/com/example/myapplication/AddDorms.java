@@ -34,9 +34,8 @@ public class AddDorms extends AppCompatActivity {
         setContentView(R.layout.activity_add_dorms);
 
         String placeType = getIntent().getStringExtra("placeType");
-        String name = getIntent().getStringExtra("placeName");
+        String name = getIntent().getStringExtra("name");
 
-        System.out.println("placcccccccccccccccccccccccccccce dd " + placeType);
 
         if (placeType.equals("dorms")) {
             image11 = findViewById(R.id.image1);
@@ -60,15 +59,25 @@ public class AddDorms extends AppCompatActivity {
                     String name1 = nameee.getText().toString().trim();
 
                     String namee3 = name1.toString();
-                    DormsClass productt = new DormsClass(imagee, imageee, imageeee, des, namee3);
+
+
+
+                        DormsClass product = new DormsClass();
+                        product.setImage1(imagee);
+                        product.setImage2(imageee);
+                        product.setImage3(imageeee);
+                        product.setDescription(des);
+                        product.setDorms(name);
+                        productsReference = FirebaseDatabase.getInstance().getReference().child("salonServices"); // Update the DatabaseReference
+
                     productsReference = FirebaseDatabase.getInstance().getReference().child("DormsDetails");
 
-                    productsReference.child(name1).setValue(productt)
+                    productsReference.child(name1).setValue(product)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     // Product added successfully
-                                    Toast.makeText(AddDorms.this, "Product added to the salon", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddDorms.this, "تمت الاضافة بنجاح", Toast.LENGTH_SHORT).show();
                                     finish(); // Finish the activity after adding the product
                                 }
                             })
@@ -76,7 +85,7 @@ public class AddDorms extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     // Error occurred while adding the product
-                                    Toast.makeText(AddDorms.this, "Failed to add the product", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddDorms.this, "فشل في عملية الاضافة", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
@@ -103,15 +112,21 @@ public class AddDorms extends AppCompatActivity {
                     String name1 = nameee.getText().toString().trim();
 
                     String namee3 = name1.toString();
-                    DormsClass productt = new DormsClass(imagee, imageee, imageeee, des, namee3);
+
+                    DormsClass product = new DormsClass();
+                    product.setImage1(imagee);
+                    product.setImage2(imageee);
+                    product.setImage3(imageeee);
+                    product.setDescription(des);
+                    product.setStudyplace(name);
                     productsReference = FirebaseDatabase.getInstance().getReference().child("StudyPlaceItems");
 
-                    productsReference.child(name1).setValue(productt)
+                    productsReference.child(name1).setValue(product)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     // Product added successfully
-                                    Toast.makeText(AddDorms.this, "Product added to the " + placeType, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddDorms.this, "تمت الاضافة بنجاح "  , Toast.LENGTH_SHORT).show();
                                     finish(); // Finish the activity after adding the product
                                 }
                             })
@@ -119,7 +134,7 @@ public class AddDorms extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     // Error occurred while adding the product
-                                    Toast.makeText(AddDorms.this, "Failed to add the product", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddDorms.this, "فشلت عملية الاضافة", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }

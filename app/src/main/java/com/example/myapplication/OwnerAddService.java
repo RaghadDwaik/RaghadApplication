@@ -138,7 +138,7 @@ public class OwnerAddService extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             // Product added successfully
-                                            Toast.makeText(OwnerAddService.this, "Product added to the "+placeType, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OwnerAddService.this, "تمت الاضافة بنجاح ", Toast.LENGTH_SHORT).show();
                                             finish(); // Finish the activity after adding the product
                                         }
                                     })
@@ -146,7 +146,7 @@ public class OwnerAddService extends AppCompatActivity {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             // Error occurred while adding the product
-                                            Toast.makeText(OwnerAddService.this, "Failed to add the product", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OwnerAddService.this, "فشلت عملية الاضافة", Toast.LENGTH_SHORT).show();
                                         }
                                     });
 
@@ -157,7 +157,7 @@ public class OwnerAddService extends AppCompatActivity {
                             product.setPrice(pricee);
                             product.setDescription(productDescription);
 
-                            product.setDryClean(name);
+                            product.setdryclean(name);
 
                             productsReference = FirebaseDatabase.getInstance().getReference().child("DryCleanServices");
 

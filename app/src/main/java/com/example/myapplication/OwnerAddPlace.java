@@ -65,7 +65,7 @@ public class OwnerAddPlace extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedPlace = parent.getItemAtPosition(position).toString();
-                Toast.makeText(OwnerAddPlace.this, "Selected Place: " + selectedPlace, Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(OwnerAddPlace.this, "Selected Place: " + selectedPlace, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -81,7 +81,7 @@ public class OwnerAddPlace extends AppCompatActivity {
                 savePlaceDetails(ownerId);
                 Intent intent = new Intent(OwnerAddPlace.this, OwnerAddService.class);
                 intent.putExtra("placeType", englishPlaceType);
-                Toast.makeText(OwnerAddPlace.this, "Selected Place: " + englishPlaceType, Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(OwnerAddPlace.this, "Selected Place: " + englishPlaceType, Toast.LENGTH_SHORT).show();
                 intent.putExtra(englishPlaceType, placeName);
                 startActivity(intent);
             }

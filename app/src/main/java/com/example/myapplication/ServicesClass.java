@@ -30,12 +30,12 @@ public class ServicesClass {
         this.Resturant = Resturant;
     }
 
-    public String getDryClean() {
-        return DryClean;
+    public String getdryclean() {
+        return dryclean;
     }
 
-    public void setDryClean(String DryClean) {
-        DryClean = DryClean;
+    public void setdryclean(String dryclean) {
+        this.dryclean = dryclean;
     }
 
     public String getSalon() {
@@ -68,8 +68,8 @@ public class ServicesClass {
 
     private String Resturant;
 
-    @PropertyName("DryClean")
-    private String DryClean;
+    @PropertyName("dryclean")
+    private String dryclean;
 
     @PropertyName("salon")
     private String salon;
@@ -100,13 +100,13 @@ public class ServicesClass {
         map.put("price", price);
         map.put("description", description);
         map.put("Resturant", Resturant);
-        map.put("DryClean", DryClean);
+        map.put("dryclean", dryclean);
         map.put("salon", salon);
         map.put("Supermarket", Supermarket);
         return map;
     }
 
-    public ServicesClass(String name, String image, double price, String description,String DryClean,String Supermarket ,String salon, String Resturant) {
+    public ServicesClass(String name, String image, double price, String description,String dryclean,String Supermarket ,String salon, String Resturant) {
 
         this.name = name;
         this.image = image;
