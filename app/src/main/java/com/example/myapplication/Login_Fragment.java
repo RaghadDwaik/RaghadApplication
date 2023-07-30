@@ -403,10 +403,6 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
     // Method to handle login based on user or owner
     private void handleLogin(FirebaseUser user) {
         if (user != null) {
-            if (!user.isEmailVerified()) {
-                // Email is not verified, show a dialog to inform the user
-                showEmailVerificationDialog();
-            } else {
                 String userId = user.getUid();
                 DocumentReference userRef = db.collection("User").document(userId);
 
@@ -415,7 +411,7 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             Boolean isOwner = documentSnapshot.getBoolean("isUser");
-                            if (isOwner != null && isOwner) {
+                            if (isOwner != null && !isOwner) {
 
                                 Intent intent = new Intent(getActivity(), OwnerHomePage.class);
                                 intent.putExtra("ownerId", userId);
@@ -440,7 +436,6 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
                 });
             }
         }
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -450,40 +445,5 @@ public class Login_Fragment extends Fragment implements OnClickListener, GoogleA
     }
 
 
-    private void showEmailVerificationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Your email address is not verified. Please check your email for the verification link.")
-                .setTitle("Email Verification")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Resend Verification Email", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendVerificationEmail();
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(false)
-                .show();
-    }
 
-    private void sendVerificationEmail() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getActivity(), "Verification email sent.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
     }
