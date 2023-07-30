@@ -323,7 +323,7 @@ public class ServiceDetails extends AppCompatActivity {
                     salonRef.child("name").setValue(newName);
                     salonRef.child("image").setValue(newImage);
                     salonRef.child("price").setValue(newPrice);
-                    salonRef.child("desc").setValue(newDesc);
+                    salonRef.child("description").setValue(newDesc);
 
                     Toast.makeText(ServiceDetails.this, "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
                 })
