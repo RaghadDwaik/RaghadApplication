@@ -70,7 +70,7 @@ public class OwnerAddPlace extends AppCompatActivity {
 
         image = findViewById(R.id.imagee);
         saveButton = findViewById(R.id.saveButton);
-        imageView = findViewById(R.id.selected_image_view);
+//        imageView = findViewById(R.id.selected_image_view);
         imageView.setImageURI(selectedImageUri);
         imageView.setVisibility(View.VISIBLE);
  imageView.setOnClickListener(new View.OnClickListener() {
