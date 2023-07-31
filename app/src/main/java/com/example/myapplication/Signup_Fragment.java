@@ -222,7 +222,7 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("isUser", isOwner);
                                     userInfo.put("id", userId);
 
-                                    sendEmailVerification(user);
+//                                    sendEmailVerification(user);
                                     // Set the user information in the Firestore document
                                     userRef.set(userInfo)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -258,44 +258,42 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         }
     }
 
-    private void sendEmailVerification(FirebaseUser user) {
-        user.sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            if(user.isEmailVerified()){
-                            Log.d("SignUpActivity", "Email verification sent.");
-                            // Add code to inform the user that the verification email has been sent.
-                            startActivity(new Intent(getActivity(),MainActivity.class));
-                        } else {
-                            Log.e("SignUpActivity", "sendEmailVerification:failure", task.getException());
-                            // Add code to handle the failure to send the verification email.
-                        }
-                    }else {
-                            Toast.makeText(getActivity(),task.getException().getMessage(),Toast.LENGTH_SHORT);
-                        }
-                    }
-                });
-        signUpButton.setOnClickListener(( view) -> {
-            startActivity(new Intent(getActivity(), MainActivity.class));
-        });
-    }
+//    private void sendEmailVerification(FirebaseUser user) {
+//        user.sendEmailVerification()
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            if(user.isEmailVerified()){
+//                            Log.d("SignUpActivity", "Email verification sent.");
+//                            // Add code to inform the user that the verification email has been sent.
+//                            startActivity(new Intent(getActivity(),MainActivity.class));
+//                        } else {
+//                            Log.e("SignUpActivity", "sendEmailVerification:failure", task.getException());
+//                            // Add code to handle the failure to send the verification email.
+//                        }
+//                    }else {
+//                            Toast.makeText(getActivity(),task.getException().getMessage(),Toast.LENGTH_SHORT);
+//                        }
+//                    }
+//                });
+//        signUpButton.setOnClickListener(( view) -> {
+//            startActivity(new Intent(getActivity(), MainActivity.class));
+//        });
+//    }
 
 
     // Method to handle owner registration (specify owner of a place)
     public void handleOwnerRegistration(String ownerId) {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            if (user.isEmailVerified()) {
+
                 // For example, you can start a new activity to add the place details and associate it with the owner
                 Intent intent = new Intent(getActivity(), OwnerHomePage.class);
                 intent.putExtra("ownerId", ownerId);
                 startActivity(intent);
             } else{
                     // User's email is not verified, show a dialog to inform the user
-                    showEmailVerificationDialog();
-                }
             }
         }
 
@@ -304,52 +302,52 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
         public void handleUserRegistration() {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
-                if (user.isEmailVerified()) {
+
                     Intent intent = new Intent(getActivity(), Profile.class);
                     startActivity(intent);
                 } else {
                     // User's email is not verified, show a dialog to inform the user
-                    showEmailVerificationDialog();
+                   // showEmailVerificationDialog();
                 }
-            }
+
         }
 
 
-    private void showEmailVerificationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Your email address is not verified. Please check your email for the verification link.")
-                .setTitle("Email Verification")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Resend Verification Email", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendVerificationEmail();
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(false)
-                .show();
-    }
+//    private void showEmailVerificationDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setMessage("Your email address is not verified. Please check your email for the verification link.")
+//                .setTitle("Email Verification")
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNegativeButton("Resend Verification Email", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        sendVerificationEmail();
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setCancelable(false)
+//                .show();
+//    }
 
-    private void sendVerificationEmail() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getActivity(), "Verification email sent.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
+//    private void sendVerificationEmail() {
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        if (user != null) {
+//            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    if (task.isSuccessful()) {
+//                        Toast.makeText(getActivity(), "Verification email sent.", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getActivity(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//        }
+//    }
 }
 
