@@ -234,10 +234,10 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     // Document successfully written
-                                                    if (selectedRadioButtonId == R.id.radioButtonOption1) {
+                                                    if (isOwner) {
                                                         // Handle owner registration (specify owner of a place) here
                                                         handleOwnerRegistration(userId);
-                                                    } else if (selectedRadioButtonId == R.id.radioButtonOption2) {
+                                                    } else {
                                                         // Handle user registration here
                                                         handleUserRegistration();
                                                     }
