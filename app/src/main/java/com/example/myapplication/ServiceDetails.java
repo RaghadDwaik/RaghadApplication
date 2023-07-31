@@ -44,7 +44,8 @@ public class ServiceDetails extends AppCompatActivity {
     double salonPrice;
     private CollectionReference favoritesRef;
     String salonName;
-    String place;
+    String placee;
+    String place1;
     String salonId;
     String salonImageUrl, salonDesc;
 
@@ -87,7 +88,8 @@ public class ServiceDetails extends AppCompatActivity {
         serviceDescriptionTextView = findViewById(R.id.productDesc);
 
         Intent intent = getIntent();
-        place = intent.getStringExtra("place");
+        placee = intent.getStringExtra("place");
+        place1 = intent.getStringExtra("place1");
 
 
         salonId = intent.getStringExtra("id");
@@ -137,7 +139,7 @@ public class ServiceDetails extends AppCompatActivity {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         CollectionReference placesCollectionRef = firestore.collection("Places");
 
-        String enteredPlace = place; // Replace this with the entered place name or ID
+        String enteredPlace = place1; // Replace this with the entered place name or ID
 
         placesCollectionRef.whereEqualTo("name", enteredPlace) // Replace "placeName" with the field containing the place name in "Places" collection
                 .get()
@@ -194,8 +196,19 @@ public class ServiceDetails extends AppCompatActivity {
 
 
         Button editButton = findViewById(R.id.edit);
-        editButton.setOnClickListener(v ->
-                EditService(salonId));
+
+        editButton.setOnClickListener(v -> {
+            if ("salon".equals(placee)) {
+                EditService(salonId);
+            } else if ("dryclean".equals(placee)) {
+                EditService1(salonId);
+            } else if ("resturant".equals(placee)) {
+                EditService2(salonId);
+            } else if ("supermarket".equals(placee)) {
+                EditService3(salonName);
+            }
+        });
+
 
 
     }
@@ -316,16 +329,175 @@ public class ServiceDetails extends AppCompatActivity {
                     serviceDescriptionTextView.setText(salonDesc);
                     Glide.with(this).load(salonImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(serviceImageView);
 
-                    // Update the edited details in the Firebase Realtime Database
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference salonRef = database.getReference("salonServices").child(salonName);
+
+                            salonRef.child("name").setValue(newName);
+                            salonRef.child("image").setValue(newImage);
+                            salonRef.child("price").setValue(newPrice);
+                            salonRef.child("description").setValue(newDesc);
+
+
+
+
+                })
+                .setNegativeButton("تخطي", null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    private void EditService1(String placeId) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
+        EditText editTextprice = dialogView.findViewById(R.id.Price);
+        EditText editTextdesc = dialogView.findViewById(R.id.description);
+
+        editTextName.setText(salonName);
+        editTextImage.setText(salonImageUrl);
+        String p = String.valueOf(salonPrice);
+        editTextprice.setText(p);
+        editTextdesc.setText(salonDesc);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
+                    String newName = editTextName.getText().toString().trim();
+                    String newImage = editTextImage.getText().toString().trim();
+                    double newPrice = Double.parseDouble(editTextprice.getText().toString().trim());
+                    String newDesc = editTextdesc.getText().toString().trim();
+
+                    salonName = newName;
+                    salonImageUrl = newImage;
+                    salonPrice = newPrice;
+                    salonDesc = newDesc;
+
+                    // Update the UI with the new values
+                    serviceNameTextView.setText(salonName);
+                    servicePriceTextView.setText(String.valueOf(salonPrice));
+                    serviceDescriptionTextView.setText(salonDesc);
+                    Glide.with(this).load(salonImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(serviceImageView);
+
+
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference salonRef = database.getReference("salonServices").child(salonName);
+                    DatabaseReference salonRef = database.getReference("DryCleanServices").child(salonName);
 
                     salonRef.child("name").setValue(newName);
                     salonRef.child("image").setValue(newImage);
                     salonRef.child("price").setValue(newPrice);
                     salonRef.child("description").setValue(newDesc);
 
-                    Toast.makeText(ServiceDetails.this, "تم التعديل بنجاح", Toast.LENGTH_SHORT).show();
+
+
+
+                })
+                .setNegativeButton("تخطي", null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void EditService2(String placeId) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
+        EditText editTextprice = dialogView.findViewById(R.id.Price);
+        EditText editTextdesc = dialogView.findViewById(R.id.description);
+
+        editTextName.setText(salonName);
+        editTextImage.setText(salonImageUrl);
+        String p = String.valueOf(salonPrice);
+        editTextprice.setText(p);
+        editTextdesc.setText(salonDesc);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
+                    String newName = editTextName.getText().toString().trim();
+                    String newImage = editTextImage.getText().toString().trim();
+                    double newPrice = Double.parseDouble(editTextprice.getText().toString().trim());
+                    String newDesc = editTextdesc.getText().toString().trim();
+
+                    salonName = newName;
+                    salonImageUrl = newImage;
+                    salonPrice = newPrice;
+                    salonDesc = newDesc;
+
+                    // Update the UI with the new values
+                    serviceNameTextView.setText(salonName);
+                    servicePriceTextView.setText(String.valueOf(salonPrice));
+                    serviceDescriptionTextView.setText(salonDesc);
+                    Glide.with(this).load(salonImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(serviceImageView);
+
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference salonRef = database.getReference("Items").child(salonName);
+
+                    salonRef.child("name").setValue(newName);
+                    salonRef.child("image").setValue(newImage);
+                    salonRef.child("price").setValue(newPrice);
+                    salonRef.child("description").setValue(newDesc);
+
+
+
+
+                })
+                .setNegativeButton("تخطي", null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void EditService3(String placeId) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
+        EditText editTextName = dialogView.findViewById(R.id.Name);
+        EditText editTextImage = dialogView.findViewById(R.id.Image);
+        EditText editTextprice = dialogView.findViewById(R.id.Price);
+        EditText editTextdesc = dialogView.findViewById(R.id.description);
+
+        editTextName.setText(salonName);
+        editTextImage.setText(salonImageUrl);
+        String p = String.valueOf(salonPrice);
+        editTextprice.setText(p);
+        editTextdesc.setText(salonDesc);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setTitle("تعديل المكان")
+                .setPositiveButton("حفظ", (dialog, which) -> {
+                    String newName = editTextName.getText().toString().trim();
+                    String newImage = editTextImage.getText().toString().trim();
+                    double newPrice = Double.parseDouble(editTextprice.getText().toString().trim());
+                    String newDesc = editTextdesc.getText().toString().trim();
+
+                    salonName = newName;
+                    salonImageUrl = newImage;
+                    salonPrice = newPrice;
+                    salonDesc = newDesc;
+
+                    // Update the UI with the new values
+                    serviceNameTextView.setText(salonName);
+                    servicePriceTextView.setText(String.valueOf(salonPrice));
+                    serviceDescriptionTextView.setText(salonDesc);
+                    Glide.with(this).load(salonImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(serviceImageView);
+
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference salonRef = database.getReference("SuperMarketItems").child(salonName);
+
+                    salonRef.child("name").setValue(newName);
+                    salonRef.child("image").setValue(newImage);
+                    salonRef.child("price").setValue(newPrice);
+                    salonRef.child("description").setValue(newDesc);
+
+
+
+
                 })
                 .setNegativeButton("تخطي", null);
 

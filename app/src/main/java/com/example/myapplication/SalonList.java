@@ -41,6 +41,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
     private BottomNavigationView bottom;
     private RecyclerView recyclerView;
     private DatabaseReference ratedSupermarketsRef;
+    String place ="salon";
     private boolean userLoggedIn;
     private AlertDialog editDialog;
 
@@ -77,7 +78,7 @@ public class SalonList extends AppCompatActivity implements BottomNavigationView
         salonImage = intent.getStringExtra("salon_image");
         visited = getIntent().getBooleanExtra("visited", false);
 
-System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvv "+visited);
+        System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvv "+visited);
         Glide.with(this)
                 .load(salonImage)
                 .centerCrop()
@@ -86,6 +87,7 @@ System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvv "+visited);
         salonId = intent.getStringExtra("salon_id");
 
         salonName = intent.getStringExtra("salon_name");
+     //   place = intent.getStringExtra("place");
 
         salonImage = intent.getStringExtra("salon_image");
         float supermarketRating = getIntent().getFloatExtra("salon_rating", 0.0f);
@@ -507,7 +509,11 @@ System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvv "+visited);
                         intent.putExtra("price", rest.getPrice());
                         intent.putExtra("desc", rest.getDescription());
                         intent.putExtra("image", rest.getImage());
-                        intent.putExtra("place", salonName);
+
+                        intent.putExtra("place", place);
+
+
+
 
 
                         // Add any other necessary data as extras

@@ -92,6 +92,7 @@ public class Dorms extends AppCompatActivity implements BottomNavigationView.OnN
             intent.putExtra("Dorms_name", supermarket.getName());
             intent.putExtra("Dorms_image", supermarket.getImage());
 
+
             // Add any other necessary data as extras
             startActivity(intent);
         });

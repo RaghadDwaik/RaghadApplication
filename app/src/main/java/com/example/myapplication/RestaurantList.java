@@ -55,6 +55,7 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
     private String restaurantImageUrl;
 
     boolean visited;
+    String place ="resturant";
     Button editButton;
     Button deleteButton;
 
@@ -70,11 +71,13 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
         editButton = findViewById(R.id.edit);
         deleteButton = findViewById(R.id.deleteButton);
 
+
         ImageView restaurantImageView = findViewById(R.id.restaurantImageView);
 
         // Get the details of the selected restaurant from the intent
         Intent intent = getIntent();
         String restaurantImage = intent.getStringExtra("restaurant_image");
+       // place = intent.getStringExtra("place");
 
         // Load the restaurant image into the ImageView using Glide
         Glide.with(this)
@@ -486,7 +489,8 @@ public class RestaurantList extends AppCompatActivity implements BottomNavigatio
                         intent.putExtra("price", rest.getPrice());
                         intent.putExtra("desc", rest.getDescription());
                         intent.putExtra("image", rest.getImage());
-                        intent.putExtra("place", restaurantName);
+                        intent.putExtra("place1", restaurantName);
+                        intent.putExtra("place", place);
 
                         // Add any other necessary data as extras
                         startActivity(intent);

@@ -78,12 +78,16 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
 
         Intent intent = getIntent();
         if (intent != null) {
+            visited = getIntent().getBooleanExtra("visited", false);
+
             studyId = intent.getStringExtra("studyplace_id");
             studyName = intent.getStringExtra("studyplace_name");
             studyImage = intent.getStringExtra("studyplace_image");
+
             float supermarketRating = getIntent().getFloatExtra("studyplace_rate", 0.0f);
             ratingBar.setRating(supermarketRating);
-            visited = getIntent().getBooleanExtra("visited", false);
+
+
 
 
             Glide.with(this)
@@ -101,7 +105,7 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
                     DormsClass studyDetails = dataSnapshot.getValue(DormsClass.class);
 
                     if (studyDetails != null) {
-                        ratingBar.setRating(studyDetails.getRating());
+                    //    ratingBar.setRating(studyDetails.getRating());
                         Glide.with(StudyPlacesDetails.this).load(studyDetails.getImage1()).into(image1);
                         Glide.with(StudyPlacesDetails.this).load(studyDetails.getImage2()).into(image2);
                         Glide.with(StudyPlacesDetails.this).load(studyDetails.getImage3()).into(image3);
@@ -327,7 +331,6 @@ public class StudyPlacesDetails extends AppCompatActivity implements BottomNavig
         } else {
             Toast.makeText(StudyPlacesDetails.this, "Invalid study place ID.", Toast.LENGTH_SHORT).show();
         }
-        ratingBar.setRating(rating);
     }
 
     private void deletePlace(String placeId) {
