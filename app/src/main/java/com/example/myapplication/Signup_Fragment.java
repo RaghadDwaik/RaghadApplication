@@ -285,30 +285,19 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
 
     // Method to handle owner registration (specify owner of a place)
     public void handleOwnerRegistration(String ownerId) {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-
                 // For example, you can start a new activity to add the place details and associate it with the owner
                 Intent intent = new Intent(getActivity(), OwnerHomePage.class);
                 intent.putExtra("ownerId", ownerId);
                 startActivity(intent);
-            } else{
-                    // User's email is not verified, show a dialog to inform the user
-            }
         }
 
 
         // Method to handle user registration
         public void handleUserRegistration() {
-            FirebaseUser user = mAuth.getCurrentUser();
-            if (user != null) {
+
 
                     Intent intent = new Intent(getActivity(), Profile.class);
                     startActivity(intent);
-                } else {
-                    // User's email is not verified, show a dialog to inform the user
-                   // showEmailVerificationDialog();
-                }
 
         }
 
