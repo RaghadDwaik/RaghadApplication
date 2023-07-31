@@ -221,9 +221,9 @@ public class Signup_Fragment extends Fragment implements OnClickListener {
                                     userInfo.put("mobileNumber", getMobileNumber);
                               //      userInfo.put("isUser", !isOwner);
                                     if (isOwner) {
-                                        userInfo.put("isUser",false ); // Set "isOwner" to true for owners
+                                        userInfo.put("isUser",false );
                                     } else {
-                                        userInfo.put("isUser", true); // Set "isUser" to true for regular users
+                                        userInfo.put("isUser", true);
                                     }
                                     userInfo.put("id", userId);
 
